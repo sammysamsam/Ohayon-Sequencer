@@ -50,7 +50,7 @@ export default class ToolsAnalysis extends React.Component {
 					<div style  = {{borderRadius:"10px",marginTop:"3px",paddingTop:"20px",background:"rgba(51, 51, 51,.8)",width:"1175px",paddingBottom:"20px"}}>	
 						
 						<div style = {{marginLeft:"30px"}}>
-							<StrandComplementMaker/>
+							<StrandUtilties/>
 						</div>
 						<div style = {{marginLeft:"30px",marginTop:"20px"}}>
 							<StrandComparer/>
