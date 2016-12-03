@@ -2,17 +2,22 @@
 
 A user friendly interface for sequencing DNA along with tools for sequence manipulation and base pairing analysis. 
 
+
 Frontend: React JS/Flux
 Dependancy Management: Webpack
 Backend:NodeJS/Express/Java
 
+___________________________________________________________
+
 Future Updates will include:
-1. Time limit for running sequencing algorithm 
-2. Desired DNA melting points for strand components
-3. Ability to include Loop DNA
+
+ - Time limit for running sequencing algorithm 
+ - Desired DNA melting points for strand components
+ - Ability to include Loop DNA
 
 
 Testing: 
+
 1. Go to console and enter "npm run server"
 
 2. On web browser go to localhost:3000
@@ -26,6 +31,7 @@ Questions: Email sm4478@nyu.edu
 
 
 Literature Cited:
+
 1. Allawi HT, SantaLucia J Jr. 1997. Thermodynamics
 and NMR of internal
 G−T mismatches in DNA. Biochemistry
