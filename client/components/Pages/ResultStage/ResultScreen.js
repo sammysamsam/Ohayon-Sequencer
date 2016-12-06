@@ -33,41 +33,68 @@ export default class ResultScreen extends React.Component {
 	loadcomparescreen()
 	{
 		let resultstyle = {
-      		overflow:"scroll",
+      		background:"rgba(0,0,0,.15)",
       		fontFamily:"'Share Tech Mono',serif", 
-      		padding:"10px 25px 0px 25px",
       		whiteSpace:"pre",
-      		height:"460px"
+      		height:"455px",
+      		//overflow:"hidden"
+    	}
+    	let bestarrangementstyle = {
+    		background:"rgba(255,255,255,.5)",
+    		height:"145px",
+    		padding:"15px",
+    	}
+    	let allarrangementstyle = {
+     		
+     		height:"260px",
+     		padding:"15px",overflow:"scroll"		
+    	}
+    	let allarrangementitemstyle = {
+    		display: "inline-block",
+    		marginLeft: "50%",
+    		transform: "translate(-50%, 0%) ",
+    		height:"50px",
+    		marginTop:"20px",
+    		marginBottom:"20px",
+    		display:"inline-block"
+    	}
+    	let bestarrangementitemstyle = {
+    		display: "inline-block",
+    		marginLeft: "50%",
+    		transform: "translate(-50%, 0%)"
     	}
 
-    	let result = this.props.results[1].split("*");
-    	let shiftedarrays = result[2].split("$$$");
-    	
+    	let results = this.props.results[1];
+    	let shiftedarrays = results[2].split("$$$");
  		return  (
 		<div style = {resultstyle}> 
-			<h4 style = {{textDecoration:"underline",marginBottom:"15px"}}>
-				Best Arrangement
-			</h4>
-			<h5>
-				{result[1]}
-			</h5>
+			<div style = {bestarrangementstyle}>
+				<h4 style = {{textDecoration:"underline",textAlign:"center"}}>
+					Best Arrangement
+				</h4>
+				<h5 style = {bestarrangementitemstyle}>
+					{results[1]}
+				</h5>
 
- 			
- 			<h4 style = {{textDecoration:"underline",marginTop:"50px"}}>
- 				All Arrangements
- 			</h4>
-			{shiftedarrays.map(function(listValue){	
-					return (
-						<div><h6 style = {{height:"50px",margin:"20px 0px 20px 0px",display:"inline-block"}}> 
-							{listValue} 
-								<hr style = {{backgroundColor:"#4d4d4d",height:"1px",marginRight:"20px"}}/>
-						</h6> 
+			</div>
 
-						</div>
+			<h4 style = {{textDecoration:"underline",textAlign:"center",height:"30px"}}>
+		 			All Arrangements
+		 	</h4>
 
-						)
-			})}			
+ 			<div style = {allarrangementstyle}>
 
+				{shiftedarrays.map(function(listValue,index){	
+						return (
+							<div key = {index}>
+								<h6 style = {allarrangementitemstyle}> 
+									{listValue} 
+									<hr style = {{backgroundColor:"#4d4d4d",height:"1px",marginRight:"20px"}}/>
+								</h6> 
+							</div>
+							)
+				})}		
+			</div>
 		</div>
 		)
 	}
@@ -76,7 +103,7 @@ export default class ResultScreen extends React.Component {
 	render()
 	{
 		return(
-			<div > {this.loadresults()} </div>
+			<div> {this.loadresults()} </div>
 		)
 	}
 }

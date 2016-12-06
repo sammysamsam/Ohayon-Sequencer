@@ -21,11 +21,11 @@ export default class StrandComparison extends React.Component {
 	}
 	//
 
-	handlecomponents(e)
+	addComponentsToComparelist(e)
 	{
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
-			temp.push( {name:e.label, components:e.value} );
+			temp.push( {name:e.label, components:e.value,loop:"false"} );
 			this.setState({comparelist : temp});
 		}
 	}
@@ -36,7 +36,7 @@ export default class StrandComparison extends React.Component {
 		if(this.state.comparelist.length > 2 || this.state.comparelist.length == 0 )
 		{
 			alert("Please Select 1 or 2 Strands to Compare");
-		} else{
+		} else {
 			StrandAction.CompareStrands(this.state.comparelist);
 		}
 	}
@@ -45,7 +45,6 @@ export default class StrandComparison extends React.Component {
 		StrandAction.PrintStrandlist();
 	}
 	
-
 
 	//
 
@@ -71,28 +70,28 @@ export default class StrandComparison extends React.Component {
 	//
 
 
-	mutablecompprocessor(){
+	componentsListProcessor(){
 			let strandlist = [];
 			for(let i = 0; i < this.props.componentlist.length;i ++)
 			{
-				let f = this.props.componentlist[i].name;
-				strandlist.push({value:[this.props.componentlist[i].name ],label:f});
+				let name = this.props.componentlist[i].name;
+				strandlist.push({value:[name ],label:name});
 				if(this.props.componentlist[i].complement == true){
-					strandlist.push({value:[this.props.componentlist[i].name +"'"] ,label:f+"'"});
+					strandlist.push({value:[name +"'"] ,label:name+"'"});
 				}
 
 			}
 			return strandlist;
 	}
-	mutablefullprocessor()
+	fullStrandListProcessor()
 	{ 
 
 	// components = array of component names
 			let strandlist = [];
 			for(let i = 0; i < this.props.fulllist.length;i ++)
 			{
-				let f = this.props.fulllist[i].name;
-				strandlist.push({value:this.props.fulllist[i].components ,label:f});
+				let name = this.props.fulllist[i].name;
+				strandlist.push({value:name ,label:name});
 			}
 			return strandlist;
 	}
@@ -123,11 +122,12 @@ export default class StrandComparison extends React.Component {
 			whiteSpace:"nowrap",
 			marginTop:"-10px",
 			borderRadius:"10px",
-			overflow:"hidden"
+			overflow:"hidden",
+			minWidth:"100px"
 		}
 		if(this.state.comparelist.length == 1){
 			return 	(
-			<div style = {{display:"inline-block"}}>
+			<div style = {{display:"inline-block",marginLeft:"15px"}}>
 				<div style = {itemstyle}> 
 					{this.state.comparelist[0].name} 
 				</div>
@@ -140,7 +140,7 @@ export default class StrandComparison extends React.Component {
 		if(this.state.comparelist.length == 2)
 		{
 			return(
-				<div style = {{display:"inline-block"}}>
+				<div style = {{display:"inline-block",marginLeft:"15px"}}>
 					<div style = {itemstyle}> 
 						{this.state.comparelist[0].name}
 					</div>
@@ -167,9 +167,9 @@ export default class StrandComparison extends React.Component {
 		const buttonstyle = {
 			fontFamily:"'Raleway',serif",
 			border:"solid",
-			borderColor:"#ff751a",
-			background:"rgba(255, 102, 0,.7)",
-			borderRadius:"20px",
+			borderColor:"white",
+			background:"rgba(255, 102, 0,.4)",
+			borderRadius:"40px",
 			marginLeft:"100px",
 			borderWidth:"1px",
 			cursor:"pointer",
@@ -188,7 +188,7 @@ export default class StrandComparison extends React.Component {
 			}
 			case false:{ 
 				return 	 (
-				<div style = {{padding:"10px 30px 10px 90px",background:"rgba(0,0,0,.7)"}}>
+				<div style = {{padding:"10px 30px 10px 90px",background:"rgba(0, 0, 0,.6)"}}>
 					<div style = {buttonstyle} className= "hvr-grow" onClick = {this.callcomparelist.bind(this)}>  
 						<Glyphicon style = {{marginRight:"5px"}} glyph = "duplicate"/> 
 						Compare
@@ -213,15 +213,16 @@ export default class StrandComparison extends React.Component {
 		let comparesetstyle = {
  	 		height:"50px",
  	 		width:"1025px",
- 	 		padding:"5px 0px 5px 20px",
+ 	 		padding:"0px 0px 5px 20px",
  	 		marginTop:"20px",
  	 		color:"white",
- 	 		border:"solid",
- 	 		borderColor:"white",
- 	 		borderWidth:"thin",
+
  	 	}
 		let comparesectionstyle = {
-			background:"rgba(28, 50, 74,.78)",marginBottom:"5px",padding:"2px 0px 0px 20px"	,boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"	
+			background:"rgba(28, 50, 74,.78)",
+			marginBottom:"5px",
+			padding:"2px 0px 0px 20px"	,
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"	
 		}
 		let resultsection = {
 			height:"513px",
@@ -230,12 +231,13 @@ export default class StrandComparison extends React.Component {
 			background:"rgba(255,255,255,.7)"
 			,boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
 		}
+
 		return(
 		<div style={{width:"1065px"}}> 
 		 		
 			<div style = {comparesectionstyle}>
  	 			<div style={comparesetstyle}> 
-					<h5 style = {{display:"inline-block",paddingRight:"30px"}}> 
+					<h5 style = {{display:"inline-block",padding:"15px 30px 15px 20px",border:"solid",borderColor:"white",borderWidth:"thin",}}> 
 						<Glyphicon style = {{marginRight:"10px"}}glyph = "search"/> 
 						Strands/Components Comparison Set:
 					</h5> 
@@ -246,16 +248,16 @@ export default class StrandComparison extends React.Component {
 		 			<Select 
 		 				placeholder="Add Strand Component"
 		 				name="form-field-name" 
-		 				options={this.mutablecompprocessor()}	
-		 				onChange = {this.handlecomponents.bind(this)} />
+		 				options={this.componentsListProcessor()}	
+		 				onChange = {this.addComponentsToComparelist.bind(this)} />
 				</div>
 				
 				<div style = {{width:"400px",margin:"20px 0px 20px 0px",display:"inline-block",verticalAlign:"top"}} >
 					<Select
 					 	placeholder="Add Full Strand" 
 						name="form-field-name" 
-						options={this.mutablefullprocessor()}	
-						onChange = {this.handlecomponents.bind(this)} />
+						options={this.fullStrandListProcessor()}	
+						onChange = {this.addComponentsToComparelist.bind(this)} />
 				</div>
 			</div>
 

@@ -19,7 +19,6 @@ export default class StrandUtilities extends React.Component {
 	handleinput(e)
 	{
 		let sequence = e.target.value;
-		
 		this.setState({input:sequence});
 
 		if(this.state.conversiontype == "false")
@@ -88,14 +87,15 @@ export default class StrandUtilities extends React.Component {
 	}
 
 
+//  RENDER METHODS
 
 	renderbottom(){
 		let containstyle = { 
 			width:"1100px",
 			margin:"0px 0px 15px 1px",
-			background:"rgba(31, 64, 96,0.9)",
+			background:"rgba(31, 64, 96,0.7)",
 			color:"white",
-		    height:"280px"
+		    height:"260px"
 		}
 		let labelstyle = {
 			display:"inline-block",
@@ -136,9 +136,11 @@ export default class StrandUtilities extends React.Component {
 					</div>
 
 					<div style = {{display:"inline-block",verticalAlign:"top",marginLeft:"30px",paddingTop:"0px"}}>
+						
 						<h5 style = {{	fontFamily: "'Dosis', serif " ,  height:"35px"}}>	
 							Insert Strand Sequence:	
 						</h5>
+						
 						<FormControl type = "text" style = {{width:"760px",marginTop:"-20px",color:"black",fontSize:"15px",fontFamily: "'Anaheim', serif ",height:"50px"}}  onChange = {this.handleinput.bind(this)}/>
 					</div>
 
@@ -148,7 +150,7 @@ export default class StrandUtilities extends React.Component {
 
 					<h4 style = {{color:"black",marginLeft:"10px",fontFamily: "'Dosis', serif " , height:"90px",width:"1070px",background:"rgba(255, 255, 255,.9)",overflowY:"scroll",padding:"10px"}}> 
 						{this.state.output}
-					 </h4>
+					</h4>
 					<br/>
 				</div>
 
@@ -173,7 +175,9 @@ export default class StrandUtilities extends React.Component {
 
 			<h4 style = {titlestyle}>	
 				<Glyphicon style = {{marginRight:"10px"}} glyph = "tasks"/> 
+				
 				Sequence Manipulator    
+				
 				<Glyphicon
 					className = "hvr-grow"  
 					style = {{cursor:"pointer",fontSize:"12px",marginTop:"4px", marginLeft:"10px",float:"right"}} 

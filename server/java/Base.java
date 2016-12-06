@@ -1,4 +1,5 @@
-public class Base {
+public class Base 
+{
     char base;
     boolean inPair;
 
@@ -9,7 +10,8 @@ public class Base {
     }
     public boolean nonbase()
     {
-    	if(this.base == ('o')){
+    	if(this.base == ('o'))
+        {
     		return true;
     	}
     	return false;
@@ -75,16 +77,20 @@ public class Base {
     }
     public double weight()
     {
-        if (this.base == 'A'){
+        if (this.base == 'A')
+        {
                 return 135.13;
         }
-        if (this.base == 'T'){
+        if (this.base == 'T')
+        {
             return 126.11;
         }
-        if (this.base == 'C'){
+        if (this.base == 'C')
+        {
             return 111.1;
         }
-        if (this.base == 'G'){
+        if (this.base == 'G')
+        {
             return 151.13;
         }
         else return 0.0;	

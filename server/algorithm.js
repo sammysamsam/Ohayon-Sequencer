@@ -15,15 +15,13 @@ AlgorithmRouter.post('/',(req,res)=>{
 
 
 		java.classpath.push(path.resolve(__dirname, './java'));
-		java.import('StackBuilder');
-		var list = java.newInstanceSync("StackBuilder");
 
-		console.log("algorithm start");
+		java.import('OhayonMiddleware');
+		var middleware = java.newInstanceSync("OhayonMiddleware");
 		
-		var data =  list.RunAlgorithm(salt,concentration,strands, (err,data) =>{
+		var data =  middleware.processStrands(salt,concentration,strands, (err,data) =>{
 			res.json({strandlist:data});
 			res.end();
-			console.log(data);
 		});
 
 
@@ -48,12 +46,13 @@ AlgorithmRouter.post('/Compare',(req,res)=>{
 
 
 		java.classpath.push(path.resolve(__dirname, './java'));
-		java.import('StackBuilder');
-		var list = java.newInstanceSync("CompareStrands");
+		java.import('OhayonMiddleware');
+		var middleware = java.newInstanceSync("OhayonMiddleware");
 		
-		var data =  list.StrandvsStrand(salt , concentration , strand1.name , strand1.sequence , strand2.name , strand2.sequence , (err,data) =>{
+		var data =  middleware.compareStrands(strand1.name , strand1.sequence , strand2.name , strand2.sequence , (err,data) =>{
 			res.json({result:data});
 			res.end();
+			console.log(data);
 		});
 
 

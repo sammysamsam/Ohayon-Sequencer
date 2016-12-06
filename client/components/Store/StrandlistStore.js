@@ -11,7 +11,7 @@ class StrandlistStore extends EventEmitter{
 		this.conditions = {Salt:"Na", Concentration:1.0};
 		this.workspaceDisplay = "1";
 		this.dataAnalysis_Results = ["",""];
-		this.toolsAnalysis_results = "";
+		this.toolsAnalysis_results = ["","",""];
 		this.javaprogramstatus = false;  // false = can not use sequencer (because sequencer is running or strandlist size < 1, true = sequencer is ready to sequence)
 		this.sequencertimeout = 30;
 	}
@@ -53,6 +53,7 @@ class StrandlistStore extends EventEmitter{
 	}
 	getToolsAnalysisResults()
 	{
+		console.log("tar" + this.toolsAnalysis_results);
 		return this.toolsAnalysis_results;
 	}
 
@@ -80,7 +81,8 @@ class StrandlistStore extends EventEmitter{
 		let updatedfulllist = [];
 		let deletedcomponent = data.deletedComponent;
 		
-		for(let i = 0 ; i < this.full_strandlist.length; i ++){
+		for(let i = 0 ; i < this.full_strandlist.length; i ++)
+		{
 			let fullstrand = this.full_strandlist[i];
 			let checkpoint = false;
 			for (let y = 0; y < fullstrand.components.length; y++)
@@ -167,27 +169,33 @@ class StrandlistStore extends EventEmitter{
 
 
  //   AXIOS POST METHODS
-	compare_DataAnalysis(r)
+	compare_DataAnalysis(strandsToCompare)
 	{
 		this.javaprogramstatus = true;
 		this.emit("Java_Status_Updater");
-		let strandlistStoreReference = this;
+		var strandlistStoreReference = this;
 
-		let seq1 = this.fullStrandSequenceBuilder(r[0].components);
-		let seq2 = this.fullStrandSequenceBuilder(r[1].components);
+		let seq1 = this.fullStrandSequenceBuilder(strandsToCompare[0].components);
+		let loop1 = strandsToCompare[0].loop;
 
-		let loop1 = r[0].loop;
-		let loop2 = r[1].loop;
+		let seq2 = seq1;
+		let loop2 = loop1;
+		if(strandsToCompare.length == 2){
+			seq2 = this.fullStrandSequenceBuilder(strandsToCompare[1].components);
+			let loop2 = strandsToCompare[1].loop;
+		}
+
+
 
 		return axios.post('/DNASequenceProgram/Compare', {
 			salt:this.conditions.Salt,
  			concentration: this.conditions.Concentration ,
 			strand1:{ 
-				name: r[0].name , 
+				name: "A" , 
 				sequence:seq1   
 			},
 			strand2:{ 
-				name: r[1].name ,  
+				name: "B" ,  
 				sequence:seq2  
 			}
 
@@ -199,26 +207,26 @@ class StrandlistStore extends EventEmitter{
  		});
 	}
 
-	compare_ToolsAnalysis(r)
+	compare_ToolsAnalysis(strandsToCompare)
 	{
 		let strandlistStoreReference = this;
-		let loop1 = r[2];
-		let loop2 = r[5];
+		let loop1 = strandsToCompare[2];
+		let loop2 = strandsToCompare[5];
 
 		return axios.post('/DNASequenceProgram/Compare', {
 			salt:this.conditions.Salt,
  			concentration: this.conditions.Concentration ,
 			strand1:{ 
-				name: r[0], 
-				sequence:r[1]   
+				name: strandsToCompare[0], 
+				sequence:strandsToCompare[1]   
 			},
 			strand2:{ 
-				name: r[3],  
-				sequence:r[4]  
+				name: strandsToCompare[3],  
+				sequence:strandsToCompare[4]  
 			}
  		}).then(function(response)
  		{
-			strandlistStoreReference.ToolsAnalysis_results = response.data.result;
+			strandlistStoreReference.toolsAnalysis_results = response.data.result;
 			strandlistStoreReference.emit("Update_ToolsAnalysisResults");
  		});
 	}
@@ -255,15 +263,15 @@ class StrandlistStore extends EventEmitter{
 
  		}).then(function(response)
  		{
-
+ 			console.log(response.data.strandlist);
 			let responseStrandlist = response.data.strandlist;
 			for(var a = 0;a < responseStrandlist.length;a++)
 			{
-				for(var b = 0; b < strandlistStoreReference.component_StrandList .length; b++)
+				for(var b = 0; b < strandlistStoreReference.component_strandlist.length; b++)
 				{
-					if(responseStrandlist[a].split(":")[0] == strandlistStoreReference.Component_StrandList[b].name)
+					if(responseStrandlist[a].split(":")[0] == strandlistStoreReference.component_strandlist[b].name)
 					{
-						strandlistStoreReference.component_StrandList[b].sequence = responseStrandlist[a].split(":")[1];
+						strandlistStoreReference.component_strandlist[b].sequence = responseStrandlist[a].split(":")[1];
 						break;
 					}
 				}

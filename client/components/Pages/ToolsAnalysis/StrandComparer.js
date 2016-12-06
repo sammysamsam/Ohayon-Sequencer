@@ -39,6 +39,7 @@ export default class StrandComparer extends React.Component {
 	updateresults()
 	{
 		this.setState({ output:StrandlistStore.getToolsAnalysisResults()	});
+		  console.log(StrandlistStore.getToolsAnalysisResults());
 	}
 	//
 
@@ -170,46 +171,78 @@ export default class StrandComparer extends React.Component {
 		let resultstyle = {
 	  		overflow:"scroll",
 	  		fontFamily:"'Share Tech Mono',serif", 
-	  		padding:"10px 25px 0px 25px",
 	  		whiteSpace:"pre",
-	  		width:"900px",
-	  		color:"black"
+	  		width:"1100px",
+	  		color:"black",
+
 		}
-		if(!this.state.output == "")
+		let bestarrangementstyle = {
+    		background:"rgba(255,255,255,.5)",
+    		height:"145px",
+    		padding:"15px",
+    	}
+    	let allarrangementstyle = {
+     		height:"200px",
+     		padding:"15px",overflow:"scroll"		
+    	}
+    	let allarrangementitemstyle = {
+    		display: "inline-block",
+    		marginLeft: "50%",
+    		transform: "translate(-50%, 0%)",
+    		height:"50px",
+    		marginTop:"20px",
+    		marginBottom:"20px",
+    		display:"inline-block"
+    	}
+    	let bestarrangementitemstyle = {
+    		display: "inline-block",
+    		marginLeft: "50%",
+    		transform: "translate(-50%, 0%)"
+    	}
+
+		if(!(this.state.output[0] == ""))
 		{
-			let result = this.state.output.split("*");
-			let shiftedarrays = result[2].split("$$$");
+			console.log(this.state.output[0])
+			let shiftedarrays = this.state.output[2].split("$$$");
 			return  (
 				<div style = {resultstyle}> 
-					<h4 style = {{textDecoration:"underline",marginBottom:"10px"}}>
-						Best Arrangement
-					</h4>
-					<h5>
-						{result[1]}
-					</h5>
-		 			<h4 style = {{textDecoration:"underline",marginTop:"30px"}}>
-		 				All Arrangements
-		 			</h4>
-					
-					{shiftedarrays.map(function(listValue,index){	
-						return( 
-							<h6 key = {index} style = {{height:"50px",marginTop:"40px"}}> 
-								listValue}
-							</h6>	
-						)
-					})}			
+					<div style = {bestarrangementstyle}>
+						<h4 style = {{textDecoration:"underline",textAlign:"center"}}>
+							Best Arrangement
+						</h4>
+						<h5 style = {bestarrangementitemstyle}>
+							{this.state.output[1]}
+						</h5>
+
+					</div>
+
+					<h4 style = {{textDecoration:"underline",textAlign:"center",height:"30px"}}>
+				 			All Arrangements
+				 	</h4>
+
+		 			<div style = {allarrangementstyle}>
+
+						{shiftedarrays.map(function(listValue,index){	
+								return (
+									<div key = {index}>
+										<h6 style = {allarrangementitemstyle}> 
+											{listValue} 
+											<hr style = {{backgroundColor:"#4d4d4d",height:"1px",marginRight:"20px"}}/>
+										</h6> 
+									</div>
+									)
+						})}		
+					</div>
 				</div>
 				)
 		}
-		return;
 	}
 
 	loadbottom(){
 		let containstyle = { 
-
 			width:"1100px",
 			margin:"0px 0px 15px 1px",
-			background:"rgba(31, 64, 96,0.9)",
+			background:"rgba(31, 64, 96,0.7)",
 			color:"white",
 			padding:"10px"
 		}
@@ -305,16 +338,16 @@ export default class StrandComparer extends React.Component {
 
 					<div  
 						className = "hvr-grow" 
-						style = {{borderRadius:"25px",fontSize:"15px",padding:"3px 0px 0px 45px",width:"140px",height:"40px",background:"rgba(64, 128, 191,.6)",marginTop:"20px",marginLeft:"450px"}} 
+						style = {{border:"solid",borderWidth:"thin",borderColor:"white",borderRadius:"25px",fontSize:"15px",textAlign:"center",width:"140px",height:"40px",background:"rgba(64, 128, 191,.6)",marginTop:"20px",marginLeft:"450px"}} 
 						onClick = {this.mismatchfunction.bind(this)}> 
 						
 						<h5>Submit</h5>
 
 					</div>
 				
-					<h5 style = {{	fontFamily: "'Dosis', serif " ,  height:"39px",padding:"10px"}}> Output: </h5>
+					<h5 style = {{	fontFamily: "'Dosis', serif " ,  height:"39px",paddingLeft:"12px",paddingBottom:"10px"}}> Output: </h5>
 
-					<div style = {{marginLeft:"10px", height:"370px",width:"1050px",background:"rgba(217, 230, 242,.95)",overflowY:"scroll",overflowX:"scroll"}}> 
+					<div style = {{marginLeft:"10px", height:"370px",width:"1050px",background:"rgba(217, 230, 242,.95)",overflow:"hidden"}}> 
 						{this.loadcomparescreen()} 
 					</div>
 
