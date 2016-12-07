@@ -103,10 +103,6 @@ var Panel = function (_React$Component) {
     }
   };
 
-  Panel.prototype.shouldRenderFill = function shouldRenderFill(child) {
-    return _react2['default'].isValidElement(child) && child.props.fill != null;
-  };
-
   Panel.prototype.renderHeader = function renderHeader(collapsible, header, id, role, expanded, bsProps) {
     var titleClassName = (0, _bootstrapUtils.prefix)(bsProps, 'title');
 

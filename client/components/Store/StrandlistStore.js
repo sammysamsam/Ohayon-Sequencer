@@ -68,7 +68,22 @@ class StrandlistStore extends EventEmitter{
 		}
 	}
 //   COMPONENT STRAND LIST
+	print_ComponentList()
+	{
 
+		let finalresults = "";
+		for(let i = 0 ; i < this.component_strandlist.length; i ++)
+		{
+			finalresults = finalresults + this.component_strandlist[i].name+" : ";
+			finalresults = finalresults + this.component_strandlist[i].sequence + "*";
+			if(this.component_strandlist[i].complement == "true")
+			{
+			finalresults = finalresults + this.component_strandlist[i].name+" ' : ";
+			finalresults = finalresults + this.complement_Maker(this.component_strandlist[i].sequence)  + "*";
+			}
+		}
+		this.dataAnalysis_Results = ["PRINT",finalresults];
+	}
 
 	update_Component_StrandList(data)
 	{
@@ -160,7 +175,7 @@ class StrandlistStore extends EventEmitter{
 		for(let i = 0 ; i < this.full_strandlist.length; i ++)
 		{
 			finalresults = finalresults + this.full_strandlist[i].name;
-			finalresults = finalresults + "[" + this.full_strandlist[i].componentsdisplay + "]:\n";
+			finalresults = finalresults + "[" + this.full_strandlist[i].componentsDisplay + "]:\n";
 			finalresults = finalresults + this.fullStrandSequenceBuilder(this.full_strandlist[i].components) + "*";
 		}
 		this.dataAnalysis_Results = ["PRINT",finalresults];
@@ -354,6 +369,11 @@ class StrandlistStore extends EventEmitter{
 			}
 			case "PRINT_STRANDLIST":{
 				this.print_StrandList();
+				this.emit("Update_Results");
+				break;
+			}
+			case "PRINT_COMPONENTLIST":{
+				this.print_ComponentList();
 				this.emit("Update_Results");
 				break;
 			}

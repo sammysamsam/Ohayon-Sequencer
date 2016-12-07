@@ -2,6 +2,7 @@ import React from "react";
 import { FormControl,Form,FormGroup,Button} from 'react-bootstrap';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon'
 
+
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
@@ -20,27 +21,23 @@ export default class StrandComponentInput extends React.Component {
 					};
 	}
 
-	handlename(e)
+	handlename(input)
 	{
-		this.setState({name : e.target.value});
+		this.setState({name : input.target.value});
 	}
-	handlelength(e)
+	handlelength(input)
 	{
-		let strandlength = e.target.value;
+		let strandlength = input.target.value;
 
-		//if length is integer
 		if (strandlength == parseInt(strandlength, 10))
 		{
-			//set length
-			this.setState({strandlength});
-			var tempblueprint = "o";
+			this.setState({strandlength});			//set length
+			var blueprint = "o";
 			for (var i = 1; i < strandlength; i ++)
 			{
-				tempblueprint = tempblueprint + "-o";
+				blueprint = blueprint + "-o";
 			}
-
-			//set blueprint
-			this.setState({blueprint:tempblueprint});
+			this.setState({blueprint});			//set blueprint
 		}
 
 		if(strandlength == "")
@@ -49,48 +46,48 @@ export default class StrandComponentInput extends React.Component {
 			this.setState({blueprint:"o-o-o-o-o-o-o-o-o-o"});
 		}
 	}
-	handlemismatchlimit(e)
+	handlemismatchlimit(input)
 	{
-		if (e.target.value == parseInt(e.target.value, 10))
+		if (e.target.value == parseInt(input.target.value, 10))
 		{
-			this.setState({mismatchlimit:e.target.value});
+			this.setState({mismatchlimit:input.target.value});
 		}
 		if(e.target.value == "")
 		{
 			this.setState({mismatchlimit:5});
 		}
 	}
-	handleselflimit(e)
+	handleselflimit(input)
 	{
-		if (e.target.value == parseInt(e.target.value, 10))
+		if (e.target.value == parseInt(input.target.value, 10))
 		{
-			this.setState({selflimit:e.target.value});
+			this.setState({selflimit:input.target.value});
 		}		
 		if(e.target.value == "")
 		{
 			this.setState({selflimit:5});
 		}		
 	}		
-	handlemeltingpoint(e)
+	handlemeltingpoint(input)
 	{
-		let value = e.target.value.replace(" ","");
-		if(value == "")
+		let meltingpoint = input.target.value.replace(" ","");
+		if(meltingpoint== "")
 		{
 			this.setState({meltingpoint:"n/a"});
 		}
-		if ( ( (e.target.value == parseInt(e.target.value, 10)) && (parseInt(e.target.value) > 0))  || (e.target.value == "")  )
+		if ( ( (meltingpoint == parseInt(meltingpoint, 10)) && (parseInt(meltingpoint) > 0))  || (meltingpoint== "")  )
 		{
-			this.setState({meltingpoint:e.target.value});
+			this.setState({meltingpoint});
 		}		
 	}		
-	handleblueprint(e)
+	handleblueprint(input)
 	{
-		let blueprint = e.target.value;
+		let blueprint = input.target.value;
 		this.setState({blueprint});
 	}
-	handleComplement(v)
+	handleComplement(input)
 	{
-			this.setState({ complement : v.target.value });
+			this.setState({ complement : input.target.value });
 	}
 
 	tokenprocessor()
@@ -103,15 +100,22 @@ export default class StrandComponentInput extends React.Component {
 			alert("NAME field contains restricted character: semicolon ( ' ) or dash ( - )");
 		}else
 		{
-			var returnthis = {name: this.state.name, length: this.state.strandlength, complement: this.state.complement, mismatch: this.state.mismatchlimit, self: this.state.selflimit, blueprint: this.state.blueprint,meltingpoint:this.state.meltingpoint};
+			let returnthis = {	name: this.state.name, 
+								length: this.state.strandlength, 
+								complement: this.state.complement, 
+								mismatch: this.state.mismatchlimit, 
+								self: this.state.selflimit, 
+								blueprint: this.state.blueprint,
+								meltingpoint:this.state.meltingpoint
+							};
 			StrandAction.Add_Component_StrandList(returnthis);		
 		}
 
 		//
 	}
-	_handleKeyPress(e) 
+	_handleKeyPress(input) 
 	{
-		if (e.key == 'Enter') 
+		if (input.key == 'Enter') 
 		{
 			this.tokenprocessor();
 		}
@@ -119,83 +123,84 @@ export default class StrandComponentInput extends React.Component {
 
 	render()
 	{
-		let containerstyle = {
+		let bodyStyle = {
 			width:"300px",
-			background:"rgba(31, 64, 96,0.9)",
+			background:"rgba(100, 153, 206,0.4)",
 			padding:"10px",
 			color:"white",
 			marginTop:"-9px"
 		}
-		let titlestyle = {
+		let headerStyle = {
 			color:"white",
 			fontFamily: "'Anaheim', serif ",
-			background:"rgba(57, 115, 172,0.7)",
+			background:"rgba(139, 179, 218,0.7)",
 			width:"300px",
 			height:"50px",
 			padding:"15px 0px 0px 10px"
 		}
-		let labelstyle = {
+		let labelStyle = {
 			margin:"11px",
-			fontFamily: "'Anaheim', serif " ,
+			fontFamily: "'Roboto', serif " ,
 			height:"35px"
 		}
-		let input2style = {
-			fontFamily: "'Dosis', serif " , 
+		let input2Style = {
+			fontFamily: "'Roboto', serif " , 
 			height:"98px", 
 			width:"280px", 
 			resize:"none",
 			color:"black",
+			padding:"4px"
 		}
-					//		<h4 style = {labelstyle}> Melting Point:		<FormControl type = "text" placeholder = "Default: none" style = {{color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     onKeyPress={this._handleKeyPress.bind(this)} onChange = {this.handlemeltingpoint.bind(this)} /> </h4>
+					//		<h5 style = {labelStyle}> Melting Point:		<FormControl type = "text" placeholder = "Default: none" style = {{color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     onKeyPress={this._handleKeyPress.bind(this)} onChange = {this.handlemeltingpoint.bind(this)} /> </h5>
 
 		return(			
-		<div>				
-			<h4 style = {titlestyle}> <Glyphicon glyph = "pencil"/> Strand Component Input </h4>
+		<div >				
+			<h4 style = {headerStyle}> <Glyphicon glyph = "pencil"/> Strand Component Input </h4>
 
-			<div style = {containerstyle}>		
-				<h4 style = {labelstyle}> 
+			<div style = {bodyStyle}>		
+				<h5 style = {labelStyle}> 
 					Name:	
 					<FormControl 
 						type = "text" 
 						placeholder = "" 
-						style = {{marginLeft:"5px",color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",display:"inline",width:"200px" }}  
+						style = {{marginLeft:"5px",color:"black",fontSize:"16px",display:"inline",width:"200px" }}  
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handlename.bind(this)} 
 					/>
-				</h4>
-				<h4 style = {labelstyle}> 	
+				</h5>
+				<h5 style = {labelStyle}> 	
 					Length: 			
 					<FormControl 
 						type = "text" 
 						placeholder = "Default (10)"  
-						style = {{marginLeft:"5px",color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"190px" ,display:"inline"}}    
+						style = {{marginLeft:"5px",color:"black",fontSize:"16px",width:"195px" ,display:"inline"}}    
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handlelength.bind(this)} 
 					/>
-				</h4>
+				</h5>
 
-				<h4 style = {labelstyle}> 
+				<h5 style = {labelStyle}> 
 					Mismatch Limit:		
 					<FormControl type = "text" 
 					placeholder = "Default (5)" 
-					style = {{marginLeft:"5px",color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"125px" ,display:"inline" }}  
+					style = {{marginLeft:"5px",color:"black",fontSize:"16px",width:"138px" ,display:"inline" }}  
 					onKeyPress={this._handleKeyPress.bind(this)} 
 					onChange = {this.handlemismatchlimit.bind(this)} 
 					/>
-				</h4>		
+				</h5>		
 
-				<h4 style = {labelstyle}> 
+				<h5 style = {labelStyle}> 
 					Self-Mismatch Limit:		
 					<FormControl 
 						type = "text" 
 						placeholder = "Default (5)" 
-						style = {{marginLeft:"5px",color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     
+						style = {{marginLeft:"5px",color:"black",fontSize:"16px",width:"111px" ,display:"inline"}}     
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handleselflimit.bind(this)} 
 					/> 
-				</h4>
+				</h5>
 
-				<h4 style = {labelstyle}> Complement Exists:  
+				<h5 style = {labelStyle}> Complement Exists:  
 					<label style = {{marginLeft:"10px"}} >
 						<input 					
 							name="YesNo" 
@@ -219,13 +224,13 @@ export default class StrandComponentInput extends React.Component {
 						 No 
 					</label>
 
-				</h4>
+				</h5>
 
-				<h4  style = {labelstyle}>  Blueprint: </h4>
+				<h5  style = {labelStyle}>  Blueprint: </h5>
 				<textarea 
 					value = {this.state.blueprint} 
 					onKeyPress={this._handleKeyPress.bind(this)} 
-					style = {input2style} 
+					style = {input2Style} 
 					onChange = {this.handleblueprint.bind(this)} 
 				/>
 				<br/>

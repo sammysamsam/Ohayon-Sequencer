@@ -45,7 +45,7 @@ var propTypes = {
    * Sets `id` on `<FormControl>` and `htmlFor` on `<FormGroup.Label>`.
    */
   controlId: _react2['default'].PropTypes.string,
-  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error'])
+  validationState: _react2['default'].PropTypes.oneOf(['success', 'warning', 'error', null])
 };
 
 var childContextTypes = {

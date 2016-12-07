@@ -5,6 +5,7 @@ import styles from '../../../StyleSheet/react-bootstrap-table.css';
 import FullStrandInput from './FullStrandInput';
 
 
+import 'react-bootstrap-table/css/react-bootstrap-table.css';
 //STORE
 import StrandlistStore from "../../Store/StrandlistStore";
 //ACTION
@@ -15,15 +16,15 @@ export default class FullStrandDisplay extends React.Component {
   		return '<i class="glyphicon glyphicon-usd"></i> ' + cell
 	}
 
-	updateStoreStrandlist(e)
+	updateStoreStrandlist(input)
 	{
 		let data = [];
 		for(let i = 0; i<this.props.strandlist.length;i++)
 		{
 			let checkpoint = false;
-			for (let g = 0; g < e.length; g ++)
+			for (let g = 0; g < input.length; g ++)
 			{
-				if(this.props.strandlist[i].name == e[g])
+				if(this.props.strandlist[i].name == input[g])
 					checkpoint = true;
 			}
 			if(checkpoint == false)
@@ -36,10 +37,10 @@ export default class FullStrandDisplay extends React.Component {
 
 	}
 
-	render(){
-		
 
-		const displaytablestyle = {
+
+	render(){
+		let fullStrandDisplayContainer = {
 			display:"inline-block",
 			width:"490px",
 			color:"black", 
@@ -47,20 +48,20 @@ export default class FullStrandDisplay extends React.Component {
 			verticalAlign:"top"
 		}
 
-		const tablestyle ={
-			background:"rgba(31, 64, 96,0.9)",
+		let tableStyle ={
+			background:"rgba(100, 153, 206,0.5)",
 			height:"462px",
 			margin:"0px 1px 1px 1px",
 			paddingTop:"10px"
 		}
 
-		const tabletopstyle = {
+		let tableHeaderStyle = {
 			 width:"489px",
 			 height:"50px",
 			 padding:"15px 10px 5px 40px",
 			 color:"white",
 			 fontFamily: "'Anaheim', serif " ,
-			 background:"rgba(57, 115, 172,0.7)",
+			background:"rgba(139, 179, 218,0.7)",
 			 margin:"1px"
 		}
 		var selectRowProp = {
@@ -73,13 +74,13 @@ export default class FullStrandDisplay extends React.Component {
 		return(
 			<div style ={{height:"605px"}}>
 
-				<div style = {{display:"inline-block"}}>
+				<div className= "animated fadeInUp" style = {{display:"inline-block"}}>
   		 			<FullStrandInput strandlist = {this.props.complist}/>
   		 		</div>
 
-		 		<div style = {displaytablestyle}>
-		 	 		<h4 style = {tabletopstyle}> <Glyphicon glyph = "th"/> Full Strands Table</h4>
-  						<div style = {tablestyle}> 
+		 		<div className= "animated fadeInUp" style = {fullStrandDisplayContainer}>
+		 	 		<h4 style = {tableHeaderStyle}> <Glyphicon glyph = "th"/> Full Strands Table</h4>
+  						<div style = {tableStyle}> 
   							<BootstrapTable 
   								tableStyle = {{backgroundColor:"white",opacity:".95"}} 
   								condensed = {true} 
@@ -101,7 +102,7 @@ export default class FullStrandDisplay extends React.Component {
 		    			    			Name
 		    			    		</TableHeaderColumn>
 		   			    			<TableHeaderColumn 
-		   			    				dataField="componentsdisplay"    
+		   			    				dataField="componentsDisplay"    
 		   			    				dataSort={true} > 
 		   			    				Components (5-3)   
 		   			    			</TableHeaderColumn>
@@ -112,8 +113,4 @@ export default class FullStrandDisplay extends React.Component {
 		)
 	}
 }
-
-
-
-
 

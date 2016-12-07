@@ -17,7 +17,7 @@ export default class HomeLayout extends React.Component {
 
 		return(
 			<div>
-			<div style = {{marginTop:"-20"}}>
+			<div style = {{marginTop:"-20px"}}>
 				<h6 style = {{color:"#ff6600", textDecoration:"none",backgroundColor:"#292B2D",height:"40px",padding:"15px 0px 0px 60px",opacity:".9"}}> <Glyphicon glyph = "globe"/> Optimizing Hybridization AnalYsis Of Nucleotides Program </h6>
 			
 				<div style = {{backgroundColor:"#155151",height:"550px",marginTop:"-20"}}> 
@@ -29,7 +29,7 @@ export default class HomeLayout extends React.Component {
 
 
 					<div style = {{margin:"70px 0px 0px 17%",display:"inline-block"}}> 
-						<Link className = "hvr-grow" style = {linkstyle} to = "DevelopmentStage">	
+						<Link className = "hvr-grow" style = {linkstyle} to = "Project/Development">	
 						 <h5> Sequencing Project </h5> 
 					</Link>  </div> 	
 

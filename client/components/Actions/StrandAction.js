@@ -82,8 +82,13 @@ import dispatcher from "../Dispatcher";
 			strands2,
 		});
 	}
-	export function PrintStrandlist(){
+	export function PrintStrandList(){
 		dispatcher.dispatch({
 			type:"PRINT_STRANDLIST"
+		});
+	}
+	export function PrintComponentList(){
+		dispatcher.dispatch({
+			type:"PRINT_COMPONENTLIST"
 		});
 	}

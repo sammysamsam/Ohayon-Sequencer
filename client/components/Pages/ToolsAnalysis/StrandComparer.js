@@ -16,7 +16,6 @@ export default class StrandComparer extends React.Component {
 	{
 		super();
 		this.state = {
-			windowstatus:"false",
 			output:StrandlistStore.getToolsAnalysisResults() , 
 			name1:"",
 			sequence1:"",
@@ -39,7 +38,6 @@ export default class StrandComparer extends React.Component {
 	updateresults()
 	{
 		this.setState({ output:StrandlistStore.getToolsAnalysisResults()	});
-		  console.log(StrandlistStore.getToolsAnalysisResults());
 	}
 	//
 
@@ -154,18 +152,6 @@ export default class StrandComparer extends React.Component {
 	}
 
 
-	//
-	openwindow()
-	{
-		this.setState({windowstatus:"true"})
-	}
-	closewindow()
-	{
-		this.setState({windowstatus:"false"})
-	}
-
-
-
 	loadcomparescreen()
 	{
 		let resultstyle = {
@@ -239,25 +225,24 @@ export default class StrandComparer extends React.Component {
 	}
 
 	loadbottom(){
-		let containstyle = { 
+		let bodyStyle = { 
 			width:"1100px",
 			margin:"0px 0px 15px 1px",
 			background:"rgba(31, 64, 96,0.7)",
 			color:"white",
 			padding:"10px"
 		}
-		let labelstyle = {
+		let labelStyle = {
 			display:"inline-block",
 			margin:"11px 0px 0px 20px",
 			fontFamily: "'Anaheim', serif " , 
 			width:"500px",
 			marginRight:"5px"
 		}
-		if(this.state.windowstatus == "true"){
 			return (
-				<div style = {containstyle}>
+				<div style = {bodyStyle}>
 					
-					<div style = {labelstyle}> 
+					<div style = {labelStyle}> 
 						<div style = {{ display:"inline-block"}}>
 							<h5 style = {{fontFamily: "'Dosis', serif " ,  height:"35px"}}>	
 								Strand 1 Name:	
@@ -296,7 +281,7 @@ export default class StrandComparer extends React.Component {
 							/>
 					</div>
 					
-					<div style = {labelstyle}> 
+					<div style = {labelStyle}> 
 						<div style = {{ display:"inline-block"}} >
 							<h5 style = {{fontFamily: "'Dosis', serif " ,  height:"35px"}}>	Strand 2 Name	</h5>
 								<FormControl 
@@ -352,37 +337,12 @@ export default class StrandComparer extends React.Component {
 					</div>
 
 				</div>)
-		}
 	}
 		
 	render(){
-		let titlestyle = {
-			width:"1100px",
-			height:"50px",
-			padding:"15px 10px 5px 40px",
-			color:"white",
-			fontFamily: "'Anaheim', serif ",
-			background:"rgba(57, 115, 172,0.7)",
-			margin:"1px"
-		}
-
-
+		
 		return(		 
 			<div>				
-				<h4 style = {titlestyle}>	
-					<Glyphicon style = {{marginRight:"10px"}} glyph = "stats"/> 
-					Strand vs Strand Base Paring    
-					<Glyphicon 
-						className = "hvr-grow"  
-						style = {{cursor:"pointer",fontSize:"12px", marginTop:"4px",marginLeft:"10px",float:"right"}} 
-						onClick = {this.openwindow.bind(this)} glyph = "resize-full"/> 
-					<Glyphicon 
-						className = "hvr-grow"  
-						style = {{cursor:"pointer",fontSize:"12px",marginTop:"4px",float:"right"}} 
-						onClick = {this.closewindow.bind(this)} 
-						glyph = "minus"/> 
-				</h4>
-				
 				{this.loadbottom()}
 			</div>
 		);

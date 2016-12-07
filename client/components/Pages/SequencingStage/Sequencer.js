@@ -18,14 +18,14 @@ export default class Sequencer extends React.Component {
 
 	ComponentDisplay()
 	{
-		const loadbuttonstyle = {
+		const loadButtonStyle = {
 			height:"50px",
 			width:"250px",
 			fontWeight:"bold",
 			marginTop:"-12px",
 			marginLeft:"80px"
 		}
-		const seqbuttonstyle = {
+		const sequencerButtonStyle = {
 			border:"solid",
 			borderColor:"#ff751a",
 			background:"rgba(255, 102, 0,.7)",
@@ -48,11 +48,11 @@ export default class Sequencer extends React.Component {
 		switch(checkpoint)
 		{
 			case true:{ 
-				return 	 (<div style = {loadbuttonstyle}><Spinner spinnerName='cube-grid' noFadeIn /></div>)
+				return 	 (<div style = {loadButtonStyle}><Spinner spinnerName='cube-grid' noFadeIn /></div>)
 
 			}
 			case false:{ 
-				return  <Button style = {seqbuttonstyle}  className = "hvr-pulse" onClick = {this.activatesequencer}> <Glyphicon glyph = "flash"/>  SEQUENCE DNA </Button>
+				return  <Button style = {sequencerButtonStyle}  className = "hvr-forward" onClick = {this.activatesequencer}> <Glyphicon glyph = "flash"/>  Sequence Strands </Button>
 			}
 		}
 	}

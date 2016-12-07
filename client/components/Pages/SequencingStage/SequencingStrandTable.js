@@ -3,7 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import Pagination from "pagination";
 import Glyphicon from 'react-bootstrap/lib/Glyphicon'
 
-
+import 'react-bootstrap-table/css/react-bootstrap-table.css';
 //STORE
 import StrandlistStore from "../../Store/StrandlistStore";
 //ACTION
@@ -50,11 +50,8 @@ format(cell, row)
 }
 
 render(){
-	const displaystyle = {
-		width:"1050px"
-	}
 
-	const conditionsstyle = {
+	let conditionStyle = {
 		fontFamily:"'Anaheim',serif", 
 		textAlign:"right",
 		position:"relative", 
@@ -62,18 +59,18 @@ render(){
 		top:"40px",
 		color:"white"
 	}
-	const tabletopstyle = {
+	let headerStyle = {
 		 width:"1048px",
 		 height:"50px",
 		 padding:"15px 10px 5px 40px",
 		 color:"white",
 		 fontFamily: "'Anaheim', serif " ,
-		 background:"rgba(57, 115, 172,0.7)",
+		 background:"rgba(139, 179, 218,0.7)",
 		 margin:"1px"
 	}
 
-	const tablestyle ={
-		background:"rgba(31, 64, 96,0.9)",
+	let tableStyle ={
+		background:"rgba(100, 153, 206,0.5)",
 		height:"450px",
 		margin:"0px 1px 1px 1px",
 		paddingTop:"2px"
@@ -81,12 +78,9 @@ render(){
 	
 	//
 	return(
-		<div style = {{height:"549px"}}>
-			<div style = {displaystyle}>
-			
-				 
-					<h4 style = {tabletopstyle}> <Glyphicon glyph = "th"/> Strand Components Table</h4>
-					<div style = { tablestyle}>
+		<div style = {{height:"549px",width:"1050px"}}>			 
+					<h4 style = {headerStyle}> <Glyphicon glyph = "th"/> Strand Components Table</h4>
+					<div style = { tableStyle}>
 
 						<BootstrapTable  
 							option = {{sizePerPage : 20, hideSizePerPage:true}} 
@@ -117,12 +111,12 @@ render(){
 				    			width = "68px"> 
 				    			Length 
 				    		</TableHeaderColumn>
+				    		<TableHeaderColumn dataField="meltingpoint" width = "100px"> Melting Point </TableHeaderColumn>
 			    			<TableHeaderColumn dataField="mismatch" width = "100px"> Mismatch Limit </TableHeaderColumn>
-			    			<TableHeaderColumn dataField="self" width = "90px"> self Limit </TableHeaderColumn>
+			    			<TableHeaderColumn dataField="self" width = "90px"> Self-Mismatch Limit </TableHeaderColumn>
 			    			<TableHeaderColumn dataField="complement" > Complement </TableHeaderColumn>
 						</BootstrapTable>
 					</div>
-				</div>
 			 </div>
 	)
 }

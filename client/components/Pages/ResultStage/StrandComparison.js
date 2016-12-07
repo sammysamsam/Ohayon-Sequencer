@@ -7,6 +7,8 @@ import styles2 from '../../../StyleSheet/hover-min.css';
 
 import Glyphicon from 'react-bootstrap/lib/Glyphicon'
 
+import 'react-bootstrap-table/css/react-bootstrap-table.css';
+
 
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
@@ -41,10 +43,12 @@ export default class StrandComparison extends React.Component {
 		}
 	}
 
-	callprintlist(){
-		StrandAction.PrintStrandlist();
+	callprintfullstrands(){
+		StrandAction.PrintStrandList();
 	}
-	
+	callprintcomponents(){
+		StrandAction.PrintComponentList();
+	}
 
 	//
 
@@ -101,7 +105,7 @@ export default class StrandComparison extends React.Component {
 
 	loadheader()
 	{
-		let clearstyle = {
+		let clearButttonStyle = {
 			verticalAlign:"top",
 			margin:"15px 0px 0px 10px",
 			fontSize:"10px",
@@ -111,27 +115,27 @@ export default class StrandComparison extends React.Component {
 			height:"45px",
 			color:"#ffa366"
 		}
-		const itemstyle = {
+		const chipStyle = {
 			verticalAlign:"top",
 			padding:"14px",
-			background:"rgba(0,0,0,.4)",
+			background:"rgba(0,0,0,.2)",
 			display:"inline-block",
 			textOverflow:"ellipsis",
 			maxWidth:"275px",
 			maxHeight:"40px",
 			whiteSpace:"nowrap",
 			marginTop:"-10px",
-			borderRadius:"10px",
+			borderRadius:"5px",
 			overflow:"hidden",
 			minWidth:"100px"
 		}
 		if(this.state.comparelist.length == 1){
 			return 	(
 			<div style = {{display:"inline-block",marginLeft:"15px"}}>
-				<div style = {itemstyle}> 
+				<div style = {chipStyle}> 
 					{this.state.comparelist[0].name} 
 				</div>
-				<span className="hvr-grow" style = {clearstyle} onClick = {this.deletecomparelist.bind(this,1)}> 
+				<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist.bind(this,1)}> 
 					[clear]
 				</span>
 			</div>
@@ -141,20 +145,20 @@ export default class StrandComparison extends React.Component {
 		{
 			return(
 				<div style = {{display:"inline-block",marginLeft:"15px"}}>
-					<div style = {itemstyle}> 
+					<div style = {chipStyle}> 
 						{this.state.comparelist[0].name}
 					</div>
-					<span className="hvr-grow" style = {clearstyle} onClick = {this.deletecomparelist.bind(this,1)}> 
+					<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist.bind(this,1)}> 
 						[clear]
 					</span>	
 					<span style = {{display:"inline-block",marginLeft:"10px",marginRight:"10px"}}> 
 					vs 
 					</span>
 					
-					<div style = {itemstyle}> 
+					<div style = {chipStyle}> 
 						{this.state.comparelist[1].name} 
 					</div>
-					<span className="hvr-grow" style = {clearstyle} onClick = {this.deletecomparelist.bind(this,1)}> 
+					<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist.bind(this,1)}> 
 						[clear]
 					</span>
 				</div>
@@ -164,22 +168,18 @@ export default class StrandComparison extends React.Component {
 
 
 	loadbuttons(){
-		const buttonstyle = {
-			fontFamily:"'Raleway',serif",
-			border:"solid",
-			borderColor:"white",
-			background:"rgba(255, 102, 0,.4)",
-			borderRadius:"40px",
-			marginLeft:"100px",
+		let analysisButtonStyle = {
+			fontFamily:"'Roboto',serif",
+			marginLeft:"60px",
 			borderWidth:"1px",
 			cursor:"pointer",
-			height:"38px",
-			width:"155px", 
-			paddingTop:"9px",
+			height:"50px",
+			width:"175px", 
+			paddingTop:"15px",
 			textAlign:"center",
 			display:"inline-block",
 			color:"white", 
-			fontSize:"13px"
+			fontSize:"14px"
 		}
 		switch(this.props.status){
 			case true:{ 
@@ -188,16 +188,20 @@ export default class StrandComparison extends React.Component {
 			}
 			case false:{ 
 				return 	 (
-				<div style = {{padding:"10px 30px 10px 90px",background:"rgba(0, 0, 0,.6)"}}>
-					<div style = {buttonstyle} className= "hvr-grow" onClick = {this.callcomparelist.bind(this)}>  
+				<div style = {{padding:"7px 30px 4px 20px",background:"rgba(0, 0, 0,.6)"}}>
+					<div style = {analysisButtonStyle} className= "hvr-underline-from-center" onClick = {this.callcomparelist.bind(this)}>  
 						<Glyphicon style = {{marginRight:"5px"}} glyph = "duplicate"/> 
 						Compare
 					</div>
-					<div style = {buttonstyle}  className= "hvr-grow" onClick = {this.callprintlist.bind(this)}>  
+					<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintfullstrands.bind(this)}>  
 						<Glyphicon style = {{marginRight:"5px"}} glyph = "print"/> 
-						Print Strands
+						Print Full Strands
 					</div>
-					<div style = {buttonstyle}  className= "hvr-grow" >  
+					<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintcomponents.bind(this)}>  
+						<Glyphicon style = {{marginRight:"5px"}} glyph = "print"/> 
+						Print Components
+					</div>
+					<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" >  
 						<Glyphicon style = {{marginRight:"5px"}} glyph = "tint"/> 
 						Melting Point
 					</div>
@@ -210,21 +214,21 @@ export default class StrandComparison extends React.Component {
 	//background:"rgba(28, 50, 74,.78)"
 
 	render(){
-		let comparesetstyle = {
- 	 		height:"50px",
+		let strandsToCompareStyle = {
+ 	 		height:"60px",
  	 		width:"1025px",
  	 		padding:"0px 0px 5px 20px",
- 	 		marginTop:"20px",
+ 	 		marginTop:"10px",
  	 		color:"white",
 
  	 	}
-		let comparesectionstyle = {
+		let compareWorkspaceStyle = {
 			background:"rgba(28, 50, 74,.78)",
 			marginBottom:"5px",
 			padding:"2px 0px 0px 20px"	,
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"	
 		}
-		let resultsection = {
+		let resultSectionStyle = {
 			height:"513px",
 			width:"1065px",
 			display:"block",
@@ -233,11 +237,10 @@ export default class StrandComparison extends React.Component {
 		}
 
 		return(
-		<div style={{width:"1065px"}}> 
-		 		
-			<div style = {comparesectionstyle}>
- 	 			<div style={comparesetstyle}> 
-					<h5 style = {{display:"inline-block",padding:"15px 30px 15px 20px",border:"solid",borderColor:"white",borderWidth:"thin",}}> 
+		<div style={{width:"1065px"}}> 	
+			<div style = {compareWorkspaceStyle}>
+ 	 			<div style={strandsToCompareStyle}> 
+					<h5 style = {{display:"inline-block",padding:"20px 30px 20px 20px",background:"rgba(255, 255, 255,.07)",borderRadius:"6px"}}> 
 						<Glyphicon style = {{marginRight:"10px"}}glyph = "search"/> 
 						Strands/Components Comparison Set:
 					</h5> 
@@ -261,7 +264,7 @@ export default class StrandComparison extends React.Component {
 				</div>
 			</div>
 
-			<div style={resultsection}> 
+			<div style={resultSectionStyle}> 
 				{this.loadbuttons()}
  				<ResultScreen results = {this.props.results}/>
 			</div>

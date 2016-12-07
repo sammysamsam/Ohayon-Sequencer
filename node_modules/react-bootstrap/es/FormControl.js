@@ -21,7 +21,15 @@ var propTypes = {
   /**
    * Uses `controlId` from `<FormGroup>` if not explicitly specified.
    */
-  id: React.PropTypes.string
+  id: React.PropTypes.string,
+  /**
+   * Attaches a ref to the `<input>` element. Only functions can be used here.
+   *
+   * ```js
+   * <FormControl inputRef={ref => { this.input = ref; }} />
+   * ```
+   */
+  inputRef: React.PropTypes.func
 };
 
 var defaultProps = {
@@ -50,8 +58,9 @@ var FormControl = function (_React$Component) {
         type = _props.type,
         _props$id = _props.id,
         id = _props$id === undefined ? controlId : _props$id,
+        inputRef = _props.inputRef,
         className = _props.className,
-        props = _objectWithoutProperties(_props, ['componentClass', 'type', 'id', 'className']);
+        props = _objectWithoutProperties(_props, ['componentClass', 'type', 'id', 'inputRef', 'className']);
 
     var _splitBsProps = splitBsProps(props),
         bsProps = _splitBsProps[0],
@@ -68,6 +77,7 @@ var FormControl = function (_React$Component) {
     return React.createElement(Component, _extends({}, elementProps, {
       type: type,
       id: id,
+      ref: inputRef,
       className: classNames(className, classes)
     }));
   };

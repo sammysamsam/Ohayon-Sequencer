@@ -11,9 +11,16 @@ export default {
 	module: { 
 		loaders: [
 		{ test: /\.js$/,include: path.join(__dirname, 'client'),loaders: [ 'babel'] },
-      	{ test: /\.css$/, loader: "style-loader!css-loader" },
-      	{ test: /\.png$/, loader: "url-loader?limit=100000" },
-      	{ test: /\.jpg$/, loader: "file-loader" }
+		{
+		  test: /\.css$/,
+		  loader: 'style-loader'
+		}, 
+		{
+		  test: /\.css$/,
+		  loader: 'css-loader'
+		},
+		{ test: /\.png$/, loader: "url-loader?limit=100000" },
+      	{ test:  /\.(jpe|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/, loader: "file-loader" },
     ]},
 	resolve: {
 		extensions: ['', '.js', '.jsx','.css']

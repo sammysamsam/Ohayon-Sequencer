@@ -2,11 +2,12 @@ import React from "react";
 import StrandUtilities from '../pages/ToolsAnalysis/StrandUtilities';
 import StrandComparer from '../pages/ToolsAnalysis/StrandComparer';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-import styles from '../../StyleSheet/hover-min.css';
+import hover from '../../StyleSheet/hover-min.css';
 import { Link } from "react-router";
 
 
 export default class ToolsAnalysis extends React.Component {
+
 	render(){
 		const backgroundstyle = {
 			marginTop:"-10px", 
@@ -27,6 +28,15 @@ export default class ToolsAnalysis extends React.Component {
 			margin:"20px 0px 0px 20px",
 			borderRadius:"10px"
 		}
+		const headerStyle = {
+			width:"1100px",
+			height:"50px",
+			padding:"15px 10px 5px 40px",
+			color:"white",
+			fontFamily: "'Anaheim', serif ",
+			background:"rgba(57, 115, 172,0.7)",
+			margin:"1px"
+		}
 
 		return(
 		<div style = {{marginTop:"-10px",backgroundImage: "url('http://www.lirent.net/wp-content/uploads/2014/10/Android-Lollipop-Material-Design-Wallpaper-IdeaLTriangles.png')",backgroundSize:"1300px 900px"}}>
@@ -39,23 +49,46 @@ export default class ToolsAnalysis extends React.Component {
 							
 					<div style = {{borderRadius:"10px",marginTop:"50px",padding:"5px",color:"white",background:"rgba(28, 50, 74,.95)",width:"1175px"}}> 
 						
-						<Link to="/"  className = "hvr-grow" style = {homebutton}>   <Glyphicon glyph = "home"/> </Link>
+						<Link to="/"  className = {"hover.hvr-grow"} style = {homebutton}>   <Glyphicon glyph = "home"/> </Link>
 						
 						<h1 style = {{marginLeft:"320px",verticalAlign:"top",fontFamily:"'raleway',serif",display:"inline-block"}}> 
-							<Glyphicon style = {{marginRight:"10px"}} glyph = "wrench"/> 
+
 							TOOLS & ANALYSIS 
 						</h1>
 					</div>
 					
 					<div style  = {{borderRadius:"10px",marginTop:"3px",paddingTop:"20px",background:"rgba(51, 51, 51,.8)",width:"1175px",paddingBottom:"20px"}}>	
-						
-						<div style = {{marginLeft:"30px"}}>
-							<StrandUtilities/>
-						</div>
-						<div style = {{marginLeft:"30px",marginTop:"20px"}}>
-							<StrandComparer/>
-						
-						</div>
+						  
+						  <ul className="collapsible">
+						    <li>
+						      <div className="collapsible-header">
+									<h4 style = {headerStyle}>	
+										
+										<Glyphicon style = {{marginRight:"10px"}} glyph = "tasks"/>
+													Sequence Manipulator    
+									</h4>
+
+						      </div>
+						      <div className="collapsible-body">
+
+									<StrandUtilities/>
+
+						      </div>
+						    </li>
+						    <li>
+							    <div className="collapsible-header">
+							    	<h4 style = {headerStyle}>	
+										
+										<Glyphicon style = {{marginRight:"10px"}} glyph = "tasks"/>
+													Strand vs Strand Comparison    
+									</h4>
+
+							    </div>
+							    <div className="collapsible-body">
+									<StrandComparer/>
+						    	</div>
+						    </li>
+						  </ul>
 					</div>
 				</div>
 			</div>

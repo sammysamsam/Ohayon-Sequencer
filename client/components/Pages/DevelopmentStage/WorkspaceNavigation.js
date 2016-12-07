@@ -61,8 +61,6 @@ export default class WorkspaceNav extends React.Component {
 			let highlightstyle = {
 				background:"rgba(0, 34, 51,.9)", 
 				display:"inline-block", 
-				fontWeight:"bold",
-				textDecoration: "underline",
 				width:"180px",
 				padding:"10px 0px 10px 0px",
 				textAlign:"center", 
@@ -76,8 +74,8 @@ export default class WorkspaceNav extends React.Component {
 				return(		
 						<div style = {backgroundstyle}>
 							<div  style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
-							<div className= "hvr-grow" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
-							<div className= "hvr-grow" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
+							<div className= "hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
+							<div className= "hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
 						</div>
 				)
 			}
@@ -85,9 +83,9 @@ export default class WorkspaceNav extends React.Component {
 			{
 							return(		
 						<div style = {backgroundstyle}>
-							<div className="hvr-grow" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
+							<div className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
 							<div style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
-							<div className="hvr-grow" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
+							<div className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
 						</div>
 					)	
 			}
@@ -95,8 +93,8 @@ export default class WorkspaceNav extends React.Component {
 			{
 				return(		
 					<div style = {backgroundstyle}>
-						<div  className="hvr-grow" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
-						<div  className="hvr-grow" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
+						<div  className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
+						<div  className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
 						<div style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
 						</div>
 				)

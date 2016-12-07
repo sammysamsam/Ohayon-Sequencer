@@ -2,40 +2,42 @@ import React from "react";
 import { FormControl,Button, Checkbox } from 'react-bootstrap';
 import Glyphicon from 'react-bootstrap/lib/Glyphicon'
 import Select from 'react-select'
-import styles from '../../../StyleSheet/react-select.css';
+
+import 'react-select/dist/react-select.css';
+
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
-
 export default class StrandComponentInput extends React.Component {
 
 	constructor()
 	{
 		super();
+		
 		this.state = { 
 			name: "", 
 			components:[],
 			fiveprime:"true"};
 	}
 
-	handlename(e)
+	handlename(input)
 	{
-		this.setState({name : e.target.value});
+		this.setState({name : input.target.value});
 	}
-	handlecomponents(e)
+	handlecomponents(input)
 	{
 		let temp = this.state.components;
-		temp.push(e.label);
+		temp.push(input.label);
 		this.setState({components:temp});
 	}
-	handleprime(f)
+	handleprime(input)
 	{
-		if(f.target.value == 1)
+		if(input.target.value == 1)
 		{
 			this.state.fiveprime = "true";
-		}else if(f.target.value == 2)
+		}else if(input.target.value == 2)
 		{
 			this.state.fiveprime = "false";
-		}else if(f.target.value == 3)
+		}else if(input.target.value == 3)
 		{
 			this.state.fiveprime = "loop";
 		}
@@ -73,30 +75,30 @@ export default class StrandComponentInput extends React.Component {
 		}else{
 
 			//full strand components
-			let componentlist = this.state.components;
-			let componentsdisplay = "";
+			let componentList = this.state.components;
+			let componentsDisplay = "";
 
 			//loop strand
 			if(this.state.fiveprime == "loop")
 			{
-				componentsdisplay = "(loop) ";
+				componentsDisplay = "(loop) ";
 			}	
 			// turn 3-5 to 5-3 
 			if(this.state.fiveprime == "false")
 			{
-				componentlist = componentlist.reverse();
+				componentList = componentList.reverse();
 			}
 			
 			//process components list for displaying on table (string instead of array)
-			componentsdisplay = componentsdisplay + componentlist[0];
-			for (let i = 1; i < componentlist.length;i++)
+			componentsDisplay = componentsDisplay + componentList[0];
+			for (let i = 1; i < componentList.length;i++)
 			{
-				componentsdisplay = componentsdisplay + " - "+componentlist[i];
+				componentsDisplay = componentsDisplay + " - "+componentList[i];
 			}
 			// return components back to original order
 			if(this.state.fiveprime == "false")
 			{
-				componentlist = componentlist.reverse();
+				componentList = componentList.reverse();
 			}
 
 			//loop strand checkpoint
@@ -105,10 +107,9 @@ export default class StrandComponentInput extends React.Component {
 			{
 				loopcheck = "true";
 			}
-
 			let fullstrand = {	name: this.state.name ,
-								components:componentlist, 
-								componentsdisplay:componentsdisplay, 
+								components:componentList, 
+								componentsDisplay:componentsDisplay, 
 								loop:loopcheck
 							}
 			
@@ -120,7 +121,7 @@ export default class StrandComponentInput extends React.Component {
 
 
 	rendercomponents(){
-		let compstyle = {
+		let componentStyle = {
 			fontFamily: "'Raleway', serif " , 
 			opacity:".95",
 			width:"480px",
@@ -137,7 +138,7 @@ export default class StrandComponentInput extends React.Component {
 		}
 		if (this.state.components.length == 0)
 		{
-			return (<div style = {compstyle}> n/a </div>)				
+			return (<div style = {componentStyle}> n/a </div>)				
 		} else 
 		{
 			var comp = this.state.components[0];
@@ -146,54 +147,56 @@ export default class StrandComponentInput extends React.Component {
 			{
 				comp = comp + " - "+this.state.components[i]
 			}
-			return (<h4 style = {compstyle}> {comp} </h4>)
+			return (<h4 style = {componentStyle}> {comp} </h4>)
 		}
 	}
 
-	_handleKeyPress(e) 
+	_handleKeyPress(input) 
 	{
-		if (e.key == 'Enter') 
+		if (input.key == 'Enter') 
 		{
 			this.tokenprocessor();
 		}
 	}
 
 	render()
-	{
+	{		 
 
-		const titlestyle = {
+		const headerStyle = {
 			width:"530px",
 			height:"50px",
 			padding:"15px 10px 5px 40px",
 			color:"white",
 			fontFamily: "'Anaheim', serif ",
-			background:"rgba(57, 115, 172,0.7)",
+			background:"rgba(139, 179, 218,0.7)",
 			margin:"1px"
 		}
-		const containstyle = { 
-			width:"530px",margin:"0px 0px 15px 1px",
-			background:"rgba(31, 64, 96,0.9)",
+		const bodyStyle = { 
+			fontFamily: "'Roboto', serif " ,
+			width:"530px",
+			margin:"0px 0px 15px 1px",
+			background:"rgba(100, 153, 206,0.5)",
 			color:"white",
 			padding:"15px"
 		}
 		return(		 
 
 			<div>				
-				<h4 style = {titlestyle}>	<Glyphicon glyph = "pencil"/> Full Strand Input </h4>
+				<h4 style = {headerStyle}>	<Glyphicon glyph = "pencil"/> Full Strand Input </h4>
 
-				<div style = {containstyle}>
+				<div style = {bodyStyle}>
 				
 					<h5 style = {{	fontFamily: "'Dosis', serif " ,  height:"35px"}}>	
 						Strand Name: 
 						 <FormControl 
 						 	type = "text" 
-						 	style = {{marginLeft:"10px",color:"black",fontSize:"18px",fontFamily: "'Anaheim', serif " ,width:"350px",display:"inline"}} 
+						 	style = {{marginLeft:"10px",color:"black",fontSize:"18px",width:"350px",display:"inline"}} 
 						 	onKeyPress={this._handleKeyPress.bind(this)}  
 						 	onChange = {this.handlename.bind(this)}
 						 />
 					 </h5>
 										
-					<div style = {{fontFamily: "'Dosis', serif " , height:"44px", padding:"10px 0px 0px 0px"}}>
+					<div style = {{height:"44px", padding:"10px 0px 0px 0px"}}>
 						<span>Select Direction: </span>
 						<label style = {{marginLeft:"10px"}} > 
 							<input 
@@ -230,7 +233,7 @@ export default class StrandComponentInput extends React.Component {
 						</label>
 					</div>
 					
-					<h5 style = {{	fontFamily: "'Dosis', serif " ,  height:"15px"}}> Components: </h5>
+					<h5 style = {{  height:"15px"}}> Components: </h5>
 
 					{this.rendercomponents()}
 

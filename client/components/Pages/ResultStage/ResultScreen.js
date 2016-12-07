@@ -1,55 +1,56 @@
 import React from "react";
 
 export default class ResultScreen extends React.Component {
-	loadresults()
-	{		
-		if(this.props.results[0] == "PRINT")
-		{
-			return this.loadprintscreen();
-		}
-		if(this.props.results[0] == "COMPARE")
-		{
-			return this.loadcomparescreen();
-		}
-	}
-
 	loadprintscreen(){
-		let resultstyle = {fontFamily:"'Share Tech Mono',serif", padding:"25px",whiteSpace:"pre"}
+		let printedStrandsContainerStyle = {
+			fontFamily:"'Anaheim',serif",
+			padding:"25px",
+			overflowY:"scroll",
+			overflowWrap: "break-word",
+			height:"452px",
+			width:"1065px",
+			fontWeight:"bold"
+		}
+    	
     	let results = this.props.results[1].split("*");
-
 		return (
-			<div style = {resultstyle}>
-				<h4 style = {{textAlign:"center",textDecoration:"underline"}}>
-					Strand Order (5' to 3')
-				</h4>
-				
-				{results.map(function(listValue){	
-					return <h4> {listValue} </h4>	
+			<div style = {printedStrandsContainerStyle}>
+				<h3 style = {{textAlign:"center",textDecoration:"underline",marginBottom:"10px"}}>
+					Strand Order [5' to 3']
+				</h3>
+				<ul >
+				{results.map(function(listValue,index){	
+					if(index != (results.length-1))
+					{
+						return <li ><h4 style = {{margin:"4px"}} key = {index}> {listValue} </h4>	</li>
+					}
+
 					})
 				}
+				</ul>
 			</div>
 			)
 	}
 	loadcomparescreen()
 	{
-		let resultstyle = {
+		let resultsContainer = {
       		background:"rgba(0,0,0,.15)",
       		fontFamily:"'Share Tech Mono',serif", 
       		whiteSpace:"pre",
-      		height:"455px",
+      		height:"452px",
       		//overflow:"hidden"
     	}
-    	let bestarrangementstyle = {
+    	let bestArrangementStyle = {
     		background:"rgba(255,255,255,.5)",
     		height:"145px",
     		padding:"15px",
     	}
-    	let allarrangementstyle = {
+    	let allArrangementStyle = {
      		
      		height:"260px",
      		padding:"15px",overflow:"scroll"		
     	}
-    	let allarrangementitemstyle = {
+    	let allArrangementItemStyle = {
     		display: "inline-block",
     		marginLeft: "50%",
     		transform: "translate(-50%, 0%) ",
@@ -58,21 +59,23 @@ export default class ResultScreen extends React.Component {
     		marginBottom:"20px",
     		display:"inline-block"
     	}
-    	let bestarrangementitemstyle = {
+    	let bestarrangementItemStyle = {
     		display: "inline-block",
     		marginLeft: "50%",
     		transform: "translate(-50%, 0%)"
     	}
 
     	let results = this.props.results[1];
+    	console.log(results)
     	let shiftedarrays = results[2].split("$$$");
+
  		return  (
-		<div style = {resultstyle}> 
-			<div style = {bestarrangementstyle}>
+		<div style = {resultsContainer}> 
+			<div style = {bestArrangementStyle}>
 				<h4 style = {{textDecoration:"underline",textAlign:"center"}}>
 					Best Arrangement
 				</h4>
-				<h5 style = {bestarrangementitemstyle}>
+				<h5 style = {bestarrangementItemStyle}>
 					{results[1]}
 				</h5>
 
@@ -82,12 +85,12 @@ export default class ResultScreen extends React.Component {
 		 			All Arrangements
 		 	</h4>
 
- 			<div style = {allarrangementstyle}>
+ 			<div style = {allArrangementStyle }>
 
 				{shiftedarrays.map(function(listValue,index){	
 						return (
 							<div key = {index}>
-								<h6 style = {allarrangementitemstyle}> 
+								<h6 style = {allArrangementItemStyle}> 
 									{listValue} 
 									<hr style = {{backgroundColor:"#4d4d4d",height:"1px",marginRight:"20px"}}/>
 								</h6> 
@@ -100,6 +103,19 @@ export default class ResultScreen extends React.Component {
 	}
 
 
+
+	loadresults()
+	{		
+		if(this.props.results[0] == "PRINT")
+		{
+			return this.loadprintscreen();
+		}
+		if(this.props.results[0] == "COMPARE")
+		{
+			return this.loadcomparescreen();
+		}
+	}
+	
 	render()
 	{
 		return(

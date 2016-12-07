@@ -98,7 +98,16 @@ var propTypes = {
   /**
    * Which event when fired outside the component will cause it to be closed
    */
-  rootCloseEvent: React.PropTypes.oneOf(['click', 'mousedown'])
+  rootCloseEvent: React.PropTypes.oneOf(['click', 'mousedown']),
+
+  /**
+   * @private
+   */
+  onMouseEnter: React.PropTypes.func,
+  /**
+   * @private
+   */
+  onMouseLeave: React.PropTypes.func
 };
 
 var defaultProps = {

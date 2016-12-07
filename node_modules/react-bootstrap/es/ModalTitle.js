@@ -5,8 +5,17 @@ import _possibleConstructorReturn from 'babel-runtime/helpers/possibleConstructo
 import _inherits from 'babel-runtime/helpers/inherits';
 import classNames from 'classnames';
 import React from 'react';
+import elementType from 'react-prop-types/lib/elementType';
 
 import { bsClass, getClassSet, splitBsProps } from './utils/bootstrapUtils';
+
+var propTypes = {
+  componentClass: elementType
+};
+
+var defaultProps = {
+  componentClass: 'h4'
+};
 
 var ModalTitle = function (_React$Component) {
   _inherits(ModalTitle, _React$Component);
@@ -19,8 +28,9 @@ var ModalTitle = function (_React$Component) {
 
   ModalTitle.prototype.render = function render() {
     var _props = this.props,
+        Component = _props.componentClass,
         className = _props.className,
-        props = _objectWithoutProperties(_props, ['className']);
+        props = _objectWithoutProperties(_props, ['componentClass', 'className']);
 
     var _splitBsProps = splitBsProps(props),
         bsProps = _splitBsProps[0],
@@ -28,12 +38,15 @@ var ModalTitle = function (_React$Component) {
 
     var classes = getClassSet(bsProps);
 
-    return React.createElement('h4', _extends({}, elementProps, {
+    return React.createElement(Component, _extends({}, elementProps, {
       className: classNames(className, classes)
     }));
   };
 
   return ModalTitle;
 }(React.Component);
+
+ModalTitle.propTypes = propTypes;
+ModalTitle.defaultProps = defaultProps;
 
 export default bsClass('modal-title', ModalTitle);

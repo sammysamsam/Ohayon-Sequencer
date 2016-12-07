@@ -1,6 +1,8 @@
 import React from "react";
 import Glyphicon from 'react-bootstrap/lib/Glyphicon'
 import {FormControl,Form,FormGroup,Col} from 'react-bootstrap'
+
+
 //STORE
 import StrandlistStore from "../../Store/StrandlistStore";
 
@@ -8,99 +10,100 @@ import StrandlistStore from "../../Store/StrandlistStore";
 import * as StrandAction from "../../Actions/StrandAction";
 
 export default class Overview extends React.Component {
-	handleSalt(e)
+	handleSalt(input)
 	{
-		if((e.target.value == "Na"|| e.target.value == "Mg")&& (e.target.value != this.props.Salt))
+		if((input.target.value == "Na"|| input.target.value == "Mg")&& (input.target.value != this.props.Salt))
 		{
-			StrandAction.EditSalt(e.target.value);	
+			StrandAction.EditSalt(input.target.value);	
 		}
 	}
-	handleSaltConcentration(e)
+	handleSaltConcentration(input)
 	{
-		if(e.target.value <=1 && e.target.value > 0 && e.target.value != this.props.Concentration)
+		if(input.target.value <=1 && input.target.value > 0 && input.target.value != this.props.Concentration)
 		{
-			StrandAction.EditSaltConcentration(e.target.value);
+			StrandAction.EditSaltConcentration(input.target.value);
 		}
 	}
-	printcomplist()
+	printComponentList()
 	{	
-		let complistprint = "";		
+		let componentList = "";		
 		
 		if(this.props.complist.length > 0){
-			complistprint = this.props.complist[0].name;
+			componentList = this.props.complist[0].name;
 			for(let i = 1;i < this.props.complist.length; i++)
 			{
-				complistprint = complistprint+" , "+ this.props.complist[i].name;
+				componentList = componentList+" , "+ this.props.complist[i].name;
 			}
 		}
 
-		return(<h4 style = {{color:"black",fontWeight:"bold"}}>{complistprint}</h4>)
+		return(<h5 style = {{color:"#494e56",fontWeight:"bold"}}>{componentList}</h5>)
 	}
-	printstrandlist()
+
+	printStrandList()
 	{
 		return this.props.strandlist.map(function(listValue,index){
+			
 			let data = listValue.name + " [ "+listValue.componentsdisplay + " ] ";
-			let indexx =  index +"."
+			let number =  index +"."
 			return( 
 				<div>
 					<span style = {{display:"inline-block",color:"black",fontSize:"9px",paddingRight:"8px"}}>
-						{indexx}
+						{number}
 					</span>
-					<h4 key = {listValue.name + "-fullstrand"} style = {{color:"black",width:"380px",textOverflow:"ellipsis",display:"inline-block"}}> 
+					<h5 key = {listValue.name + "-fullstrand"} style = {{color:"#494e56",width:"380px",textOverflow:"ellipsis",display:"inline-block"}}> 
 						{data}
-					</h4>
+					</h5>
 				</div>
 			)
 		})
 	}
 
-
 	render()
 	{
 
-		const containstyle = {
-			background:"rgba(31, 64, 96,0.9)",
+		const bodyStyle = {
+			background:"rgba(100, 153, 206,0.3)",
 			padding:"2px 0px 15px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
-		const topstyle = {
-			background:"rgba(57, 115, 172,0.7)",
+		const headerStyle = {
+			 background:"rgba(139, 179, 218,0.7)",
 			padding:"15px 0px 15px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
-		const contain2style = {
-			background:"rgba(31, 64, 96,0.9)",
+		const bodyStyle2 = {
+			background:"rgba(100, 153, 206,0.3)",
 			padding:"2px 0px 15px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
-		const top2style= {
-			background:"rgba(57, 115, 172,0.7)",
+		const header2Style= {
+			 background:"rgba(139, 179, 218,0.7)",
 			padding:"15px 0px 15px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
-		const conditionsposition = {
+		const conditionsPosition = {
 			display:"inline-block",
 			marginRight:"2px"
 		}
-		const componentposition = {
+		const componentPosition = {
 			marginTop:"-274px"
 		}
-		const fullstrandposition = {
+		const fullStrandPosition = {
 			display:"inline-block",
 			verticalAlign:"top"
 		}
 
 
 		return(
-			<div style = {{fontFamily:"'Dosis',serif",marginLeft:"17px",color:"white"}}>
+			<div style = {{fontFamily:"'Roboto',serif",marginLeft:"17px",color:"white"}}>
 
-				<div style = {conditionsposition}>
-					<h4 style = {top2style}>  <Glyphicon glyph = "cog"/> Adjust Experimental Conditions: </h4>						
-					<div style = {contain2style}>
+				<div className= "animated fadeInUp" style = {conditionsPosition}>
+					<h4 style = {header2Style}>  <Glyphicon glyph = "cog"/> Adjust Experimental Conditions: </h4>						
+					<div style = {bodyStyle2}>
 						<h5 style = {{fontFamily:"'Anaheim',serif",textAlign:"center"}}> 
 							Current Conditions: {this.props.Salt} [{this.props.Concentration}] 
 						</h5>
@@ -128,10 +131,9 @@ export default class Overview extends React.Component {
 
 
 
-				<div style = {fullstrandposition}>
-					<h4 style = {topstyle}> <Glyphicon glyph = "tasks"/> Full Strand Overview: </h4>		
-
-					<div style = {containstyle}>
+				<div className= "animated fadeInUp" style = {fullStrandPosition}>
+					<h4 style = {headerStyle}> <Glyphicon glyph = "tasks"/> Full Strand Overview: </h4>		
+					<div style = {bodyStyle}>
 
 						<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
 							Number of Strands: <strong>{this.props.strandlist.length} 
@@ -142,27 +144,28 @@ export default class Overview extends React.Component {
 							Strands: 
 						</h5>
 
-						<div style = {{height:"358px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.9)",padding:"10px" }}> 
-							{this.printstrandlist()} 
+						<div style = {{height:"358px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.9)",padding:"10px"}}> 
+							{this.printStrandList()} 
 						</div>			
 					</div>
 				</div>
+		      
 
-				<div style = {componentposition}>
-					<h4 style = {top2style}> <Glyphicon glyph = "tasks"/> Strand Component Overview: </h4>						
-					
-					<div style = {contain2style}>
-						<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
-							Number of Components: {this.props.complist.length}
-						</h5>
-						<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
-							Components: 
-						</h5>
-						<div style = {{height:"130px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.9)" ,padding:"10px" }}> 
-							{this.printcomplist()} 
+					<div className= "animated fadeInUp" style = {componentPosition}>
+						<h4 style = {header2Style}> <Glyphicon glyph = "tasks"/> Strand Component Overview: </h4>						
+						<div style = {bodyStyle2}>
+							<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
+								Number of Components: {this.props.complist.length}
+							</h5>
+							<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
+								Components: 
+							</h5>
+							<div style = {{height:"130px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.9)" ,padding:"10px" }}> 
+								{this.printComponentList()} 
+							</div>
 						</div>
 					</div>
-				</div>
+
 			</div>
 		)
 	}

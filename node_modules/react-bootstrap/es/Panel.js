@@ -70,10 +70,6 @@ var Panel = function (_React$Component) {
     }
   };
 
-  Panel.prototype.shouldRenderFill = function shouldRenderFill(child) {
-    return React.isValidElement(child) && child.props.fill != null;
-  };
-
   Panel.prototype.renderHeader = function renderHeader(collapsible, header, id, role, expanded, bsProps) {
     var titleClassName = prefix(bsProps, 'title');
 
