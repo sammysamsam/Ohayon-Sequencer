@@ -1,26 +1,9 @@
 import React from "react";
-//STORE
-import StrandlistStore from "../../Store/StrandlistStore";
-import styles from '../../../StyleSheet/hover-min.css';
+
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
 export default class WorkspaceNav extends React.Component {
-
-	constructor(){
-		super();
-		this.updateWorkspaceNavigation = this.updateWorkspaceNavigation.bind(this);
-		this.state = {activedisplay: StrandlistStore.getWorkspaceDisplay()}
-	}
-	componentWillMount() {
-		StrandlistStore.on("Change_Workspace_Display", this.updateWorkspaceNavigation)
-	}
-	componentWillUnmount() {
-		StrandlistStore.removeListener("Change_Workspace_Display",this.updateWorkspaceNavigation)
-	}
-	updateWorkspaceNavigation(){
-		this.setState({ activedisplay: StrandlistStore.getWorkspaceDisplay()});
-	}
 
 	handleSidebarChange(e){
 		switch(e){
@@ -41,66 +24,67 @@ export default class WorkspaceNav extends React.Component {
 	rendertabs()
 	{
 			let backgroundstyle = {
-				height:"60px",
-				padding:"25px 0px 0px 0px",
-				margin:"-20px 0px 0px 5px",
-				fontSize:"16px", 	
+				height:"52px",
+				fontSize:"15px", 	
 				fontFamily: "'Dosis', serif " ,
-				color:"white"
+				color:"white",
+				width:"1045px",
+				display:"block",
+				marginBottom:"20px"
+
 			}
 			let itemstyle = {    
-				background:"rgba(89, 139, 192,0.7)",
+				background:"rgba(0, 34, 51,.5)", 
 				display:"inline-block",
-				width:"180px", 
-				padding:"10px 0px 10px 0px",
-				margin:"10px 10px 10px 10px",
+				width:"348px", 
+				padding:"15px 0px 15px 0px",
 				textAlign:"center", 
 				verticalAlign:"top",
-				cursor:"pointer"
+				cursor:"pointer",
 			}
 			let highlightstyle = {
-				background:"rgba(0, 34, 51,.9)", 
+				background:"rgba(0, 34, 51,.8)", 
 				display:"inline-block", 
-				width:"180px",
-				padding:"10px 0px 10px 0px",
+				width:"349px",
+				padding:"15px 0px 15px 0px",
 				textAlign:"center", 
-				margin:"10px 10px 10px 10px",
-				verticalAlign:"top"
+				verticalAlign:"top",
+				fontWeight:"bold",
+				textDecoration:"underline"
 			}
 
 
-			if(this.state.activedisplay == "1")
+			if(this.props.activeDisplay == "1")
 			{
 				return(		
-						<div style = {backgroundstyle}>
-							<div  style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
-							<div className= "hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
-							<div className= "hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
-						</div>
+					<div style = {backgroundstyle}>
+						<div  style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
+						<div className= "hvr-underline-from-center" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
+						<div className= "hvr-underline-from-center" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
+					</div>
 				)
 			}
-			if(this.state.activedisplay == "2")
+			if(this.props.activeDisplay == "2")
 			{
-							return(		
-						<div style = {backgroundstyle}>
-							<div className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
-							<div style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
-							<div className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
-						</div>
-					)	
+				return(		
+					<div style = {backgroundstyle}>
+						<div className="hvr-underline-from-center" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
+						<div style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
+						<div className="hvr-underline-from-center" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
+					</div>
+				)	
 			}
 			else
 			{
 				return(		
 					<div style = {backgroundstyle}>
-						<div  className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
-						<div  className="hvr-shutter-out-horizontal" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
+						<div className="hvr-underline-from-center" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "1")}>Overview</div>
+						<div className="hvr-underline-from-center" style = {itemstyle} onClick ={this.handleSidebarChange.bind(this, "2")} >Strand Components</div>
 						<div style = {highlightstyle} onClick ={this.handleSidebarChange.bind(this, "3")} >Full Strands</div>
-						</div>
+					</div>
 				)
 			}
 	}
-
 		
 	render()
 	{

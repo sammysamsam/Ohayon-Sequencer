@@ -11,7 +11,7 @@ public class Strand
     
     boolean complementExists = false;
     boolean blueprintExists = false;
-    String[] blueprint;    
+    char[] blueprint;    
     
     double compConcentration = 0;
     double strandConcentration = 0;
@@ -91,26 +91,26 @@ public class Strand
     {
 		this.mismatchThreshold = i;
 	}
-    public void setBlueprint(String[] blueprint)
+    public void setBlueprint(String blueprint)
     {
 		this.blueprintExists = true;
-		this.blueprint = blueprint;
+		this.blueprint = blueprint.toCharArray();
 		if(this.isFivePrime == false)
         {
 			this.setSequence(this.reverse().sequence);
 			this.isFivePrime= !this.isFivePrime;
 		}
-		String[] SequenceArray = this.sequence.split("(?!^)");
+		char[] sequenceArray = this.sequence.toCharArray();
 		int counter = 0;
-		for(String f:this.blueprint)
+		for(char f:this.blueprint)
         {
-			if(f.equalsIgnoreCase("A") ||f.equals("T")||f.equals("C")||f.equals("G"))
+			if(f == 'A'||f == 'T'||f == 'C'||f == 'G')
             {
-				SequenceArray[counter] = f;
+				sequenceArray[counter] = f;
 			}
 			counter ++;
 		}		
-		this.setSequence(Arrays.toString(SequenceArray));		
+		this.setSequence(String.valueOf(sequenceArray));		
 	}
 	public void setComplement(boolean f)
     {
@@ -560,6 +560,69 @@ STRAND PROPERTIES/GETTER METHODS
 			}
 			if(highestScore < hitScore)
 				highestScore = hitScore;
+		}
+		return highestScore;
+    }
+
+
+    public int mismatch2(Strand b, int maxhitlimit, int[] ignoreShifts)
+    {
+		if(!this.isFivePrime)
+			return this.reverse().mismatch2(b, maxhitlimit,ignoreShifts);
+		if(b.isFivePrime)
+			b = b.reverse();
+
+		Base[] shiftedThis = new Base[this.length + b.length*2];
+		Base[] shiftedB = new Base[this.length + b.length*2];
+		int highestScore = 0;
+
+		for(int i = 1; i < b.length + this.length; i++)
+        {
+			boolean skipShift = false;
+			for(int ignoreShiftIndex = 0; ignoreShiftIndex < ignoreShifts.length;ignoreShiftIndex++)
+			{
+				if(i == ignoreShifts[ignoreShiftIndex])
+					skipShift = true;
+			}
+			if(!skipShift)
+			{
+				//Shift Bases over for each shift (0) = strand this  (1) = strand b
+				ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(b, i);			
+				shiftedThis = shiftedBaseArray.get(0);
+				shiftedB = shiftedBaseArray.get(1);
+				
+				int consecCounter = 0;
+				int hitScore = 0;
+				
+				for(int k = this.length; k < b.length + this.length+1; k++)
+	            {
+					if(shiftedB[k].canPair(shiftedThis[k]))
+		    			consecCounter++;
+					else
+	                {
+						//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
+						if(shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
+	                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
+	                            shiftedB[k - 1].canPair(shiftedThis[k - 1]) && 
+	                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && consecCounter > 0)
+							consecCounter--;
+						//Case: if the non-match is not between two matches, then consecCounter returns to 0 
+						else
+	                    {
+							if(consecCounter >= maxhitlimit)
+								hitScore++;
+							if(consecCounter > maxhitlimit)
+								hitScore = hitScore + (consecCounter - maxhitlimit);
+							consecCounter = 0;  	
+						}      // ::: ::: 
+						// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
+					}
+				}
+				if(highestScore < hitScore){
+					highestScore = hitScore;
+				}
+
+			}
 		}
 		return highestScore;
     }

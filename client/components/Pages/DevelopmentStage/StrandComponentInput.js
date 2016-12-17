@@ -1,7 +1,5 @@
 import React from "react";
-import { FormControl,Form,FormGroup,Button} from 'react-bootstrap';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon'
-
+import {Input,Button,Row} from 'react-materialize'
 
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
@@ -15,9 +13,10 @@ export default class StrandComponentInput extends React.Component {
 						strandlength: 10, 
 						complement: "true",
 						meltingpoint:"n/a",
+						maxMeltingPt:"100",
 						mismatchlimit: 5, 
 						selflimit: 5, 
-						blueprint: "o-o-o-o-o-o-o-o-o-o"
+						blueprint: "o-o-o-o-o-o-o-o-o-o",
 					};
 	}
 
@@ -28,8 +27,17 @@ export default class StrandComponentInput extends React.Component {
 	handlelength(input)
 	{
 		let strandlength = input.target.value;
+		//set max melting pt
 
-		if (strandlength == parseInt(strandlength, 10))
+
+		//
+
+		if(strandlength == "")
+		{
+			this.setState({strandlength:10});
+			this.setState({blueprint:"o-o-o-o-o-o-o-o-o-o"});
+		}
+		else
 		{
 			this.setState({strandlength});			//set length
 			var blueprint = "o";
@@ -37,36 +45,29 @@ export default class StrandComponentInput extends React.Component {
 			{
 				blueprint = blueprint + "-o";
 			}
-			this.setState({blueprint});			//set blueprint
-		}
-
-		if(strandlength == "")
-		{
-			this.setState({strandlength:10});
-			this.setState({blueprint:"o-o-o-o-o-o-o-o-o-o"});
+			this.setState({blueprint});			//set blueprint	
 		}
 	}
 	handlemismatchlimit(input)
 	{
-		if (e.target.value == parseInt(input.target.value, 10))
-		{
-			this.setState({mismatchlimit:input.target.value});
-		}
-		if(e.target.value == "")
+		if(input.target.value == "")
 		{
 			this.setState({mismatchlimit:5});
+		}else
+		{
+			this.setState({mismatchlimit:input.target.value});
 		}
 	}
 	handleselflimit(input)
 	{
-		if (e.target.value == parseInt(input.target.value, 10))
-		{
-			this.setState({selflimit:input.target.value});
-		}		
+		
 		if(e.target.value == "")
 		{
 			this.setState({selflimit:5});
-		}		
+		}else
+		{
+			this.setState({selflimit:input.target.value});
+		}
 	}		
 	handlemeltingpoint(input)
 	{
@@ -74,44 +75,84 @@ export default class StrandComponentInput extends React.Component {
 		if(meltingpoint== "")
 		{
 			this.setState({meltingpoint:"n/a"});
-		}
-		if ( ( (meltingpoint == parseInt(meltingpoint, 10)) && (parseInt(meltingpoint) > 0))  || (meltingpoint== "")  )
+		}else
 		{
 			this.setState({meltingpoint});
 		}		
 	}		
 	handleblueprint(input)
 	{
-		let blueprint = input.target.value;
-		this.setState({blueprint});
+		this.setState({blueprint:input.target.value});
 	}
 	handleComplement(input)
 	{
-			this.setState({ complement : input.target.value });
+		this.setState({ complement : input.target.value });
 	}
 
 	tokenprocessor()
 	{
-		if (!/\S/.test(this.state.name)) 
+		let alerts = false;
+		if(!this._isInt(this.state.strandlength)||
+			!this._isInt(this.state.mismatchlimit)||
+			!this._isInt(this.state.selflimit))
 		{
-			alert("Unfufilled Requirement: Name field must contain at least one character");
-		}else if(this.state.name.includes("'") || this.state.name.includes("-"))
-		{
-			alert("NAME field contains restricted character: semicolon ( ' ) or dash ( - )");
-		}else
-		{
-			let returnthis = {	name: this.state.name, 
-								length: this.state.strandlength, 
-								complement: this.state.complement, 
-								mismatch: this.state.mismatchlimit, 
-								self: this.state.selflimit, 
-								blueprint: this.state.blueprint,
-								meltingpoint:this.state.meltingpoint
-							};
-			StrandAction.Add_Component_StrandList(returnthis);		
+			alerts = true;
 		}
 
-		//
+		//check name
+		if (!/\S/.test(this.state.name)) 
+		{
+			Materialize.toast("Unfufilled Requirement: Name field must contain at least one character!",4000);
+			alerts = true;
+		}
+
+		if(this.state.name.includes("'") || this.state.name.includes("-"))
+		{
+			Materialize.toast("Unfufilled Requirement: Name field contains restricted character: semicolon ( ' ) or dash ( - )!",4000);
+			alerts = true;
+		}
+
+		// check blueprint
+		if(this.state.strandlength != this.state.blueprint.split("-").length)
+		{
+			alerts = true;
+			Materialize.toast("Unfufilled Requirement: Blueprint length does not match Strand Length!",4000);
+		}
+
+		//check repeat name
+		for(let i = 0; i < this.props.strandlist.length;i++)
+		{
+			if(this.props.strandlist[i].name == this.state.name)
+			{
+				alerts = true;
+				Materialize.toast("Unfufilled Requirement: Name already exists in Component List",4000);
+				break;
+			}
+		}
+
+
+		/*check melting point
+		if(this.state.meltingpoint < 0 || this.state.meltingpoint > this.state.maxMeltingPt)
+		{
+			alerts = true;
+			Materialize.toast("Unfufilled Requirement: Melting Pt exceeds maximum melting pt possible for given strand length",4000);	
+		}*/
+
+
+
+		if(alerts == false)
+		{
+			StrandAction.Add_Component_StrandList(
+				{	name: this.state.name, 
+					length: this.state.strandlength, 
+					complement: this.state.complement, 
+					mismatch: this.state.mismatchlimit, 
+					self: this.state.selflimit, 
+					blueprint: this.state.blueprint,
+					meltingpoint:this.state.meltingpoint
+				}
+			);
+		}
 	}
 	_handleKeyPress(input) 
 	{
@@ -120,124 +161,120 @@ export default class StrandComponentInput extends React.Component {
 			this.tokenprocessor();
 		}
 	}
+	_isInt(number)
+	{
+		return number % 1 == 0;
+	}
 
 	render()
 	{
 		let bodyStyle = {
 			width:"300px",
 			background:"rgba(100, 153, 206,0.4)",
-			padding:"10px",
-			color:"white",
-			marginTop:"-9px"
+			padding:"15px 15px 10px 15px ",
+			marginTop:"1px"
 		}
 		let headerStyle = {
-			color:"white",
-			fontFamily: "'Anaheim', serif ",
 			background:"rgba(139, 179, 218,0.7)",
 			width:"300px",
 			height:"50px",
-			padding:"15px 0px 0px 10px"
+			padding:"9px 0px 0px 20px",
+			fontSize:"16px"
 		}
-		let labelStyle = {
-			margin:"11px",
-			fontFamily: "'Roboto', serif " ,
-			height:"35px"
-		}
-		let input2Style = {
-			fontFamily: "'Roboto', serif " , 
-			height:"98px", 
-			width:"280px", 
+		let textAreaStyle = {
+			height:"150px", 
+			width:"270px",
+			background:"rgba(0,0,0,.2)",
 			resize:"none",
-			color:"black",
-			padding:"4px"
+			padding:"4px",
+			overflow:"scroll"
 		}
-					//		<h5 style = {labelStyle}> Melting Point:		<FormControl type = "text" placeholder = "Default: none" style = {{color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     onKeyPress={this._handleKeyPress.bind(this)} onChange = {this.handlemeltingpoint.bind(this)} /> </h5>
+					//		<p style = {labelStyle}> Melting Point:		<FormControl type = "text" placeholder = "Default: none" style = {{color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     onKeyPress={this._handleKeyPress.bind(this)} onChange = {this.handlemeltingpoint.bind(this)} /> </p>
 
 		return(			
-		<div >				
-			<h4 style = {headerStyle}> <Glyphicon glyph = "pencil"/> Strand Component Input </h4>
-
-			<div style = {bodyStyle}>		
-				<h5 style = {labelStyle}> 
-					Name:	
-					<FormControl 
-						type = "text" 
-						placeholder = "" 
-						style = {{marginLeft:"5px",color:"black",fontSize:"16px",display:"inline",width:"200px" }}  
+		<div style = {{color:"white"}}>				
+			<div style = {headerStyle}> 
+				<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">input</i>	
+				Strand Component Input
+			</div>
+			<div style = {bodyStyle}>
+				<Row>		
+					<Input 
+						label = "Name"
+						s = {12}
+						type = "text"
+						className="validate"
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handlename.bind(this)} 
 					/>
-				</h5>
-				<h5 style = {labelStyle}> 	
-					Length: 			
-					<FormControl 
-						type = "text" 
-						placeholder = "Default (10)"  
-						style = {{marginLeft:"5px",color:"black",fontSize:"16px",width:"195px" ,display:"inline"}}    
+					<Input
+						label = "Length"
+						type = "number"
+						min = "1"
+						s = {6}
+						className="validate"
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handlelength.bind(this)} 
 					/>
-				</h5>
-
-				<h5 style = {labelStyle}> 
-					Mismatch Limit:		
-					<FormControl type = "text" 
-					placeholder = "Default (5)" 
-					style = {{marginLeft:"5px",color:"black",fontSize:"16px",width:"138px" ,display:"inline" }}  
-					onKeyPress={this._handleKeyPress.bind(this)} 
-					onChange = {this.handlemismatchlimit.bind(this)} 
+					<Input
+						label = "Melting Pt."
+						type = "number"
+						min = "1"
+						max = {this.state.maxMeltingPt}
+						s = {6}
+						className="validate"
+						onKeyPress={this._handleKeyPress.bind(this)} 
+						onChange = {this.handlemeltingpoint.bind(this)} 
+					/>	
+					<Input 
+						label = "Mismatch Limit"
+						className="validate"
+						s = {6}
+						type = "number"
+						min = "2"
+						onKeyPress={this._handleKeyPress.bind(this)} 
+						onChange = {this.handlemismatchlimit.bind(this)} 
 					/>
-				</h5>		
-
-				<h5 style = {labelStyle}> 
-					Self-Mismatch Limit:		
-					<FormControl 
-						type = "text" 
-						placeholder = "Default (5)" 
-						style = {{marginLeft:"5px",color:"black",fontSize:"16px",width:"111px" ,display:"inline"}}     
+					<Input 
+						s = {6}
+						label = "Self-Mismatch Limit"
+						className="validate"
+						type = "number"
+						min = "2"
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handleselflimit.bind(this)} 
 					/> 
-				</h5>
 
-				<h5 style = {labelStyle}> Complement Exists:  
-					<label style = {{marginLeft:"10px"}} >
-						<input 					
-							name="YesNo" 
-							defaultChecked = {(this.state.complement== "true")}  
-							value={"true"}  
-							type="radio" 
-							onClick = {this.handleComplement.bind(this)} 
-							style = {{marginRight:"5px"}}
-							/>
-						 Yes 
-					</label>
-					<label style = {{marginLeft:"10px"}} >
-						<input
-							name="YesNo" 
-							defaultChecked = {(this.state.complement == "false")} 
-							value={"false"} 
-							type="radio" 
-							onClick = {this.handleComplement.bind(this)}
-							style = {{marginRight:"5px"}}
-						/> 
-						 No 
-					</label>
+					<p className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px"}}> Complement Exists: 	</p>
 
-				</h5>
+					
+					<Input 					
+						name="YesNo" 		
+						defaultChecked = {(this.state.complement== "true")}  
+						value={"true"}  
+						type="radio"
+						label = "Yes"
+						onClick = {this.handleComplement.bind(this)} 
+					/>
+					<Input
+						name="YesNo" 
+						label = "No"
+						value={"false"} 
+						type="radio" 
+						onClick = {this.handleComplement.bind(this)}
+					/> 
+					</Row>
+				<span className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px",fontSize:"9px"}}> Blueprint (optional):	</span>
 
-				<h5  style = {labelStyle}>  Blueprint: </h5>
 				<textarea 
 					value = {this.state.blueprint} 
 					onKeyPress={this._handleKeyPress.bind(this)} 
-					style = {input2Style} 
+					style = {textAreaStyle} 
 					onChange = {this.handleblueprint.bind(this)} 
 				/>
-				<br/>
+
 				<Button 
-					style = {{width:"75px" }}
-					bsStyle="danger"
-					bsSize="small"
+					style = {{width:"150px" , marginTop:"5px"}}
 					onClick = {this.tokenprocessor.bind(this)}> 
 					Submit 
 				</Button>

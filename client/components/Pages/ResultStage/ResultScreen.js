@@ -1,5 +1,5 @@
 import React from "react";
-
+import {Table} from 'react-materialize';
 export default class ResultScreen extends React.Component {
 	loadprintscreen(){
 		let printedStrandsContainerStyle = {
@@ -7,27 +7,38 @@ export default class ResultScreen extends React.Component {
 			padding:"25px",
 			overflowY:"scroll",
 			overflowWrap: "break-word",
-			height:"452px",
-			width:"1065px",
+			height:"502px",
+			width:"1035px",
 			fontWeight:"bold"
 		}
     	
     	let results = this.props.results[1].split("*");
 		return (
 			<div style = {printedStrandsContainerStyle}>
-				<h3 style = {{textAlign:"center",textDecoration:"underline",marginBottom:"10px"}}>
+				<h6 style = {{textAlign:"center",textDecoration:"underline",marginBottom:"10px"}}>
 					Strand Order [5' to 3']
-				</h3>
-				<ul >
-				{results.map(function(listValue,index){	
-					if(index != (results.length-1))
-					{
-						return <li ><h4 style = {{margin:"4px"}} key = {index}> {listValue} </h4>	</li>
-					}
+				</h6>
+				<Table className = "responsive-table striped">
+			        <thead>
+			          <tr>
+			              <th data-field="id">Name</th>
+			              <th data-field="name">Sequence</th>
+			          </tr>
+			        </thead>
+				    <tbody>
+						{results.map(function(listValue,index){	
 
-					})
-				}
-				</ul>
+							if(index != (results.length-1))
+							{
+								let values = listValue.split(":");
+								return     <tr  key = {index} >
+										      <td>{values[0]}</td>
+										      <td style = {{fontFamily:"'Share Tech Mono',serif"}}>{values[1]}</td>
+										    </tr>
+							}
+						})}
+		        	</tbody>
+		      	</Table>
 			</div>
 			)
 	}
@@ -37,72 +48,59 @@ export default class ResultScreen extends React.Component {
       		background:"rgba(0,0,0,.15)",
       		fontFamily:"'Share Tech Mono',serif", 
       		whiteSpace:"pre",
-      		height:"452px",
-      		//overflow:"hidden"
     	}
     	let bestArrangementStyle = {
     		background:"rgba(255,255,255,.5)",
-    		height:"145px",
-    		padding:"15px",
+    		height:"160px",
+    		padding:"10px",
     	}
     	let allArrangementStyle = {
-     		
-     		height:"260px",
-     		padding:"15px",overflow:"scroll"		
+     		height:"330px",
+     		padding:"15px",
+     		overflow:"scroll",	
+    		fontSize:"12px"
     	}
-    	let allArrangementItemStyle = {
-    		display: "inline-block",
-    		marginLeft: "50%",
-    		transform: "translate(-50%, 0%) ",
-    		height:"50px",
-    		marginTop:"20px",
-    		marginBottom:"20px",
-    		display:"inline-block"
-    	}
+
     	let bestarrangementItemStyle = {
     		display: "inline-block",
     		marginLeft: "50%",
-    		transform: "translate(-50%, 0%)"
+    		transform: "translate(-50%, 0%)",
+    		fontSize:"12px"
     	}
 
     	let results = this.props.results[1];
-    	console.log(results)
     	let shiftedarrays = results[2].split("$$$");
 
  		return  (
 		<div style = {resultsContainer}> 
 			<div style = {bestArrangementStyle}>
-				<h4 style = {{textDecoration:"underline",textAlign:"center"}}>
-					Best Arrangement
-				</h4>
-				<h5 style = {bestarrangementItemStyle}>
+				<div style = {{textDecoration:"underline",textAlign:"center",fontSize:"17px",padding:"5px"}}>
+					Best Arrangement: {this.props.list[0].components} vs {this.props.list[1].components}
+				</div>
+				<div style = {bestarrangementItemStyle}>
 					{results[1]}
-				</h5>
+				</div>
 
 			</div>
-
-			<h4 style = {{textDecoration:"underline",textAlign:"center",height:"30px"}}>
-		 			All Arrangements
-		 	</h4>
-
  			<div style = {allArrangementStyle }>
-
-				{shiftedarrays.map(function(listValue,index){	
-						return (
-							<div key = {index}>
-								<h6 style = {allArrangementItemStyle}> 
-									{listValue} 
-									<hr style = {{backgroundColor:"#4d4d4d",height:"1px",marginRight:"20px"}}/>
-								</h6> 
-							</div>
-							)
-				})}		
+				<Table className = "responsive-table hover">
+			        <thead>
+			          <tr>
+			              <th data-field="id">All Arrangements</th>
+			          </tr>
+			        </thead>
+				    <tbody>
+						{shiftedarrays.map(function(listValue,index){	
+								return (<tr key = {index} >
+									      <td>{listValue} </td>
+									    </tr>)
+						})}
+		        	</tbody>
+		      	</Table>
 			</div>
 		</div>
 		)
 	}
-
-
 
 	loadresults()
 	{		

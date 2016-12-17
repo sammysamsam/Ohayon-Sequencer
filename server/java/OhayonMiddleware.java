@@ -1,40 +1,23 @@
 import java.util.ArrayList;
 
 public class OhayonMiddleware{
-	ArrayList<Strand> componentsList;
+	ArrayList<Strand> componentList;
 	ArrayList<FullStrand> fullStrandList;
 	ThermodynamicsCalculator thermoCalc;
 	CompareStrands comparer;
-	
-/*
-	public static void main(String[] args){
-		//String[] c = {"sam,15,true,5,5,o-o-o-o-o-o-o-o-o-o-o-o-o-o-o","sam2,15,true,5,5,o-o-o-o-o-o-o-o-o-o-o-o-o-o-o"};
-		OhayonMiddleware sdfs = new OhayonMiddleware();		
-		//String[] results = sdfs.processStrands("Na","1",c);
-		System.out.println(sdfs.compareStrands("sam","AGTCAGCATCGAT","mao","AGCTAGCTACGA")[1]);
-	}
-*/
 
 	public OhayonMiddleware()
 	{
-		this.componentsList = new ArrayList<Strand>();
+		this.componentList = new ArrayList<Strand>();
 		this.fullStrandList =  new ArrayList<FullStrand>();
 		this.thermoCalc = new ThermodynamicsCalculator();
 		this.comparer = new CompareStrands(this.thermoCalc);
 	}
-	public OhayonMiddleware(String salt, String concentration, String[] unparsedComponentsList)
-	{
-		this.componentsList = new ArrayList<Strand>();
-		this.fullStrandList =  new ArrayList<FullStrand>();
-		this.thermoCalc = new ThermodynamicsCalculator();
-		this.comparer = new CompareStrands(this.thermoCalc);
-		this.setAllProperties(salt , concentration , unparsedComponentsList);
-	}	
 
 	/*
-	public OhayonMiddleware(String salt, String concentration, String[] unparsedComponentsList , String[] unparsedFullStrandList)
+	public OhayonMiddleware(String salt, String concentration, String[][] unparsedComponentsList , String[][][] unparsedFullStrandList)
 	{
-		this.componentsList = new ArrayList<Strand>();
+		this.componentList = new ArrayList<Strand>();
 		this.fullStrandList =  new ArrayList<FullStrand>();
 		this.thermoCalc = new ThermodynamicsCalculator();
 		this.setAllProperties(salt , concentration , unparsedComponentsList, unparsedFullStrandList);
@@ -47,49 +30,42 @@ public class OhayonMiddleware{
 
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
-	/*
-	public void setAllProperties(String salt, String concentration, String[] unparsedComponentsList , String[] unparsedFullStrandList)
+	
+	private void setAllProperties(String salt, String concentration,  ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList)
 	{
 		this.processConditions( salt , concentration );
 		this.buildComponents( unparsedComponentsList );
-		this.buildFullStrandList( unparsedFullStrandList );
-	}
-	*/
-
-	public void setAllProperties(String salt, String concentration, String[] unparsedComponentsList )
-	{
-		this.processConditions( salt , concentration );
-		this.buildComponents( unparsedComponentsList );
+		//this.buildFullStrandList( unparsedFullStrandList );
 	}
 
-	public String[] getParsedData()
+	private String[] getParsedData()
 	{
-		String[] parsedComponentData = new String[this.componentsList.size()];
-		
-		for( int i = 0; i < this.componentsList.size();i++)
+		String[] parsedComponentData = new String[this.componentList.size()];
+		for( int i = 0; i < this.componentList.size();i++)
 		{
-			Strand temp = this.componentsList.get(i);
+			Strand temp = this.componentList.get(i);
 			String sequence = temp.sequence;
 			parsedComponentData[i] = temp.name+":"+sequence;
+			System.out.println(parsedComponentData[i]);
 		}
-		
 		return parsedComponentData;
 	}
 
 
 	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-	STRAND INPUT/PROJECT FILE READER METHOD:
+	SEQUENCING/COMPARING METHODS:
 
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	
-	public String[] processStrands(String salt, String concentration, String[] unparsedComponentsList )
+	public String[] sequenceStrands(String salt, String concentration, ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
 	{
-		this.setAllProperties(salt,concentration,unparsedComponentsList);
+		this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
 		
-		this.runAlgorithm();
+		//****
+		Sequencer OHAYON = new Sequencer(this.componentList , this.thermoCalc,this.fullStrandList);		
+		//****
 
-		//System.out.println("done");
+		OHAYON.minimizeInteractions();
 
 		String[] results = this.getParsedData();
 		return results;
@@ -106,16 +82,12 @@ public class OhayonMiddleware{
 	}
 
 
-	
-	private void runAlgorithm()
-	{
-		
-		//****
-		Sequencer OHAYON = new Sequencer(this.componentsList , this.thermoCalc);		
-		//****
+	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-		OHAYON.minimizeInteractions();
-	}
+	PARSING METHODS:
+
+	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 
 	private void processConditions(String salt, String concentration)
 	{
@@ -126,46 +98,52 @@ public class OhayonMiddleware{
 	}
 	
 
-	private void buildComponents(String[] unparsedComponents )
+	private void buildComponents(ArrayList<String[]> unparsedComponents )
 	{
-		for(String compdata: unparsedComponents)
-		{
-			String[] parameters = compdata.split(",");
-			
+		for(int i = 0; i < unparsedComponents.size();i++)
+		{			
+			String[] parameters = unparsedComponents.get(i);
 			Strand component = new Strand( Integer.parseInt(parameters[1]) , true);	//length, complementexists
+			
 			component.setName(parameters[0]);											//name
-			
 			component.setComplement( Boolean.parseBoolean(parameters[2]) );			//complement
-			
 			component.setMismatchThreshold( Integer.valueOf(parameters[3]) );			//mismatch
 			component.setHairpinThreshold( Integer.valueOf(parameters[4]) );			//hairpin
-			
-			component.setBlueprint(parameters[5].split("-"));							//blueprint
+			component.setBlueprint(parameters[5]);							//blueprint
 			
 			//f.setTm( Float.valueOf(parameters[6]) , this.thermoCalc );		//meltingpoint
-			this.componentsList.add(component);										//add strandlist
+			this.componentList.add(component);										//add strandlist
 		}
 	}
 
 
-	// full strandlist example: NAME: compA-compB-compC
+	// full strand: [0] = NAME [1] = compA - compB - compC
 
-	private void buildFullStrandList(String[] unparsedFullStrandList )
+	private void buildFullStrandList(ArrayList<String[]> unparsedFullStrandList )
 	{
-		for(String fullStrandData: unparsedFullStrandList)
-		{
+		this.fullStrandList.clear();
+		for(int y = 0; y < unparsedFullStrandList.size();y++)
+		{	
+			String[] parameters = unparsedFullStrandList.get(y);
+			
+			//strandname
+			String strandname = parameters[parameters.length-1];
+			
+			//build list of components that make this strand
+			String[] strandRecipe = new String[parameters.length-1];
+			for(int x = 0; x < parameters.length-1;x++)
+			{
+				strandRecipe[x] = parameters[x];
+			}
 
-			ArrayList<Strand> orderedComponents = new ArrayList<Strand>();
-			
-			//get componentNames
-			String[] strandRecipe = fullStrandData.split(":")[1].split("-");
-			
-			//build fullstrand componentslist			
+
+			//build fullstrand componentslist
+			ArrayList<Strand> orderedComponents = new ArrayList<Strand>();			
 			for(String compName: strandRecipe )
 			{
-				for(int i = 0; i < this.componentsList.size(); i++)
+				for(int z = 0; z < this.componentList.size(); z++)
 				{
-					Strand tempcomp = this.componentsList.get(i);
+					Strand tempcomp = this.componentList.get(z);
 					if(compName.equals(tempcomp.name) || compName.equals(tempcomp.name+"'"))
 					{
 						orderedComponents.add(tempcomp);
@@ -173,14 +151,10 @@ public class OhayonMiddleware{
 					}
 				}
 			}
-			//set name
-			String name = fullStrandData.split(":")[0];
 
-			FullStrand fullstrand = new FullStrand(	name , orderedComponents , strandRecipe);
-			fullstrand.setComponentsNames(strandRecipe);
+			FullStrand fullstrand = new FullStrand(	strandname , orderedComponents , strandRecipe);
 			this.fullStrandList.add(fullstrand);
 		}
 	}
-	
 }
 

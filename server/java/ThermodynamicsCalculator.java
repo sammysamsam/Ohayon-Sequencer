@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 public class ThermodynamicsCalculator
 {
-	public int consecutiveLimit = 4;
+	public int consecutiveLimit = 2;
 	private double SaltCt = 1.00;
 	private String Salt = "Na";
 	final double R = 1.987; // ideal gas constant (cal.K^-1.mol^-1)

@@ -1,68 +1,115 @@
 import React from "react";
-import { Button } from 'react-bootstrap';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon'
-import Spinner from 'react-spinkit'
-//STORE
-import StrandlistStore from "../../Store/StrandlistStore";
+import { Button,Icon,Input} from 'react-materialize';
+import Spinner from 'react-spinkit';
+
+import ReactCountdownClock from 'react-countdown-clock';
 
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
 export default class Sequencer extends React.Component {
-
-
+	constructor()
+	{
+		super();
+		this.activatesequencer = this.activatesequencer.bind(this);
+		this.handleTime = this.handleTime.bind(this);
+		this.state = {time:15}
+	}
+	handleTime(input)
+	{
+		this.setState({time:input.target.value});
+	}
 	activatesequencer()
 	{
-		StrandAction.SequenceStrandlist();
+		if(this.state.time < 0 || this.state.time > 180)
+			Materialize.toast("Unfufilled Requirement: Invalid Time Limit",3000);
+		else 
+			StrandAction.SequenceStrandlist(this.state.time);
 	}
-
-	ComponentDisplay()
+	
+	renderSequencerStart()
 	{
-		const loadButtonStyle = {
+		let sequencerButtonStyle = {
 			height:"50px",
-			width:"250px",
 			fontWeight:"bold",
-			marginTop:"-12px",
-			marginLeft:"80px"
+			fontSize:"13px",
+			display:"inline-block"
 		}
-		const sequencerButtonStyle = {
-			border:"solid",
-			borderColor:"#ff751a",
-			background:"rgba(255, 102, 0,.7)",
-			
-			height:"50px",
-			width:"200px",
+		return(
+			<div>
+				<div style = {{display:"inline-block",marginRight:"120px"}}>
+					<Button style = {sequencerButtonStyle}  onClick = {this.activatesequencer}> 
+						<i style = {{position:"relative",top:"2px",marginRight:"10px"}}className="material-icons">cloud_upload</i> 
+						Sequence Strands 
+					</Button>
+				</div>
+
+				<div style = {{display:"inline-block",width:"300px"}}>
+					<Input
+						label = "Algorithm Runtime (min.)"
+						s = {6}
+						defaultValue = {this.state.time}
+						style = {{color:"white"}}
+						type = "number"
+						min = "10"
+						max = "240"
+						className="validate"
+						onChange = {this.handleTime} 
+						>
+						<Icon>av_timer</Icon> 
+					</Input>
+				</div>
+
+			</div>
+			)
+	}
+	renderSequencerRunning()
+	{
+		return (
+			<div>
+				<div style = {{	height:"50px", width:"250px",marginTop:"-8px",marginLeft:"250px"}}>
+					<Spinner spinnerName='cube-grid' noFadeIn />
+				</div>
+				<div style = {{position:"relative",top:"-270px",left:"360px"}}>
+					<ReactCountdownClock seconds={60 * this.state.time}
+	                 color="#ff7043"
+	                 alpha={0.9}
+	                 size={110}
+	                 />
+				</div>				
+			</div>
+			)
+	}
+	render()
+	{
+		let errorStyle = { 
+			padding:"17px",
+			backgroundColor:"#ff9e80",
+			marginLeft:"40px",
+			width:"580px",
+			color:"#424242",
+			textAlign:"center",
 			fontWeight:"bold",
-			borderRadius:"9px",
-			fontSize:"11px",
-			marginTop:"2px"
+			fontSize:"15px",
+			borderRadius:"2px"
 		}
+
 		var checkpoint = this.props.status;
 		if(this.props.componentlength == 0){
 			return (
-				<div style = {{ paddingTop:"15px",height:"50px",width:"400px", marginLeft:"-80px",fontWeight:"bold",color:"white"}}  onClick = {this.activatesequencer}> 
-					<Glyphicon glyph = "exclamation-sign"/>  
-					Unfufilled Requirement: At least One Strand Component 
+				<div style = {errorStyle}  className = "z-depth-4">  
+					<i style = {{position:"relative",top:"6px",marginRight:"15px"}}className="material-icons">error</i> 
+					Unfulfilled Requirement: 1 or More Strand Components 
 				</div>)
 		}
 		switch(checkpoint)
 		{
 			case true:{ 
-				return 	 (<div style = {loadButtonStyle}><Spinner spinnerName='cube-grid' noFadeIn /></div>)
-
+				return 	this.renderSequencerRunning();
 			}
 			case false:{ 
-				return  <Button style = {sequencerButtonStyle}  className = "hvr-forward" onClick = {this.activatesequencer}> <Glyphicon glyph = "flash"/>  Sequence Strands </Button>
+				return  this.renderSequencerStart();
 			}
 		}
-	}
-
-	render()
-	{
-		return(			
-		<div >
-			{this.ComponentDisplay()}
-		</div>
-		)
 	}
 }

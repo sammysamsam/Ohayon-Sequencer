@@ -1,66 +1,68 @@
 import React from "react";
-import { Button } from 'react-bootstrap';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon'
-import Spinner from 'react-spinkit'
-//STORE
-import StrandlistStore from "../../Store/StrandlistStore";
+import { Button,Input } from 'react-materialize';
 
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
-export default class Sequencer extends React.Component {
 
+
+export default class Timer extends React.Component {
+
+	updateTimeLimit(input)
+	{
+
+	}
 
 	ComponentDisplay()
 	{
-		const loadButtonStyle = {
-			height:"50px",
-			width:"250px",
-			fontWeight:"bold",
-			marginTop:"-12px",
-			marginLeft:"80px"
+
+	}
+	_handleKeyPress(input) 
+	{
+		if (input.key == 'Enter') 
+		{
+			this.updateTimeLimit();
 		}
-		const sequencerButtonStyle = {
-			border:"solid",
-			borderColor:"#ff751a",
-			background:"rgba(255, 102, 0,.7)",
-			
-			height:"50px",
-			width:"200px",
-			fontWeight:"bold",
-			borderRadius:"9px",
-			fontSize:"11px",
-			marginTop:"2px"
+	}
+	render()
+	{
+		let containerStyle = {
+			display:"inline-block",
+			width:"300px",
+			marginLeft:"100px"
 		}
-		var checkpoint = this.props.status;
-		switch(checkpoint)
+
+
+		switch(this.props.status)
 		{
 			case true:{ 
-				return 	 (<div style = {loadButtonStyle}>
-
-
-				</div>)
-
+				return 	 (
+					<div style = {containerStyle }>
+						lol
+					</div>
+				)
 			}
 			case false:{ 
 				return  (
-				<div>
-					<Button style = {sequencerButtonStyle}  className = "hvr-forward" onClick = {this.activatesequencer}>
-						<Glyphicon glyph = "flash"/>  
-						Sequence Strands
-					</Button>
-				</div>
+					<div style = {containerStyle}>
+						
+						<Input
+						label = "Algorithm Runtime (min.)"
+						s = {6}
+						defaultValue = "15"
+						style = {{color:"white"}}
+						type = "number"
+						min = "10"
+						max = "240"
+						className="validate"
+						onKeyPress={this._handleKeyPress.bind(this)} 
+						onChange = {this.updateTimeLimit.bind(this)} 
+						>
+						<Icon>av_timer</Icon> 
+						</Input>
+					</div>
 				 )
 			}
 		}
-	}
-
-	render()
-	{
-		return(			
-		<div >
-			{this.ComponentDisplay()}
-		</div>
-		)
 	}
 }

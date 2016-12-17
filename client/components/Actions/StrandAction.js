@@ -1,14 +1,17 @@
 import dispatcher from "../Dispatcher";
-	export function Update_Sequencer_Timeout(){
+	
+	export function OpenProjectJSONData(data){
 		dispatcher.dispatch({
-			type:"UPDATE_SEQUENCER_TIMEOUT",
-			time,
+			type:"OPEN_PROJECT",
+			data,
 		});
 	}
-	
-	export function SequenceStrandlist(){
+
+
+	export function SequenceStrandlist(time){
 		dispatcher.dispatch({
 			type:"SEQUENCE_STRANDLIST",
+			time,
 		});
 	}
 	
@@ -76,19 +79,28 @@ import dispatcher from "../Dispatcher";
 			strands,
 		});
 	}
+	export function PrintStrandList(){
+		dispatcher.dispatch({
+			type:"PRINT_FULL_STRANDLIST"
+		});
+	}
+	export function PrintComponentList(){
+		dispatcher.dispatch({
+			type:"PRINT_COMPONENT_STRANDLIST"
+		});
+	}
+
+	///
+
 	export function CompareStrandsTA(strands2){
 		dispatcher.dispatch({
 			type:"COMPARE_STRANDS_TA",
 			strands2,
 		});
 	}
-	export function PrintStrandList(){
+	export function getMeltingPointTA(input){
 		dispatcher.dispatch({
-			type:"PRINT_STRANDLIST"
-		});
-	}
-	export function PrintComponentList(){
-		dispatcher.dispatch({
-			type:"PRINT_COMPONENTLIST"
+			type:"GET_MELTING_POINT_TA",
+			data,
 		});
 	}

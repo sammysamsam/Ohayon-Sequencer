@@ -1,8 +1,14 @@
 import React from "react";
 import StrandUtilities from '../pages/ToolsAnalysis/StrandUtilities';
+
 import StrandComparer from '../pages/ToolsAnalysis/StrandComparer';
-import Glyphicon from 'react-bootstrap/lib/Glyphicon';
-import hover from '../../StyleSheet/hover-min.css';
+
+import StrandMeltingPt from '../pages/ToolsAnalysis/StrandMeltingPt';
+
+import FooterSection from '../pages/MainFooterSection';
+
+import {Collapsible,CollapsibleItem,Tabs,Tab} from 'react-materialize';
+
 import { Link } from "react-router";
 
 
@@ -10,89 +16,86 @@ export default class ToolsAnalysis extends React.Component {
 
 	render(){
 		const backgroundstyle = {
-			marginTop:"-10px", 
-			paddingBottom:"50px",
+			background:"rgba(255,255,255,.5)",
+			padding:"50px 0px 50px 0px",
 			verticalAlign:"top",
-			marginLeft:"50px",
-			minHeight:"530px"
+			minHeight:"540px"
 		}
-		let homebutton = {
-			fontSize:"15px",
-			textDecoration:"none",
+		let headerStyle = {
+			boxShadow:" 6px 9px 12px -4px rgba(0,0,0,0.56)",
+			backgroundColor:"#546e7a",
+			width:"1200px",
+			height:"100px",
+			marginBottom:"0",
+			padding:"35px",
 			color:"white",
-			border:"solid",
-			height:"35px",
-			width:"35px",
-			display:"inline-block",
-			padding:"5px 0px 0px 6.5px", 
-			margin:"20px 0px 0px 20px",
-			borderRadius:"10px"
+			display:"block",
+			margin:"auto"
 		}
-		const headerStyle = {
-			width:"1100px",
-			height:"50px",
-			padding:"15px 10px 5px 40px",
-			color:"white",
-			fontFamily: "'Anaheim', serif ",
-			background:"rgba(57, 115, 172,0.7)",
-			margin:"1px"
+		let bodyStyle = {
+			boxShadow:" 6px 9px 12px -4px rgba(0,0,0,0.56)",
+			padding:"25px",
+			backgroundColor:"#eceff1",
+			width:"1200px",
+			display:"block",
+			margin:"auto"
 		}
+
 
 		return(
-		<div style = {{marginTop:"-10px",backgroundImage: "url('http://www.lirent.net/wp-content/uploads/2014/10/Android-Lollipop-Material-Design-Wallpaper-IdeaLTriangles.png')",backgroundSize:"1300px 900px"}}>
-			
-			<div style = {{background:"rgba(255,255,255,.5)"}}>
-				
-				<h6 style = {{color:"#ff6600", textDecoration:"none",backgroundColor:"#292B2D",height:"40px",padding:"15px 0px 0px 60px",opacity:".99"}}> <Glyphicon glyph = "globe"/> Optimizing Hybridization AnalYsis Of Nucleotides Program </h6>
-			
-				<div style = {backgroundstyle}>	
-							
-					<div style = {{borderRadius:"10px",marginTop:"50px",padding:"5px",color:"white",background:"rgba(28, 50, 74,.95)",width:"1175px"}}> 
+			<div style = {{overflow:"hidden"}}>
+				<div style = {{backgroundColor:"#292B2D",height:"40px",padding:"3px 0px 0px 75px",fontSize:"13px",width:"100%"}}> 
+	
+						<Link to="/" className = "hvr-grow" style = {{color:"#ff6600",display:"inline-block",cursor:"pointer"}}>
 						
-						<Link to="/"  className = {"hover.hvr-grow"} style = {homebutton}>   <Glyphicon glyph = "home"/> </Link>
+							<i style = {{textDecoration:"none",position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
+								home
+							</i>
+							Optimizing Hybridization AnalYsis Of Nucleotides Program 
 						
-						<h1 style = {{marginLeft:"320px",verticalAlign:"top",fontFamily:"'raleway',serif",display:"inline-block"}}> 
-
+						</Link>
+				</div>
+				<div style = {{backgroundImage: "url('http://www.lirent.net/wp-content/uploads/2014/10/Android-Lollipop-Material-Design-Wallpaper-IdeaLTriangles.png')",backgroundSize:"100% 150%"}}>
+					<div style = {backgroundstyle}>	
+						<h4 style = {headerStyle}>
+							<i style = {{float:"left",margin:"-10px 20px 0px 0px"}}className=" medium material-icons">
+								assignment
+							</i>
 							TOOLS & ANALYSIS 
-						</h1>
-					</div>
-					
-					<div style  = {{borderRadius:"10px",marginTop:"3px",paddingTop:"20px",background:"rgba(51, 51, 51,.8)",width:"1175px",paddingBottom:"20px"}}>	
-						  
-						  <ul className="collapsible">
-						    <li>
-						      <div className="collapsible-header">
-									<h4 style = {headerStyle}>	
-										
-										<Glyphicon style = {{marginRight:"10px"}} glyph = "tasks"/>
-													Sequence Manipulator    
-									</h4>
-
-						      </div>
-						      <div className="collapsible-body">
+						</h4>
+						<div style = {bodyStyle}> 					
+							
+							<p style = {{color:"rgb(238, 110, 115)",textAlign:"center",fontStyle:"italic"}}> Analyze and manipulate your sequences. </p>
+							<Collapsible  popout style = {{width:"1105px"}}>
+						  		<CollapsibleItem header = "Sequence Manipulator">
 
 									<StrandUtilities/>
 
-						      </div>
-						    </li>
-						    <li>
-							    <div className="collapsible-header">
-							    	<h4 style = {headerStyle}>	
-										
-										<Glyphicon style = {{marginRight:"10px"}} glyph = "tasks"/>
-													Strand vs Strand Comparison    
-									</h4>
+								</CollapsibleItem>
+							  	<CollapsibleItem header = "Melting Point Calculator">
 
-							    </div>
-							    <div className="collapsible-body">
+									<StrandMeltingPt/>
+
+								</CollapsibleItem>						
+								<CollapsibleItem header = "Strand vs Strand Comparison" >
+
 									<StrandComparer/>
-						    	</div>
-						    </li>
-						  </ul>
+
+								</CollapsibleItem>
+							</Collapsible>
+						</div>
+
 					</div>
+
+					<FooterSection/>
 				</div>
 			</div>
-		</div>
-		);
+		  );
 	}
 }
+						
+
+
+/*
+
+						*/

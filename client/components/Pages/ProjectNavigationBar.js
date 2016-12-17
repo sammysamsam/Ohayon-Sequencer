@@ -1,70 +1,48 @@
 import React from "react";
-import  '../../StyleSheet/hover-min.css';
 import { Link } from "react-router";
 import image3 from "../../images/AnalysisIcon.png";
 import image2 from "../../images/SequencerIcon.png";
 import image1 from "../../images/WorkspaceIcon.png";
-import Glyphicon from 'react-bootstrap/lib/Glyphicon'
 export default class ProjectNagivationBar extends React.Component {
 	render()
 	{
 		const ulStyle = {
 			boxShadow:" 6px 9px 12px -4px rgba(0,0,0,0.56)",
 			listStyleType:"none",
-			background:"rgba(51, 102, 153,.88)",
+			background:"rgba(19, 29, 45,.85)",
 			display:"inline-block",
-			height:"804px",
+			height:"692px",
 			width:"150px",
-
+			marginTop:"246px"
 		}
 		const liStyle = {
-			padding:"65px 0px 0px 0px", 
+			padding:"75px 0px 0px 0px", 
 			width:"150px",
 			height:"200px",
-			textAlign:"center"
-		}
-		const HomeStyle = {
-			padding:"35px 0px 0px 0px", 
-			width:"150px",
-			height:"75px",
 			textAlign:"center"
 		}
 		const linkstyle = {
 			fontFamily: "'Raleway', serif " , 
 			textDecoration:"none",
-			color:"white"
 		}
-		let homebutton = {
-			fontSize:"15px",
-			color:"white",
-			height:"35px",
-			width:"35px",
-			paddingTop:"5px"
-		}
-
 		return(
 			<div  className ="animated fadeInLeft" style = {ulStyle}>
-				<div style = {HomeStyle}>  
-					<Link to="/"  className = "hvr-grow" style = {homebutton}>   
-						<Glyphicon glyph = "home"/>    
-					</Link><hr style = {{height:"1px",width:"100px"}}/> 	
-				</div>
 				<div style = {liStyle}>   
 					<Link to="Project/Development" style = {linkstyle} className = "hvr-forward" > 
 						<img src = {image1} style = {{height:"50px",width:"50px"}}/>  
-						<h4>Workspace </h4>
+						<h6 style = {{color:"#80cbc4"}}>Workspace </h6>
 					</Link>
 				</div>
 				<div style = {liStyle}>  
 					<Link to = "Project/Sequencing" style = {linkstyle} className = "hvr-forward" >
 						<img src = {image2} style = {{height:"50px",width:"50px"}}/>  
-						<h4>Sequencing</h4>
+						<h6 style = {{color:"#80cbc4"}}>Sequencing</h6>
 					</Link> 
 				</div>
 				<div style = {liStyle}>  
 					<Link to = "Project/Result" style = {linkstyle} className = "hvr-forward" >    
 						<img src = {image3} style = {{height:"50px",width:"50px"}}/>  
-						<h4> Results</h4> 
+						<h6 style = {{color:"#80cbc4"}}> Results</h6> 
 					</Link> 
 				</div> 
 			</div>

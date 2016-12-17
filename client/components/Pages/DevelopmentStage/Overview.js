@@ -1,30 +1,60 @@
 import React from "react";
-import Glyphicon from 'react-bootstrap/lib/Glyphicon'
-import {FormControl,Form,FormGroup,Col} from 'react-bootstrap'
-
-
-//STORE
-import StrandlistStore from "../../Store/StrandlistStore";
+import {Input,Row,Button} from 'react-materialize';
 
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
 export default class Overview extends React.Component {
-	handleSalt(input)
+	constructor()
 	{
-		if((input.target.value == "Na"|| input.target.value == "Mg")&& (input.target.value != this.props.Salt))
+		super();
+		this.state = {
+			salt: "",
+			concentration:""
+		}
+		this.handleSalt = this.handleSalt.bind(this);
+		this.handleSaltConcentration = this.handleSaltConcentration.bind(this);
+		this.submit = this.submit.bind(this);
+	}
+	handleSalt(input)
+	{	
+		if (input.key == 'Enter') 
 		{
-			StrandAction.EditSalt(input.target.value);	
+			this.submit();
+		}
+		if(input.target.value !=this.state.salt)
+		{
+			this.setState({salt:input.target.value});
 		}
 	}
 	handleSaltConcentration(input)
 	{
-		if(input.target.value <=1 && input.target.value > 0 && input.target.value != this.props.Concentration)
+		if (input.key == 'Enter') 
 		{
-			StrandAction.EditSaltConcentration(input.target.value);
+			this.submit();
+		}
+		if(input.target.value != this.state.concentration)
+		{
+			this.setState({concentration:input.target.value});
 		}
 	}
-	printComponentList()
+	submit()
+	{
+		if(this.state.salt != "Na" && this.state.salt != "Mg")
+		{
+			Materialize.toast("Unfulfilled Requirement: Salt needs to be 'Na' or 'Mg' ",4000);
+		}
+		if(this.state.concentration >= 1 || this.state.concentration <0)
+		{
+			Materialize.toast("Unfulfilled Requirement: Concentration Range: [0.01] - [1.00] ",4000);
+		}
+		else
+		{
+			StrandAction.EditSalt(this.state.salt);	
+			StrandAction.EditSaltConcentration(this.state.concentration);
+		}
+	}
+	printComponentList()		
 	{	
 		let componentList = "";		
 		
@@ -36,23 +66,23 @@ export default class Overview extends React.Component {
 			}
 		}
 
-		return(<h5 style = {{color:"#494e56",fontWeight:"bold"}}>{componentList}</h5>)
+		return(<span style = {{color:"#e3e4e5",fontSize:"17px"}}>{componentList}</span>)
 	}
 
 	printStrandList()
 	{
 		return this.props.strandlist.map(function(listValue,index){
 			
-			let data = listValue.name + " [ "+listValue.componentsdisplay + " ] ";
+			let data = listValue.name + " [ "+listValue.componentsDisplay + " ] ";
 			let number =  index +"."
 			return( 
 				<div>
-					<span style = {{display:"inline-block",color:"black",fontSize:"9px",paddingRight:"8px"}}>
+					<span style = {{display:"inline-block",color:"#e3e4e5",fontSize:"9px",paddingRight:"8px"}}>
 						{number}
 					</span>
-					<h5 key = {listValue.name + "-fullstrand"} style = {{color:"#494e56",width:"380px",textOverflow:"ellipsis",display:"inline-block"}}> 
+					<h6 key = {listValue.name + "-fullstrand"} style = {{color:"#e3e4e5",width:"380px",textOverflow:"ellipsis",display:"inline-block"}}> 
 						{data}
-					</h5>
+					</h6>
 				</div>
 			)
 		})
@@ -68,29 +98,33 @@ export default class Overview extends React.Component {
 			margin:"1.5px",
 		}
 		const headerStyle = {
-			 background:"rgba(139, 179, 218,0.7)",
-			padding:"15px 0px 15px 30px",
+			background:"rgba(139, 179, 218,0.7)",
+			padding:"10px 0px 0px 30px",
 			width:"500px",
+			height:"53px",
 			margin:"1.5px",
+			fontSize:"16px"
 		}
 		const bodyStyle2 = {
 			background:"rgba(100, 153, 206,0.3)",
-			padding:"2px 0px 15px 30px",
+			padding:"15px 0px 12px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
 		const header2Style= {
-			 background:"rgba(139, 179, 218,0.7)",
-			padding:"15px 0px 15px 30px",
+			background:"rgba(139, 179, 218,0.7)",
+			padding:"10px 0px 0px 30px",
+			height:"53px",
 			width:"500px",
 			margin:"1.5px",
+			fontSize:"16px"
 		}
 		const conditionsPosition = {
 			display:"inline-block",
 			marginRight:"2px"
 		}
 		const componentPosition = {
-			marginTop:"-274px"
+			marginTop:"-305px"
 		}
 		const fullStrandPosition = {
 			display:"inline-block",
@@ -99,52 +133,52 @@ export default class Overview extends React.Component {
 
 
 		return(
-			<div style = {{fontFamily:"'Roboto',serif",marginLeft:"17px",color:"white"}}>
+			<div style = {{marginLeft:"17px",color:"white"}}>
 
 				<div className= "animated fadeInUp" style = {conditionsPosition}>
-					<h4 style = {header2Style}>  <Glyphicon glyph = "cog"/> Adjust Experimental Conditions: </h4>						
+
+					<div style = {header2Style}> 
+						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">perm_data_setting</i>
+						 <span className="badge">{this.props.Salt} [{this.props.Concentration}]</span> 
+						  Adjust Experimental Conditions: 
+					</div>						
+
 					<div style = {bodyStyle2}>
-						<h5 style = {{fontFamily:"'Anaheim',serif",textAlign:"center"}}> 
-							Current Conditions: {this.props.Salt} [{this.props.Concentration}] 
-						</h5>
-						
-						<hr style = {{backgroundColor:"white",width:"220px"}}/>		
-							<h5>Salt (Na or Mg):    
-							<FormControl 
+							<Row>
+								<Input 
+								label = "Edit Salt [Na or Mg]:"
+								s={12}
 								type="text" 
-								placeholder="Enter Salt Here" 
-								onChange={this.handleSalt} 
-								style = {{marginLeft:"10px",color:"black",fontSize:"14px",fontFamily: "'Anaheim', serif ",width:"200px",display:"inline"}} 
-							/>
-						</h5>
-						
-						<h5>Concentration of Salt: 
-							<FormControl 
-							type="text" 
-							placeholder="Enter Concentration Here" 
-							onChange={this.handleSaltConcentration.bind(this)} 
-							style = {{marginLeft:"10px",color:"black",fontSize:"14px",fontFamily: "'Anaheim', serif ",width:"200px",display:"inline"}} 
-							/>
-						</h5>
-					</div>
+								onChange= {this.handleSalt} 
+								style = {{fontSize:"14px",width:"290px"}} 
+								/>
+
+								<Input
+								s={12}
+								label="Edit Concentration of Salt [0.0 M - 1.0 M]:"
+								onChange={this.handleSaltConcentration} 
+								style = {{fontSize:"14px",width:"290px"}} 
+								/>
+							<Button waves='light' onClick = {this.submit}>Submit</Button>
+							</Row>
+						</div>
 				</div>
 
-
-
 				<div className= "animated fadeInUp" style = {fullStrandPosition}>
-					<h4 style = {headerStyle}> <Glyphicon glyph = "tasks"/> Full Strand Overview: </h4>		
+					<div style = {headerStyle}> 
+						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">toc</i>
+						Full Strand Overview:
+					</div>		
 					<div style = {bodyStyle}>
+						<h6 style = {{color:"#9e9e9e"}}> 
+							Number of Strands: {this.props.strandlist.length} 
+						</h6>
 
-						<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
-							Number of Strands: <strong>{this.props.strandlist.length} 
-							</strong>
-						</h5>
-
-						<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
+						<h6 style = {{color:"#9e9e9e",paddingTop:"5px",paddingBottom:"10px"}}> 
 							Strands: 
-						</h5>
+						</h6>
 
-						<div style = {{height:"358px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.9)",padding:"10px"}}> 
+						<div style = {{height:"468px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.15)",padding:"10px",color:"white"}}> 
 							{this.printStrandList()} 
 						</div>			
 					</div>
@@ -152,15 +186,18 @@ export default class Overview extends React.Component {
 		      
 
 					<div className= "animated fadeInUp" style = {componentPosition}>
-						<h4 style = {header2Style}> <Glyphicon glyph = "tasks"/> Strand Component Overview: </h4>						
+						<div style = {header2Style}> 
+							<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">toc</i>
+							Strand Component Overview: 
+						</div>						
 						<div style = {bodyStyle2}>
-							<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
+							<h6 style = {{color:"#9e9e9e"}}> 
 								Number of Components: {this.props.complist.length}
-							</h5>
-							<h5 style = {{fontFamily:"'Anaheim',serif",paddingTop:"5px"}}> 
+							</h6>
+							<h6 style = {{color:"#9e9e9e",paddingTop:"5px",paddingBottom:"10px"}}> 
 								Components: 
-							</h5>
-							<div style = {{height:"130px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.9)" ,padding:"10px" }}> 
+							</h6>
+							<div style = {{height:"153px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.15)" ,padding:"10px",color:"white" }}> 
 								{this.printComponentList()} 
 							</div>
 						</div>
