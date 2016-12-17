@@ -10,6 +10,13 @@ export default class StrandComparison extends React.Component {
 	constructor()
 	{
 		super();
+		this.deletecomparelist1 = this.deletecomparelist.bind(this,1);
+		this.deletecomparelist2 = this.deletecomparelist.bind(this,2);
+		this.callcomparelist = this.callcomparelist.bind(this);
+		this.callprintfullstrands = this.callprintfullstrands.bind(this);
+		this.callprintcomponents = this.callprintcomponents.bind(this)
+		this.addComponentsToComparelist = this.addComponentsToComparelist.bind(this);
+
 		this.state = {
 			comparelist:[]
 		}
@@ -128,7 +135,7 @@ export default class StrandComparison extends React.Component {
 				<div className = "chip"> 
 					{this.state.comparelist[0].name} 
 
-					<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist.bind(this,1)}> 
+					<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist1}> 
 						[clear]
 					</span>
 				</div>
@@ -141,7 +148,7 @@ export default class StrandComparison extends React.Component {
 				<div className= "animated fadeIn" style = {{display:"inline-block",margin:"-10px 0px 0px 15px"}}>
 					<div className = "chip"> 
 						{this.state.comparelist[0].name}
-						<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist.bind(this,1)}> 
+						<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist1}> 
 							[clear]
 						</span>	
 					</div>
@@ -151,7 +158,7 @@ export default class StrandComparison extends React.Component {
 					
 					<div className = "chip"> 
 						{this.state.comparelist[1].name} 
-						<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist.bind(this,2)}> 
+						<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist2}> 
 							[clear]
 						</span>
 					</div>
@@ -177,22 +184,22 @@ export default class StrandComparison extends React.Component {
 		switch(this.props.status){
 			case true:{ 
 				return	(
-				<div style = {{padding:"7px 30px 4px 380px",background:"rgba(0, 0, 0,.6)"}}> 
+				<div style = {{padding:"7px 30px 4px 390px",background:"rgba(0, 0, 0,.6)"}}> 
 						<Spinner spinnerName='wave' noFadeIn />
 				</div>)
 			}
 			case false:{ 
 					return (	
 						<div style = {{padding:"7px 30px 4px 20px",background:"rgba(0, 0, 0,.6)"}}>
-							<div style = {analysisButtonStyle} className= "hvr-underline-from-center" onClick = {this.callcomparelist.bind(this)}>  
+							<div style = {analysisButtonStyle} className= "hvr-underline-from-center" onClick = {this.callcomparelist}>  
 
 								Compare
 							</div>
-							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintfullstrands.bind(this)}>  
+							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintfullstrands}>  
 
 								Print Full Strands
 							</div>
-							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintcomponents.bind(this)}>  
+							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintcomponents}>  
 					
 								Print Components
 							</div>
@@ -242,7 +249,7 @@ export default class StrandComparison extends React.Component {
 		 				placeholder="Add Strand Component"
 		 				name="form-field-name" 
 		 				options={this.componentsListProcessor()}	
-		 				onChange = {this.addComponentsToComparelist.bind(this)} />
+		 				onChange = {this.addComponentsToComparelist} />
 				</div>
 				
 				<div style = {{width:"400px",margin:"20px 0px 20px 0px",display:"inline-block",verticalAlign:"top"}} >
@@ -250,7 +257,7 @@ export default class StrandComparison extends React.Component {
 					 	placeholder="Add Full Strand" 
 						name="form-field-name" 
 						options={this.fullStrandListProcessor()}	
-						onChange = {this.addComponentsToComparelist.bind(this)} 
+						onChange = {this.addComponentsToComparelist} 
 						/>
 				</div>
 			</div>

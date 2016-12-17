@@ -6,7 +6,7 @@ import axios from "axios";
 class ToolsAnalysisStore extends EventEmitter{
 	constructor(){
 		super();
-		this.toolsAnalysis_Compare = ["","",""];
+		this.toolsAnalysis_Compare = ["",""];
 		this.toolsAnalysis_MeltingPt = 0;
 	}
 

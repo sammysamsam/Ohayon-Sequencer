@@ -244,10 +244,7 @@ export default class StrandComponentInput extends React.Component {
 						onKeyPress={this._handleKeyPress.bind(this)} 
 						onChange = {this.handleselflimit.bind(this)} 
 					/> 
-
 					<p className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px"}}> Complement Exists: 	</p>
-
-					
 					<Input 					
 						name="YesNo" 		
 						defaultChecked = {(this.state.complement== "true")}  

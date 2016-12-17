@@ -54,12 +54,10 @@ class ProjectStore extends EventEmitter{
 // PROJECT SAVE/LOAD
 
 
-loadProject(data)
-{
-	this.compressedProjectData = data;
-
-}
-
+	loadProject(data)
+	{
+		this.compressedProjectData = data;
+	}
 
 
 //   COMPONENT LIST
@@ -132,16 +130,14 @@ loadProject(data)
 
 	print_Full_StrandList()
 	{
-		let finalresults = "";
+		let finalresults = [];
 		for(let i = 0 ; i < this.full_StrandList.length; i ++)
 		{
 			let fs = this.full_StrandList[i];
-			finalresults = finalresults + fs.name + " [ " + fs.componentsDisplay + " ]:\n" + this.fullStrandSequenceBuilder(fs.components) + "*";
+			finalresults.push(fs.name + " [ " + fs.componentsDisplay + " ]:\n" + this.fullStrandSequenceBuilder(fs.components));
 		}
-		//split final results by '*'
 		this.dataAnalysis_Results = ["PRINT",finalresults];
 	}
-
 
 
  //   AXIOS POST METHODS

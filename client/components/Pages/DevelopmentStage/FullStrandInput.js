@@ -9,6 +9,8 @@ export default class StrandComponentInput extends React.Component {
 	constructor()
 	{
 		super();
+		this.pop = this.pop.bind(this);
+		this.clear = this.clear.bind(this);
 		this.state = { 
 			name: "", 
 			components:[],
@@ -76,9 +78,9 @@ export default class StrandComponentInput extends React.Component {
 		}
 		if(checkpoint)
 		{
+			let name = this.state.name;
 			let componentList = this.state.components;
 			let componentsDisplay = "";
-
 			if(this.state.fiveprime == "loop")			//loop strand
 				componentsDisplay = "(loop) ";
 
@@ -90,7 +92,6 @@ export default class StrandComponentInput extends React.Component {
 			{
 				componentsDisplay = componentsDisplay + " - "+componentList[i];
 			}
-
 			if(this.state.fiveprime == "false") // return components back to original order
 				componentList = componentList.reverse();
 
@@ -98,8 +99,8 @@ export default class StrandComponentInput extends React.Component {
 			if(this.state.fiveprime == 'loop')
 				loopcheck = "true";
 
-			let fullstrand = {	name: this.state.name ,
-								components:this.state.components,
+			let fullstrand = {	name: name,
+								components:componentList,
 								componentsDisplay:componentsDisplay, 
 								loop:loopcheck
 							}
@@ -217,10 +218,10 @@ export default class StrandComponentInput extends React.Component {
 							onChange = {this.handlecomponents.bind(this)} 
 					/>
 
-					<Button style = {{margin:"30px 0px 10px 10px",fontSize:"12px"}} onClick = {this.pop.bind(this)}> 
+					<Button style = {{margin:"30px 0px 10px 10px",fontSize:"12px"}} onClick = {this.pop}> 
 						Delete Recent Component
 					</Button>
-					<Button style = {{margin:"30px 0px 10px 5px",fontSize:"12px"}} onClick = {this.clear.bind(this)}> 
+					<Button style = {{margin:"30px 0px 10px 5px",fontSize:"12px"}} onClick = {this.clear}> 
 						Clear All Components
 					</Button>
 					<Button 

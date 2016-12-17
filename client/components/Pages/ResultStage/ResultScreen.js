@@ -12,7 +12,7 @@ export default class ResultScreen extends React.Component {
 			fontWeight:"bold"
 		}
     	
-    	let results = this.props.results[1].split("*");
+    	let results = this.props.results[1];
 		return (
 			<div style = {printedStrandsContainerStyle}>
 				<h6 style = {{textAlign:"center",textDecoration:"underline",marginBottom:"10px"}}>
@@ -27,15 +27,11 @@ export default class ResultScreen extends React.Component {
 			        </thead>
 				    <tbody>
 						{results.map(function(listValue,index){	
-
-							if(index != (results.length-1))
-							{
-								let values = listValue.split(":");
-								return     <tr  key = {index} >
-										      <td>{values[0]}</td>
-										      <td style = {{fontFamily:"'Share Tech Mono',serif"}}>{values[1]}</td>
-										    </tr>
-							}
+							let values = listValue.split(":");
+							return     (<tr  key = {index} >
+									      <td>{values[0]}</td>
+									      <td style = {{fontFamily:"'Share Tech Mono',serif"}}>{values[1]}</td>
+									    </tr>)
 						})}
 		        	</tbody>
 		      	</Table>
@@ -51,16 +47,15 @@ export default class ResultScreen extends React.Component {
     	}
     	let bestArrangementStyle = {
     		background:"rgba(255,255,255,.5)",
-    		height:"160px",
+    		height:"130px",
     		padding:"10px",
     	}
     	let allArrangementStyle = {
-     		height:"330px",
+     		height:"365px",
      		padding:"15px",
      		overflow:"scroll",	
     		fontSize:"12px"
     	}
-
     	let bestarrangementItemStyle = {
     		display: "inline-block",
     		marginLeft: "50%",
@@ -68,9 +63,7 @@ export default class ResultScreen extends React.Component {
     		fontSize:"12px"
     	}
 
-    	let results = this.props.results[1];
-    	let shiftedarrays = results[2].split("$$$");
-
+    	let shiftedarrays = (this.props.results[1][1]).split("$$$");
  		return  (
 		<div style = {resultsContainer}> 
 			<div style = {bestArrangementStyle}>
@@ -78,7 +71,7 @@ export default class ResultScreen extends React.Component {
 					Best Arrangement: {this.props.list[0].components} vs {this.props.list[1].components}
 				</div>
 				<div style = {bestarrangementItemStyle}>
-					{results[1]}
+					{this.props.results[1][0]}
 				</div>
 
 			</div>

@@ -169,7 +169,7 @@ export default class StrandComparer extends React.Component {
 
 		if(!(this.state.output[0] == ""))
 		{
-			let shiftedarrays = this.state.output[2].split("$$$");
+			let shiftedarrays = this.state.output[1].split("$$$");
 			return  (
 				<div style = {resultstyle}> 
 					<div style = {bestarrangementstyle}>
@@ -177,7 +177,7 @@ export default class StrandComparer extends React.Component {
 							Best Arrangement
 						</h5>
 						<div style = {bestarrangementitemstyle}>
-							{this.state.output[1]}
+							{this.state.output[0]}
 						</div>
 					</div>
 
@@ -201,6 +201,7 @@ export default class StrandComparer extends React.Component {
 				)
 		}
 	}
+	
 	_handleKeyPress(input) 
 	{
 		if (input.key == 'Enter') 
