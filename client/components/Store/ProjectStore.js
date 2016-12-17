@@ -64,15 +64,13 @@ class ProjectStore extends EventEmitter{
 
 	print_Component_StrandList()
 	{
-		let finalresults = "";
+		let finalresults = [];
 		for(let i = 0 ; i < this.component_StrandList.length; i ++)
 		{
 			let component = this.component_StrandList[i];
-			finalresults = finalresults + component.name + " : " + component.sequence + "*";
+			finalresults.push(component.name + " : " + component.sequence);
 			if(this.component_StrandList[i].complement == "true")
-			{
-			finalresults = finalresults + component.name + " ' : " + this.complement_Maker(component.sequence) + "*";
-			}
+				finalresults.push(component.name + " ' : " + this.complement_Maker(component.sequence));
 		}
 		//split final results by '*'
 		this.dataAnalysis_Results = ["PRINT",finalresults];
