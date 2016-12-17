@@ -78,20 +78,22 @@ export default class DevelopmentStageLayout extends React.Component {
 			textAlign:"center",
 			marginLeft:"-153px",
 			height:"244px",
+			border:"solid #ff9e80",
+			borderWidth:"0px 0px 1px 0px"
 		}
 		let bottomstyle = {
 			marginTop:"2px",
 			background:"rgba(28, 50, 74,.8)", 
 			width:"1045px",
 			height:"693px",
-			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
 		}
 
 		return(
 		<div>
 			<div style = {topstyle} >
-				<h2 style = {{color:"white"}}> PROJECT WORKSPACE </h2>
-				<h6 style = {{color:"white",paddingTop:"30px",height:"45px"}}>Use this space to adjust experimental solution conditions and input your desired strands components and put those components together to create your desired strands. </h6>
+				<h2 style = {{color:"#ffccbc"}}> PROJECT WORKSPACE </h2>
+				<h6 style = {{color:"#ffccbc",paddingTop:"30px",height:"45px"}}>Use this space to adjust experimental solution conditions and input your desired strands components and put those components together to create your desired strands. </h6>
 			</div>
 			
 			<div style  = {bottomstyle}>

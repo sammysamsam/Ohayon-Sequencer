@@ -13,7 +13,7 @@ export default class ProjectNagivationBar extends React.Component {
 			display:"inline-block",
 			height:"692px",
 			width:"150px",
-			marginTop:"246px"
+			marginTop:"246px",
 		}
 		const liStyle = {
 			padding:"75px 0px 0px 0px", 
@@ -30,19 +30,19 @@ export default class ProjectNagivationBar extends React.Component {
 				<div style = {liStyle}>   
 					<Link to="Project/Development" style = {linkstyle} className = "hvr-forward" > 
 						<img src = {image1} style = {{height:"50px",width:"50px"}}/>  
-						<h6 style = {{color:"#80cbc4"}}>Workspace </h6>
+						<h6 style = {{color:"#ffccbc"}}>Workspace </h6>
 					</Link>
 				</div>
 				<div style = {liStyle}>  
 					<Link to = "Project/Sequencing" style = {linkstyle} className = "hvr-forward" >
 						<img src = {image2} style = {{height:"50px",width:"50px"}}/>  
-						<h6 style = {{color:"#80cbc4"}}>Sequencing</h6>
+						<h6 style = {{color:"#ffccbc"}}>Sequencing</h6>
 					</Link> 
 				</div>
 				<div style = {liStyle}>  
 					<Link to = "Project/Result" style = {linkstyle} className = "hvr-forward" >    
 						<img src = {image3} style = {{height:"50px",width:"50px"}}/>  
-						<h6 style = {{color:"#80cbc4"}}> Results</h6> 
+						<h6 style = {{color:"#ffccbc"}}> Results</h6> 
 					</Link> 
 				</div> 
 			</div>

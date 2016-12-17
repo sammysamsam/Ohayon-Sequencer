@@ -84,22 +84,23 @@ export default class Sequencer extends React.Component {
 	{
 		let errorStyle = { 
 			padding:"17px",
-			backgroundColor:"#ff9e80",
-			marginLeft:"40px",
-			width:"580px",
-			color:"#424242",
+			borderStyle:"solid",
+			borderColor:"#ff9e80",
+			borderWidth:"thin",
+			width:"700px",
+			color:"#ff9e80",
 			textAlign:"center",
 			fontWeight:"bold",
-			fontSize:"15px",
+			fontSize:"14px",
 			borderRadius:"2px"
 		}
 
 		var checkpoint = this.props.status;
 		if(this.props.componentlength == 0){
 			return (
-				<div style = {errorStyle}  className = "z-depth-4">  
+				<div style = {errorStyle} >  
 					<i style = {{position:"relative",top:"6px",marginRight:"15px"}}className="material-icons">error</i> 
-					Unfulfilled Requirement: 1 or More Strand Components 
+					Unfulfilled Requirement: Must have at least one or more Strand Components 
 				</div>)
 		}
 		switch(checkpoint)

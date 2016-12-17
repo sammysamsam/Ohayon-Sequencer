@@ -48,9 +48,10 @@ export default class SequencingStageLayout extends React.Component {
 			background:"rgba(28, 50, 74,.8)",     
 			width:"1197px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)", 
-			textAlign:"center",
 			marginLeft:"-153px",
-			height:"244px"
+			height:"244px",
+			border:"solid #ff9e80",
+			borderWidth:"1px 0px 1px 0px"
 		}
 		let middlestyle = {
 			marginTop:"3px",
@@ -71,8 +72,8 @@ export default class SequencingStageLayout extends React.Component {
 		return(
 		<div >		
 			<div style = {topstyle}>
-					<h2 style = {{color:"white"}}> SEQUENCING ALGORITHM </h2>
-					<h6 style = {{color:"white",paddingTop:"30px"}}> Read over your Strand Components and start the sequencing algorithm when everything is properly inputed. (optional) set maximum time allocated for sequencing any set of strands (range: 1- 6 hours) </h6>
+					<h2 style = {{textAlign:"center",color:"#ffccbc"}}> SEQUENCING ALGORITHM </h2>
+					<h6 style = {{textAlign:"center",color:"#ffccbc",paddingTop:"30px"}}> Read over your Strand Components and start the sequencing algorithm when everything is properly inputed. (optional) set maximum time allocated for sequencing any set of strands (range: 1- 6 hours) </h6>
 			</div>
 			
 			<div className= "animated fadeIn"  style = {middlestyle}>

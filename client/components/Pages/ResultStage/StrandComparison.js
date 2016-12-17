@@ -178,7 +178,7 @@ export default class StrandComparison extends React.Component {
 			paddingTop:"10px",
 			textAlign:"center",
 			display:"inline-block",
-			color:"#80cbc4",
+			color:"#ff9e80",
 			fontSize:"14px"
 		}
 		switch(this.props.status){

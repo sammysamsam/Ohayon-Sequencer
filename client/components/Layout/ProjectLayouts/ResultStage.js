@@ -60,14 +60,16 @@ export default class ResultStateLayout extends React.Component {
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)", 
 			textAlign:"center",
 			margin:"0px 0px 2px -153px",
-			height:"244px"
+			height:"244px",
+			border:"solid #ff9e80",
+			borderWidth:"1px 0px 1px 0px"
 		}
 
 		return(
 		<div >
 			<div style = {topstyle}>
-				<h2 style = {{color:"white"}}> DATA ANALYSIS </h2>
-				<p style = {{paddingTop:"30px",color:"white"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
+				<h2 style = {{color:"#ffccbc"}}> DATA ANALYSIS </h2>
+				<p style = {{paddingTop:"30px",color:"#ffccbc"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
 			</div>
 
 			<div className= "animated fadeIn">

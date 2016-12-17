@@ -27,7 +27,7 @@ export default class WorkspaceNav extends React.Component {
 				height:"52px",
 				fontSize:"15px", 	
 				fontFamily: "'Dosis', serif " ,
-				color:"white",
+				color:"#ff9e80",
 				width:"1045px",
 				display:"block",
 				marginBottom:"20px"
