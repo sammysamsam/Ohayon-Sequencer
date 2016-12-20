@@ -6,7 +6,14 @@ public class CompareStrands {
     {
     	this.thermocalc = a;
 	}
-
+	public void bestArrangement(Strand a, Strand b){
+				System.out.println(a.name + " vs " + b.name + "\n" 
+                        + this.mismatchPrint(a, b, 5) + "\n");
+	}
+	public void bestArrangementFull(Strand a, Strand b,int[] restrictedshifts){
+				System.out.println(a.name + " vs " + b.name + "\n" 
+                        + this.mismatch2Print(a, b, 5,restrictedshifts) + "\n");
+	}
 	public String[] compareTwo(Strand a, Strand b)
     {
 		String[] result = new String[2];
@@ -122,7 +129,7 @@ public class CompareStrands {
 		String hitMarker = "";
 		String seq1 = "";
 		String seq2 = "";
-		for(int k = 0; k < (a.length + b.length*2); k++)
+		for(int k = a.length; k < (a.length + b.length); k++)
 		{
 			if(!bShift[k].nonbase())
             {
@@ -221,7 +228,7 @@ public class CompareStrands {
         double consecCounter = 0;
         double hitScore = 0;
         
-        for(int k = a.length; k < b.length + a.length + 1; k++)
+        for(int k = 1; k < b.length + a.length + 1; k++)
         {
             if(shiftB[k].canPair(shiftA[k]))
                 consecCounter++;
@@ -258,7 +265,7 @@ public class CompareStrands {
 		//-1 so no scores of 0 will be saved in shifted base arrays
 		double highestscore =  - 1;
 		
-		for(int i = 0; i < b.length + a.length; i++)
+		for(int i = 1; i < b.length + a.length; i++)
         {	
 			ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(a, b, i);
 			

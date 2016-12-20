@@ -14,7 +14,8 @@ export default class StrandComponentInput extends React.Component {
 		this.state = { 
 			name: "", 
 			components:[],
-			fiveprime:"true"};
+			fiveprime:"true"
+		};
 	}
 	handlename(input)
 	{
@@ -69,7 +70,7 @@ export default class StrandComponentInput extends React.Component {
 		}
 		for(let i = 0; i < this.props.fulllist.length; i++)
 		{
-			if(this.props.fulllist[i].name == this.state.name)
+			if(this.props.fulllist[i].name.replace(/ /g,"")  == this.state.name.replace(/ /g,"") )
 			{
 				checkpoint = false;
 				Materialize.toast("Unfufilled Requirement: Name already exists!",4000);	
@@ -80,12 +81,19 @@ export default class StrandComponentInput extends React.Component {
 		{
 			let name = this.state.name;
 			let componentList = this.state.components;
+			
 			let componentsDisplay = "";
-			if(this.state.fiveprime == "loop")			//loop strand
+
+			let loopcheck = "false";			//loop strand checkpoint
+			if(this.state.fiveprime == "loop")	
+			{
+				loopcheck = "true";		
 				componentsDisplay = "(loop) ";
+			}		
 
 			if(this.state.fiveprime == "false")			// turn 3-5 to 5-3 
 				componentList = componentList.reverse();
+
 
 			componentsDisplay = componentsDisplay + componentList[0];			//process components list for displaying on table (string instead of array)
 			for (let i = 1; i < componentList.length;i++)
@@ -95,20 +103,15 @@ export default class StrandComponentInput extends React.Component {
 			if(this.state.fiveprime == "false") // return components back to original order
 				componentList = componentList.reverse();
 
-			let loopcheck = "false";			//loop strand checkpoint
-			if(this.state.fiveprime == 'loop')
-				loopcheck = "true";
-
 			let fullstrand = {	name: name,
 								components:componentList,
 								componentsDisplay:componentsDisplay, 
 								loop:loopcheck
 							}
+			this.clear();
 			StrandAction.Add_Full_StrandList(fullstrand);
 		}
 	}
-	
-
 
 
 	rendercomponents(){

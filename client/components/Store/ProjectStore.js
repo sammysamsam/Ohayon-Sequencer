@@ -14,6 +14,7 @@ class ProjectStore extends EventEmitter{
 		this.dataAnalysis_Results = ["",""];
 
 		this.backendStatus = false;  // false = can not use sequencer (because sequencer is running or strandlist size < 1, true = sequencer is ready to sequence)
+		
 		this.compressedProjectData;
 	}
 
@@ -40,23 +41,32 @@ class ProjectStore extends EventEmitter{
 	{
 		return this.backendStatus;
 	}
+
+	getJSONProjectData()
+	{
+		let data = JSON.stringify({C:this.conditions,CL:this.component_StrandList,FSL:this.full_StrandList}); 
+		return data;
+	}
+
+ // RESULTS
 	getDataAnalysisResults()
 	{
 		return this.dataAnalysis_Results;
 	}
-	getJSONProjectData()
-	{
-		let data = JSON.stringify({C:this.conditions,CL:this.component_StrandList,FSL:this.full_StrandList}); 
-		console.log(data);
-		return data;
-	}
- 
+ 	clearResults()
+ 	{
+ 		this.dataAnalysis_Results =["",""]
+ 	}
+
+
 // PROJECT SAVE/LOAD
 
 
 	loadProject(data)
 	{
-		this.compressedProjectData = data;
+		this.component_StrandList = data.CL;
+		this.full_StrandList = data.FSL;
+		this.conditions = data.C;
 	}
 
 
@@ -72,37 +82,35 @@ class ProjectStore extends EventEmitter{
 			if(this.component_StrandList[i].complement == "true")
 				finalresults.push(component.name + " ' : " + this.complement_Maker(component.sequence));
 		}
-		//split final results by '*'
 		this.dataAnalysis_Results = ["PRINT",finalresults];
 	}
 
 	update_Component_StrandList(data)
 	{
 		//update component list
-		this.component_StrandList = data.updatedComponentlist;
+		this.component_StrandList = data.complist;
 		this.emit("Change_Component_Strandlist");
 
 		//if any full strands contain deleted component, delete full strand 
 		let updatedfulllist = [];
-		let deletedcomponent = data.deletedComponent;
-		
 		for(let i = 0 ; i < this.full_StrandList.length; i ++)
 		{
-			let checkpoint = false;
+			let checkpoint = true;
 			for (let y = 0; y < this.full_StrandList[i].components.length; y++)
 			{
-				if(this.full_StrandList[i].components[y] == deletedcomponent)
+				if(data.deletedlist.indexOf(this.full_StrandList[i].components[y]) > -1)
 				{
-					checkpoint = true;
+					checkpoint = false;
 					break;
 				}
 			}			
-			if(checkpoint == false)
-				updatedfulllist.push(fullstrand);
+			if(checkpoint == true)
+				updatedfulllist.push(this.full_StrandList[i]);
 		}
 		if(this.full_StrandList.length != updatedfulllist.length)
 		{
-			update_Full_StrandList(updatedfulllist);
+			this.update_Full_StrandList(updatedfulllist);
+			this.emit("Change_Full_Strandlist");	
 		}
 	}
 
@@ -119,7 +127,6 @@ class ProjectStore extends EventEmitter{
 	update_Full_StrandList(StrandlistUpdate2)
 	{
 		this.full_StrandList = StrandlistUpdate2;
-		this.emit("Change_Full_Strandlist");
 	}
 	add_Full_StrandList(NewStrand)
 	{
@@ -141,6 +148,7 @@ class ProjectStore extends EventEmitter{
  //   AXIOS POST METHODS
 	compareStrands(strandsToCompare)
 	{
+		console.log("WHITE");
 		this.backendStatus = true;
 		this.emit("Update_Backend_Status");
 
@@ -170,6 +178,7 @@ class ProjectStore extends EventEmitter{
  	{ 
 		this.backendStatus = true;
 		this.emit("Update_Backend_Status");
+		
 		let strandlistStoreReference = this;
  		return axios.post('/DNASequenceProgram/', {
  			timelimit: timelimit,
@@ -207,12 +216,14 @@ class ProjectStore extends EventEmitter{
 		switch(action.type){
 
 			case "OPEN_PROJECT":{
-				this.saveProject()
+				this.loadProject(action.data);
 				this.emit("Change_Component_Strandlist");
 				this.emit("Change_Condition");
 				this.emit("Change_Full_Strandlist");
+				this.emit("Open_Project");
 				break;
 			}
+//
 
 			case "EDIT_WORKSPACE_DISPLAY": {
 				this.workspaceDisplay = action.Display1;
@@ -226,12 +237,19 @@ class ProjectStore extends EventEmitter{
  				this.emit("Update_Backend_Status");
 				break;
 			}
+
 			case "SEQUENCE_STRANDLIST":{
 				this.runSequencer(action.time);
 				break;
 			}
 			case "COMPARE_STRANDS":{
 				this.compareStrands(action.strands);
+				break;
+			}
+//
+			case "CLEAR_RESULT":{
+				this.clearResults();
+				this.emit("Update_Results");
 				break;
 			}
 //
@@ -266,7 +284,7 @@ class ProjectStore extends EventEmitter{
 				this.emit("Change_Full_Strandlist");
 				break;
 			}
-//
+//		
 			case "EDIT_SALT" : {
 				this.conditions.Salt = action.Conditions1;
 				this.emit("Change_Condition");
@@ -329,22 +347,20 @@ class ProjectStore extends EventEmitter{
  	random_Sequence_Generator(length,blue)
  	{
  		var sequence = "";
- 		var blueprint = blue.split("-");
+ 		var blueprint = blue.split("");
  		for(var i = 0; i < length;i ++)
  		{
 			var random = Math.ceil(Math.random() * 4);
 			if(blueprint[i] == 'A' || blueprint[i] == 'T'|| blueprint[i] == 'C'|| blueprint[i]=='G')
-			{
 				sequence = sequence + blueprint[i];
-			} else if(random == 1){	
+			else if(random == 1)
 				sequence = sequence + "A";
-			} else if(random == 2){ 
+			else if(random == 2) 
 				sequence = sequence + "T";
-			} else if(random == 3){ 
+			 else if(random == 3)
 				sequence = sequence + "C";
-			}else{ 
+			else
 				sequence = sequence + "G";
-			}
  		}
  		return sequence; 
  	}

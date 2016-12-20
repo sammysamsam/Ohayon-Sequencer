@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router";
-import image3 from "../../images/AnalysisIcon.png";
-import image2 from "../../images/SequencerIcon.png";
-import image1 from "../../images/WorkspaceIcon.png";
+import image3 from "../../images/Icons/AnalysisIcon.png";
+import image2 from "../../images/Icons/SequencerIcon.png";
+import image1 from "../../images/Icons/WorkspaceIcon.png";
 export default class ProjectNagivationBar extends React.Component {
 	render()
 	{
@@ -14,6 +14,8 @@ export default class ProjectNagivationBar extends React.Component {
 			height:"692px",
 			width:"150px",
 			marginTop:"246px",
+			border:"solid #ff9e80",
+			borderWidth:"0px 2px 0px 0px"
 		}
 		const liStyle = {
 			padding:"75px 0px 0px 0px", 
@@ -30,19 +32,19 @@ export default class ProjectNagivationBar extends React.Component {
 				<div style = {liStyle}>   
 					<Link to="Project/Development" style = {linkstyle} className = "hvr-forward" > 
 						<img src = {image1} style = {{height:"50px",width:"50px"}}/>  
-						<h6 style = {{color:"#ffccbc"}}>Workspace </h6>
+						<h6 style = {{color:"white"}}>Workspace </h6>
 					</Link>
 				</div>
 				<div style = {liStyle}>  
 					<Link to = "Project/Sequencing" style = {linkstyle} className = "hvr-forward" >
 						<img src = {image2} style = {{height:"50px",width:"50px"}}/>  
-						<h6 style = {{color:"#ffccbc"}}>Sequencing</h6>
+						<h6 style = {{color:"white"}}>Sequencing</h6>
 					</Link> 
 				</div>
 				<div style = {liStyle}>  
 					<Link to = "Project/Result" style = {linkstyle} className = "hvr-forward" >    
 						<img src = {image3} style = {{height:"50px",width:"50px"}}/>  
-						<h6 style = {{color:"#ffccbc"}}> Results</h6> 
+						<h6 style = {{color:"white"}}> Results</h6> 
 					</Link> 
 				</div> 
 			</div>

@@ -47,32 +47,40 @@ export default class SequencingStageLayout extends React.Component {
 			padding:"35px",
 			background:"rgba(28, 50, 74,.8)",     
 			width:"1197px",
-			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)", 
 			marginLeft:"-153px",
 			height:"244px",
 			border:"solid #ff9e80",
-			borderWidth:"1px 0px 1px 0px"
+			borderWidth:"0px 0px 2px 0px"
 		}
 		let middlestyle = {
-			marginTop:"3px",
+			marginTop:"2px",
 			paddingLeft:"150px",
-			background:"rgba(28, 50, 74,.85)", 
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)", 
+			background:"rgba(28, 50, 74,.9)", 
 			width:"1044px",
 			height:"87px",
 			paddingTop:"12px"
 		}
 		let bottomstyle = {
-			padding:"10px 0px 0px 10px",
-			background:"rgba(28, 50, 74,.8)", 
+			marginTop:"1px",
+			padding:"10px 0px 0px 8px",
+			background:"rgba(28, 50, 74,.85)", 
 			width:"1044px",
-			height:"603px",
+			height:"604px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"
 		}
 
 		return(
 		<div >		
 			<div style = {topstyle}>
-					<h2 style = {{textAlign:"center",color:"#ffccbc"}}> SEQUENCING ALGORITHM </h2>
+					<h2 style = {{textAlign:"center",color:"#ffccbc"}}> 
+						
+
+						SEQUENCING ALGORITHM 
+
+					</h2>
+					
+
 					<h6 style = {{textAlign:"center",color:"#ffccbc",paddingTop:"30px"}}> Read over your Strand Components and start the sequencing algorithm when everything is properly inputed. (optional) set maximum time allocated for sequencing any set of strands (range: 1- 6 hours) </h6>
 			</div>
 			

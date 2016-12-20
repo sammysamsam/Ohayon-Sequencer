@@ -27,11 +27,10 @@ export default class WorkspaceNav extends React.Component {
 				height:"52px",
 				fontSize:"15px", 	
 				fontFamily: "'Dosis', serif " ,
-				color:"#ff9e80",
+				color:"white",
 				width:"1045px",
 				display:"block",
-				marginBottom:"20px"
-
+				marginBottom:"20px",
 			}
 			let itemstyle = {    
 				background:"rgba(0, 34, 51,.5)", 
@@ -50,7 +49,7 @@ export default class WorkspaceNav extends React.Component {
 				textAlign:"center", 
 				verticalAlign:"top",
 				fontWeight:"bold",
-				textDecoration:"underline"
+				textDecoration:"underline",
 			}
 
 

@@ -105,9 +105,7 @@ public class Strand
 		for(char f:this.blueprint)
         {
 			if(f == 'A'||f == 'T'||f == 'C'||f == 'G')
-            {
 				sequenceArray[counter] = f;
-			}
 			counter ++;
 		}		
 		this.setSequence(String.valueOf(sequenceArray));		
@@ -523,7 +521,7 @@ STRAND PROPERTIES/GETTER METHODS
 		Base[] shiftedB = new Base[this.length + b.length*2];
 		int highestScore = 0;
 
-		for(int i = 1; i < b.length + this.length; i++)
+		for(int i = 1; i < b.length + this.length; i++)//SHIFT LOOP
         {
 			//Shift Bases over for each shift (0) = strand this  (1) = strand b
 			ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(b, i);			
@@ -576,7 +574,7 @@ STRAND PROPERTIES/GETTER METHODS
 		Base[] shiftedB = new Base[this.length + b.length*2];
 		int highestScore = 0;
 
-		for(int i = 1; i < b.length + this.length; i++)
+		for(int i = 1; i < b.length + this.length; i++)//SHIFT LOOP
         {
 			boolean skipShift = false;
 			for(int ignoreShiftIndex = 0; ignoreShiftIndex < ignoreShifts.length;ignoreShiftIndex++)

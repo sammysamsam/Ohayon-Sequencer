@@ -8,46 +8,34 @@ export default class Overview extends React.Component {
 	constructor()
 	{
 		super();
-		this.state = {
-			salt: "",
-			concentration:""
-		}
 		this.handleSalt = this.handleSalt.bind(this);
 		this.handleSaltConcentration = this.handleSaltConcentration.bind(this);
 		this.submit = this.submit.bind(this);
+		this.state = {
+			salt: "",
+			concentration:""
+		};
 	}
 	handleSalt(input)
 	{	
-		if (input.key == 'Enter') 
-		{
+		if (input.key == 'Enter')
 			this.submit();
-		}
 		if(input.target.value !=this.state.salt)
-		{
 			this.setState({salt:input.target.value});
-		}
 	}
 	handleSaltConcentration(input)
 	{
 		if (input.key == 'Enter') 
-		{
 			this.submit();
-		}
 		if(input.target.value != this.state.concentration)
-		{
 			this.setState({concentration:input.target.value});
-		}
 	}
 	submit()
 	{
 		if(this.state.salt != "Na" && this.state.salt != "Mg")
-		{
 			Materialize.toast("Unfulfilled Requirement: Salt needs to be 'Na' or 'Mg' ",4000);
-		}
-		if(this.state.concentration >= 1 || this.state.concentration <0)
-		{
+		if(this.state.concentration >= 1 || this.state.concentration < 0)
 			Materialize.toast("Unfulfilled Requirement: Concentration Range: [0.01] - [1.00] ",4000);
-		}
 		else
 		{
 			StrandAction.EditSalt(this.state.salt);	
@@ -76,11 +64,11 @@ export default class Overview extends React.Component {
 			let data = listValue.name + " [ "+listValue.componentsDisplay + " ] ";
 			let number =  index +"."
 			return( 
-				<div>
+				<div key = {listValue.name + "-fullstrand"} >
 					<span style = {{display:"inline-block",color:"#e3e4e5",fontSize:"9px",paddingRight:"8px"}}>
 						{number}
 					</span>
-					<h6 key = {listValue.name + "-fullstrand"} style = {{color:"#e3e4e5",width:"380px",textOverflow:"ellipsis",display:"inline-block"}}> 
+					<h6 style = {{color:"#e3e4e5",width:"380px",textOverflow:"ellipsis",display:"inline-block"}}> 
 						{data}
 					</h6>
 				</div>
@@ -124,7 +112,7 @@ export default class Overview extends React.Component {
 			marginRight:"2px"
 		}
 		const componentPosition = {
-			marginTop:"-305px"
+			marginTop:"-386px"
 		}
 		const fullStrandPosition = {
 			display:"inline-block",
@@ -147,17 +135,17 @@ export default class Overview extends React.Component {
 							<Row>
 								<Input 
 								label = "Edit Salt [Na or Mg]:"
-								s={12}
+								s={6}
 								type="text" 
 								onChange= {this.handleSalt} 
-								style = {{fontSize:"14px",width:"290px"}} 
+								style = {{fontSize:"14px"}} 
 								/>
 
 								<Input
-								s={12}
-								label="Edit Concentration of Salt [0.0 M - 1.0 M]:"
+								s={6}
+								label="Edit Salt Concentration:"
 								onChange={this.handleSaltConcentration} 
-								style = {{fontSize:"14px",width:"290px"}} 
+								style = {{fontSize:"14px"}} 
 								/>
 							<Button waves='light' onClick = {this.submit}>Submit</Button>
 							</Row>
@@ -197,7 +185,7 @@ export default class Overview extends React.Component {
 							<h6 style = {{color:"#9e9e9e",paddingTop:"5px",paddingBottom:"10px"}}> 
 								Components: 
 							</h6>
-							<div style = {{height:"153px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.15)" ,padding:"10px",color:"white" }}> 
+							<div style = {{height:"234px",overflow:"auto",width:"440px",background:"rgba(255, 255, 255, 0.15)" ,padding:"10px",color:"white" }}> 
 								{this.printComponentList()} 
 							</div>
 						</div>

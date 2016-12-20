@@ -5,7 +5,8 @@ public class Tester
 	public static void main(String[] args)
     {
 		//testConsecPossible();
-		testCompAlgorithm();
+		//testCompAlgorithm();
+		testFullAlgorithm();
 	}
 //
 	private static Sequencer sequencerCompGenerator()

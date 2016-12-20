@@ -73,6 +73,11 @@ import dispatcher from "../Dispatcher";
 			results,
 		});
 	}
+	export function ClearResults(){
+			dispatcher.dispatch({
+			type:"CLEAR_RESULT",
+		});
+	}
 	export function CompareStrands(strands){
 		dispatcher.dispatch({
 			type:"COMPARE_STRANDS",

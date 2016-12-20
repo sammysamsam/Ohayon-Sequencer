@@ -32,7 +32,7 @@ export default class FullStrandDisplay extends React.Component {
 	render(){
 		let fullStrandDisplayContainer = {
 			display:"inline-block",
-			width:"490px",
+			width:"491px",
 			color:"black", 
 			fontSize:"11px",
 			verticalAlign:"top"
@@ -90,7 +90,7 @@ export default class FullStrandDisplay extends React.Component {
 			    			dataField="name" 
 			    			isKey={true} 
 			    			dataSort={true} 
-			    			width = {"150px"} > 
+			    			width = {"120px"} > 
 			    			Name
 			    		</TableHeaderColumn>
 			    			<TableHeaderColumn 

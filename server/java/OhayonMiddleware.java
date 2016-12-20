@@ -35,7 +35,8 @@ public class OhayonMiddleware{
 	{
 		this.processConditions( salt , concentration );
 		this.buildComponents( unparsedComponentsList );
-		//this.buildFullStrandList( unparsedFullStrandList );
+		if(unparsedFullStrandList.size() > 0)
+			this.buildFullStrandList( unparsedFullStrandList );
 	}
 
 	private String[] getParsedData()
@@ -46,7 +47,6 @@ public class OhayonMiddleware{
 			Strand temp = this.componentList.get(i);
 			String sequence = temp.sequence;
 			parsedComponentData[i] = temp.name+":"+sequence;
-			System.out.println(parsedComponentData[i]);
 		}
 		return parsedComponentData;
 	}
@@ -60,6 +60,7 @@ public class OhayonMiddleware{
 	public String[] sequenceStrands(String salt, String concentration, ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
 	{
 		this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
+		
 		
 		//****
 		Sequencer OHAYON = new Sequencer(this.componentList , this.thermoCalc,this.fullStrandList);		
@@ -103,16 +104,16 @@ public class OhayonMiddleware{
 		for(int i = 0; i < unparsedComponents.size();i++)
 		{			
 			String[] parameters = unparsedComponents.get(i);
-			Strand component = new Strand( Integer.parseInt(parameters[1]) , true);	//length, complementexists
+			Strand component = new Strand( Integer.parseInt(parameters[1]) , true);		//length, complementexists
 			
 			component.setName(parameters[0]);											//name
-			component.setComplement( Boolean.parseBoolean(parameters[2]) );			//complement
+			component.setComplement( Boolean.parseBoolean(parameters[2]) );				//complement
 			component.setMismatchThreshold( Integer.valueOf(parameters[3]) );			//mismatch
 			component.setHairpinThreshold( Integer.valueOf(parameters[4]) );			//hairpin
-			component.setBlueprint(parameters[5]);							//blueprint
+			component.setBlueprint(parameters[5]);										//blueprint
 			
-			//f.setTm( Float.valueOf(parameters[6]) , this.thermoCalc );		//meltingpoint
-			this.componentList.add(component);										//add strandlist
+			//f.setTm( Float.valueOf(parameters[6]) , this.thermoCalc );				//meltingpoint
+			this.componentList.add(component);											//add strandlist
 		}
 	}
 
@@ -128,14 +129,13 @@ public class OhayonMiddleware{
 			
 			//strandname
 			String strandname = parameters[parameters.length-1];
-			
+
 			//build list of components that make this strand
 			String[] strandRecipe = new String[parameters.length-1];
 			for(int x = 0; x < parameters.length-1;x++)
 			{
 				strandRecipe[x] = parameters[x];
 			}
-
 
 			//build fullstrand componentslist
 			ArrayList<Strand> orderedComponents = new ArrayList<Strand>();			

@@ -1,15 +1,17 @@
 import React from "react";
+import { Link } from "react-router";
+
 import StrandUtilities from '../pages/ToolsAnalysis/StrandUtilities';
 
 import StrandComparer from '../pages/ToolsAnalysis/StrandComparer';
 
 import StrandMeltingPt from '../pages/ToolsAnalysis/StrandMeltingPt';
 
-import FooterSection from '../pages/MainFooterSection';
+import FooterSection from '../pages/FooterSection';
 
 import {Collapsible,CollapsibleItem,Tabs,Tab} from 'react-materialize';
 
-import { Link } from "react-router";
+
 
 
 export default class ToolsAnalysis extends React.Component {

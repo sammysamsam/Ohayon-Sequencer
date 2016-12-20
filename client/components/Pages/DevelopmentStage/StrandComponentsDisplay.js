@@ -7,33 +7,20 @@ import * as StrandAction from "../../Actions/StrandAction";
 
 
 export default class StrandComponentsDisplay extends React.Component {
-	updateStoreStrandlist(updatedstrandlist)
+	constructor()
 	{
-		let data = [];
-
-		//delete full strands that contain component
-		let deletedcomponent;
-
-		for(let i = 0; i<this.props.Component_list.length;i++)
+		super();
+		this.updateStoreComponentList = this.updateStoreComponentList.bind(this);
+	}
+	updateStoreComponentList(deletedStrands)
+	{
+		let newList = [];
+		for(let i = 0;i<this.props.Component_list.length;i++)
 		{
-			let checkpoint = false;
-			for (let g = 0; g < updatedstrandlist.length; g ++)
-			{
-				if(this.props.Component_list[i].name == updatedstrandlist[g])
-				{
-					checkpoint = true;
-					deletedcomponent = this.props.Component_list[i].name;
-				}
-			}			
-			if(checkpoint == false)
-				data.push(this.props.Component_list[i]);
+			if(deletedStrands.indexOf(this.props.Component_list[i].name) == -1)
+				newList.push(this.props.Component_list[i]);
 		}
-		
-		if(this.props.Component_list.length != data.length)
-		{
-			let x = {updatedComponentlist:data,deletedComponent:deletedcomponent}
-			StrandAction.Update_Component_Strandlist(x);
-		}
+		StrandAction.Update_Component_Strandlist({complist:newList,deletedlist:deletedStrands});
 	}
 
 	render()
@@ -68,7 +55,6 @@ export default class StrandComponentsDisplay extends React.Component {
 		const selectRowProp = {
   			mode: "checkbox",
   			clickToSelect: true,
-  			width:"15px",
   			bgColor: "rgb(238, 193, 213)",
 		}
 		return(
@@ -77,7 +63,6 @@ export default class StrandComponentsDisplay extends React.Component {
 				<div className= "animated fadeInUp" style = {{display:"inline-block"}}>
 					<StrandComponentInput strandlist = {this.props.Component_list}/>
 				</div>
-
 
 				<div className= "animated fadeInUp" style = {{display:"inline-block",verticalAlign:"top",marginLeft:"5px"}}>
 				
@@ -98,7 +83,7 @@ export default class StrandComponentsDisplay extends React.Component {
   							hover={true}  
   							deleteRow={true}
   							selectRow={selectRowProp}	
-  							options={ { onDeleteRow: this.updateStoreStrandlist.bind(this)}} >
+  							options={{onDeleteRow: this.updateStoreComponentList}} >
     			    
 	    			    	<TableHeaderColumn 
 	    			    		dataField="name" 
@@ -111,19 +96,19 @@ export default class StrandComponentsDisplay extends React.Component {
 	   			    		<TableHeaderColumn 
 	   			    			dataSort={true} 
 	   			    			dataField="blueprint"  
-	   			    			width = "230px">
+	   			    			width = "235px">
 	   			    			Blueprint   
 	   			    		</TableHeaderColumn>
 	 				    	
-	 				    	<TableHeaderColumn dataField="meltingpoint" width = "70px"> Melting Pt. </TableHeaderColumn>
+	 				    	<TableHeaderColumn dataAlign = 'center'  dataField="meltingpoint" width = "70px"> Melting Pt. </TableHeaderColumn>
 	 				    	
-	 				    	<TableHeaderColumn dataField="length"  width = "50px"> Length </TableHeaderColumn>
+	 				    	<TableHeaderColumn dataAlign = 'center' dataField="length"  width = "50px"> Length </TableHeaderColumn>
 
-	 			    		<TableHeaderColumn dataField="mismatch" width = "63px"> Mismatch </TableHeaderColumn>
+	 			    		<TableHeaderColumn dataAlign = 'center' dataField="mismatch" width = "63px"> Mismatch </TableHeaderColumn>
 	 			    		
-	 			    		<TableHeaderColumn 	dataField="self" width = "50px"> Self </TableHeaderColumn>
+	 			    		<TableHeaderColumn 	dataAlign = 'center' dataField="self" width = "40px"> Self </TableHeaderColumn>
 	 			    		
-	 			    		<TableHeaderColumn dataField="complement"> Comp </TableHeaderColumn>
+	 			    		<TableHeaderColumn dataAlign = 'center'  dataField="complement"> Comp </TableHeaderColumn>
  						</BootstrapTable>
  					</div>
  				</div>

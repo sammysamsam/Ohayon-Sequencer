@@ -14,7 +14,6 @@ public class Sequencer
     {
         this.thermoCalc = x;
         this.componentList = componentList;
-        this.fullStrandList = new ArrayList<FullStrand>();
     }
 
     public Sequencer(ArrayList<Strand> componentList, ThermodynamicsCalculator x, ArrayList<FullStrand> fullStrandList)
@@ -83,16 +82,17 @@ STATUS OF STRANDLIST METHODS
                 int[] complementShifts = currentFullStrand.getComplementShifts(tempFullStrand,this.componentList);
                 if(complementShifts.length == 0)
                 {
+                    int[] compshift = new int[0];
                     System.out.print("\n\n"+currentFullStrand.name + " vs "+ tempFullStrand.name+": ");
                     System.out.println(currentFullStrand.combine(this.componentList).mismatch(tempFullStrand.combine(this.componentList),this.fullStrandMismatchLimit));
-                    c.bestArrangement(currentFullStrand.combine(this.componentList),tempFullStrand.combine(this.componentList));
+                    c.bestArrangementFull( currentFullStrand.combine(this.componentList) , tempFullStrand.combine(this.componentList) , compshift);
                    
                 }
                 else
                 {
                     System.out.print("\n\n* "+currentFullStrand.name + "vs "+tempFullStrand.name + ":"); // temp = this current = other
                     System.out.println(currentFullStrand.combine(this.componentList).mismatch2(tempFullStrand.combine(this.componentList),this.fullStrandMismatchLimit,complementShifts));  //current slides through while other stays same
-                    c.bestArrangementFull(currentFullStrand.combine(this.componentList),tempFullStrand.combine(this.componentList),complementShifts);
+                    c.bestArrangementFull(currentFullStrand.combine(this.componentList) , tempFullStrand.combine(this.componentList) , complementShifts);
                 }
             }
         }
@@ -160,12 +160,11 @@ STRAND SEQUENCING METHOD:
             int numTries = 0;
 
             this.componentList.add(fullComponentList.get(i)); //step 4
-            System.out.println("add " + fullComponentList.get(i).name);  
-                        this.printFullStrand();       
+            System.out.println("\nadd " + fullComponentList.get(i).name + " |  list size now:" + this.componentList.size());   
             while(true)
             {
                     numTries++;
-                    this.strandRandomizer(5, i);   //step 5
+                    this.strandRandomizer(8, i);   //step 5
               
                     if(numTries > 10)
                     {
@@ -175,7 +174,7 @@ STRAND SEQUENCING METHOD:
                             this.componentList.remove(i);
                             i = i - 2;          
                             this.componentList.remove(i + 1);
-                            System.out.println("back, list size now:" + this.componentList.size());
+                            System.out.println("\nback, list size now:" + this.componentList.size());
                             break;
                         }
                     }
@@ -187,8 +186,6 @@ STRAND SEQUENCING METHOD:
                     {
                         checkpointResult = false;
                         System.out.println("stage : "+stage);  
-                        if(stage == 2)  
-                            minimizeEdges();
                         while(baseFixingAlgorithm(stage, i))     //step 6
                         {
                             if(sequencingStageCheckpoint(stage))
@@ -200,17 +197,20 @@ STRAND SEQUENCING METHOD:
                         if(!checkpointResult)
                             break;
                     }
-                    if(!checkpointResult)
+                    if(!sequencingStageCheckpoint(2))
                         continue;
 
-                    System.out.print("\n___\n");
+                    System.out.println("\n___\n"+numTries+"\n");
                     this.minimizeEdges();
 
                     if(sequencingStageCheckpoint(3))
                         break;
             }
         }
-        this.printFullStrand();
+        System.out.println("\n_________________________________________________________________________________________\n");
+        this.componentOverview();
+        System.out.println("\n_________________________________________________________________________________________\n");
+        this.fullStrandOverview();
     }
 
 /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -235,7 +235,7 @@ CHECKPOINT FOR ALGORITHM METHODS:
     }
     private boolean checkpoint3(int i)
     {
-        if(this.fullStrandList.size() > 0 && this.fullStrandMatches(this.componentList.get(i).name) > 0)
+        if(this.fullStrandMatches(this.componentList.get(i).name) > 0)
             return false;
         return checkpoint2(i);
     }
@@ -270,30 +270,27 @@ FULL STRAND/EDGE ALGORITHM METHODS:
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 public void minimizeEdges()
 {   
-    if(this.fullStrandList.size() > 0)
+    int[] shuffledStrandOrder = shuffleStrandIndices(this.componentList.size());  
+
+    while(true)
     {
-        int[] shuffledStrandOrder = shuffleStrandIndices(this.componentList.size());  
-
-        while(true)
+        boolean changes = false;
+        for(int i: shuffledStrandOrder)
         {
-            boolean changes = false;
-            for(int i: shuffledStrandOrder)
-            {
-                System.out.print(this.componentList.get(i).name+" before "+
-                    this.fullStrandMatches(this.componentList.get(i).name));
+            System.out.print(this.componentList.get(i).name+" before "+
+                this.fullStrandMatches(this.componentList.get(i).name));
+            
+            if (edgeFixingAlgorithm(i))
+                changes = true;
 
-
-                if (edgeFixingAlgorithm(i))
-                    changes = true;
-
-                int result = this.fullStrandMatches(this.componentList.get(i).name);            
-                System.out.println( "   after    "+result);
-            }
-
-            //if conditions satisfied or no changes can be made, break;
-            if(!changes || sequencingStageCheckpoint(3))
-                break;
+            int result = this.fullStrandMatches(this.componentList.get(i).name);            
+            System.out.println( "   after    "+result);
+        
         }
+
+        //if conditions satisfied or no changes can be made, break;
+        if(!changes || sequencingStageCheckpoint(3))
+            break;
     }
 }
 
@@ -604,8 +601,7 @@ STRAND VS STRAND CHECK METHOD:
                         Strand strand1 = currentFullStrand.combine(this.componentList);
                         Strand strand2 = tempFullStrand.combine(this.componentList);
                         sum = sum +strand1.mismatch(strand2,this.fullStrandMismatchLimit);
-                        //System.out.println(currentFullStrand.name+" "+currentFullStrand.combine(this.componentList).sequence+" vs "+tempFullStrand.name+" "+tempFullStrand.combine(this.componentList).sequence+" | "+sum);
-                        
+                        //System.out.println(currentFullStrand.name+" "+currentFullStrand.combine(this.componentList).sequence+" vs "+tempFullStrand.name+" "+tempFullStrand.combine(this.componentList).sequence+" | "+sum);    
                     }
                     else
                     {
@@ -772,10 +768,12 @@ UTILITY METHODS:
             int[] basePosition = {0,1,2,3,x.length-4,x.length-3,x.length-2,x.length-1};
             if(x.blueprintExists)
             {
+                int counter = 0;
                 for(int pos : basePosition)
                 {
-                    if(x.blueprint[pos] == 'o')
-                        basePosition[pos] = -1;
+                    if(x.blueprint[pos] == 'A'||x.blueprint[pos] == 'T'||x.blueprint[pos] == 'C'||x.blueprint[pos] == 'G')
+                        basePosition[counter] = -1;
+                    counter ++;
                 }
             }
            shuffleArray(basePosition);

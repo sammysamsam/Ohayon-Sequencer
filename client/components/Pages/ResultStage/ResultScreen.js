@@ -51,8 +51,9 @@ export default class ResultScreen extends React.Component {
     		padding:"10px",
     	}
     	let allArrangementStyle = {
-     		height:"365px",
-     		padding:"15px",
+     		background:"rgba(255,255,255,.2)",
+     		height:"371px",
+     		padding:"2px",
      		overflow:"scroll",	
     		fontSize:"12px"
     	}
@@ -62,13 +63,15 @@ export default class ResultScreen extends React.Component {
     		transform: "translate(-50%, 0%)",
     		fontSize:"12px"
     	}
-
+    	if(this.props.list.length == 0)
+    		return(<div></div>)
+    			
     	let shiftedarrays = (this.props.results[1][1]).split("$$$");
  		return  (
 		<div style = {resultsContainer}> 
 			<div style = {bestArrangementStyle}>
 				<div style = {{textDecoration:"underline",textAlign:"center",fontSize:"17px",padding:"5px"}}>
-					Best Arrangement: {this.props.list[0].components} vs {this.props.list[1].components}
+					Best Arrangement: {this.props.list[0].components.toString()} vs {this.props.list[1].components.toString()}
 				</div>
 				<div style = {bestarrangementItemStyle}>
 					{this.props.results[1][0]}
@@ -76,7 +79,10 @@ export default class ResultScreen extends React.Component {
 
 			</div>
  			<div style = {allArrangementStyle }>
-				<Table className = "responsive-table hover">
+				<Table responsive = {true} 
+						stripped = {true} 
+						bordered = {true}
+						hoverable = {true}>
 			        <thead>
 			          <tr>
 			              <th data-field="id">All Arrangements</th>

@@ -25,6 +25,7 @@ export default class StrandComparison extends React.Component {
 
 	addComponentsToComparelist(e)
 	{
+			StrandAction.ClearResults();		
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
 			temp.push( {name:e.label, components:e.value,loop:"false"} );		
@@ -33,6 +34,7 @@ export default class StrandComparison extends React.Component {
 	}
 	addFullStrandToComparelist(e)
 	{
+			StrandAction.ClearResults();		
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
 			temp.push( {name:e.label, components:e.value,loop:"false"} );		
@@ -42,22 +44,26 @@ export default class StrandComparison extends React.Component {
 	//
 
 	callcomparelist(){
+		StrandAction.ClearResults();
 		if(this.state.comparelist.length > 2 || this.state.comparelist.length == 0 )
-			alert("Please Select 1 or 2 Strands to Compare");
+			Materialize.toast("Please Select 1 or 2 Strands to Compare",2000);
 		else 
 		{
 			if(this.state.comparelist.length == 1 )
 				this.state.comparelist.push(this.state.comparelist[0]);
 			StrandAction.CompareStrands(this.state.comparelist);
 		}
+
 	}
 
 	callprintfullstrands()
 	{
+		StrandAction.ClearResults();	
 		StrandAction.PrintStrandList();
 	}
 	callprintcomponents()
 	{
+		StrandAction.ClearResults();	
 		StrandAction.PrintComponentList();
 	}
 
@@ -66,6 +72,7 @@ export default class StrandComparison extends React.Component {
 
 	deletecomparelist(f)
 	{
+		StrandAction.ClearResults();		
 		if(this.state.comparelist.length == 1){
 			this.setState({comparelist:[]});
 		}
@@ -87,30 +94,27 @@ export default class StrandComparison extends React.Component {
 
 	componentsListProcessor()
 	{
-			let strandlist = [];
-			for(let i = 0; i < this.props.componentlist.length;i ++)
-			{
-				let name = this.props.componentlist[i].name;
-				strandlist.push({value:[name ],label:name});
-				if(this.props.componentlist[i].complement){
-					strandlist.push({value:[name +"'"],label:name+"'"});
-				}
-
+		let strandlist = [];
+		for(let i = 0; i < this.props.componentlist.length;i ++)
+		{
+			let name = this.props.componentlist[i].name;
+			strandlist.push({value:[name ],label:name});
+			if(this.props.componentlist[i].complement){
+				strandlist.push({value:[name +"'"],label:name+"'"});
 			}
-			return strandlist;
+		}
+		return strandlist;
 	}
 
 	fullStrandListProcessor()
 	{ 
-
-	// components = array of component names
-			let strandlist = [];
-			for(let i = 0; i < this.props.fulllist.length;i ++)
-			{
-				let fullstrand = this.props.fulllist[i];
-				strandlist.push({ value:fullstrand.components , label:fullstrand.name});
-			}
-			return strandlist;
+		let strandlist = [];
+		for(let i = 0; i < this.props.fulllist.length;i ++)
+		{
+			let fullstrand = this.props.fulllist[i];
+			strandlist.push({ value:fullstrand.components , label:fullstrand.name});
+		}
+		return strandlist;
 	}
 
 
@@ -134,7 +138,6 @@ export default class StrandComparison extends React.Component {
 			<div className= "animated fadeIn" style = {{display:"inline-block",margin:"-10px 0px 0px 15px"}}>
 				<div className = "chip"> 
 					{this.state.comparelist[0].name} 
-
 					<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist1}> 
 						[clear]
 					</span>
@@ -212,9 +215,6 @@ export default class StrandComparison extends React.Component {
 			}
 		}
 	}
-
-	//background:"rgba(28, 50, 74,.78)"
-
 	render(){
 		let strandsToCompareStyle = {
  	 		background:"rgba(255, 255, 255,.07)",
@@ -225,13 +225,13 @@ export default class StrandComparison extends React.Component {
  	 	}
 		let compareWorkspaceStyle = {
 			background:"rgba(28, 50, 74,.55)",
-			marginBottom:"2px",
-			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"	
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"	,
 		}
 		let resultSectionStyle = {
-			height:"550px",
+			height:"553px",
 			width:"1045px",
 			display:"block",
+			marginTop:"2px",
 			background:"rgba(255,255,255,.7)"
 			,boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
 		}

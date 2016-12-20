@@ -12,6 +12,7 @@ export default class ResultStateLayout extends React.Component {
 		this.updatefullstrandlist = this.updatefullstrandlist.bind(this);
 		this.updateBackendStatus = this.updateBackendStatus.bind(this);
 		this.updateresults = this.updateresults.bind(this);
+		this.updateconditions = this.updateconditions.bind(this);
 		this.state = {  
 				Results:ProjectStore.getDataAnalysisResults(),
 				Salt: ProjectStore.getConditions().Salt, 
@@ -56,11 +57,10 @@ export default class ResultStateLayout extends React.Component {
 		let topstyle = {
 			padding:"35px",
 			background:"rgba(28, 50, 74,.8)",     
-			width:"1198px",
-			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)", 
+			width:"1198px", 
 			textAlign:"center",
-			margin:"0px 0px 2px -153px",
-			height:"244px",
+			margin:"0px 0px 3px -153px",
+			height:"243px",
 			border:"solid #ff9e80",
 			borderWidth:"1px 0px 1px 0px"
 		}
@@ -68,7 +68,11 @@ export default class ResultStateLayout extends React.Component {
 		return(
 		<div >
 			<div style = {topstyle}>
-				<h2 style = {{color:"#ffccbc"}}> DATA ANALYSIS </h2>
+				<h2 style = {{color:"#ffccbc"}}> 
+				
+
+					DATA ANALYSIS 
+				</h2>
 				<p style = {{paddingTop:"30px",color:"#ffccbc"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
 			</div>
 

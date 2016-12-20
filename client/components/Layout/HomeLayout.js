@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import FooterSection from '../Pages/MainFooterSection';
+import FooterSection from '../Pages/FooterSection';
 import Spinner from 'react-spinkit';
 
 

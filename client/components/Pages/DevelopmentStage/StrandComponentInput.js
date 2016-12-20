@@ -1,4 +1,6 @@
 import React from "react";
+import ReactDOM from 'react-dom';
+
 import {Input,Button,Row} from 'react-materialize'
 
 //ACTION
@@ -9,6 +11,8 @@ export default class StrandComponentInput extends React.Component {
 	constructor()
 	{
 		super();
+		this.handlename = this.handlename.bind(this);
+		this.handlelength = this.handlelength.bind(this);
 		this.state = {	name: "", 
 						strandlength: 10, 
 						complement: "true",
@@ -24,13 +28,11 @@ export default class StrandComponentInput extends React.Component {
 	{
 		this.setState({name : input.target.value});
 	}
-	handlelength(input)
+
+	handlelength(input) // input will always be a number
 	{
 		let strandlength = input.target.value;
 		//set max melting pt
-
-
-		//
 
 		if(strandlength == "")
 		{
@@ -51,40 +53,30 @@ export default class StrandComponentInput extends React.Component {
 	handlemismatchlimit(input)
 	{
 		if(input.target.value == "")
-		{
 			this.setState({mismatchlimit:5});
-		}else
-		{
+		else
 			this.setState({mismatchlimit:input.target.value});
-		}
 	}
 	handleselflimit(input)
 	{
 		
 		if(e.target.value == "")
-		{
 			this.setState({selflimit:5});
-		}else
-		{
+		else
 			this.setState({selflimit:input.target.value});
-		}
 	}		
 	handlemeltingpoint(input)
 	{
-		let meltingpoint = input.target.value.replace(" ","");
 		if(meltingpoint== "")
-		{
 			this.setState({meltingpoint:"n/a"});
-		}else
-		{
-			this.setState({meltingpoint});
-		}		
+		else
+			this.setState({meltingpoint});	
 	}		
 	handleblueprint(input)
 	{
 		this.setState({blueprint:input.target.value});
 	}
-	handleComplement(input)
+	handleComplement(input) // true or false
 	{
 		this.setState({ complement : input.target.value });
 	}
@@ -92,37 +84,33 @@ export default class StrandComponentInput extends React.Component {
 	tokenprocessor()
 	{
 		let alerts = false;
+
+//check if length,mismatch,self are whole numbers
 		if(!this._isInt(this.state.strandlength)||
 			!this._isInt(this.state.mismatchlimit)||
 			!this._isInt(this.state.selflimit))
+			alerts = true;
+
+//check name contains requirements
+		if(!/\S/.test(this.state.name) || this.state.name.includes("'") || this.state.name.includes("-"))
 		{
+			Materialize.toast("Unfufilled Requirement: Name field must contain at least one character and not include restricted character: semicolon ( ' ) or dash ( - )!",4000);
 			alerts = true;
 		}
 
-		//check name
-		if (!/\S/.test(this.state.name)) 
-		{
-			Materialize.toast("Unfufilled Requirement: Name field must contain at least one character!",4000);
-			alerts = true;
-		}
-
-		if(this.state.name.includes("'") || this.state.name.includes("-"))
-		{
-			Materialize.toast("Unfufilled Requirement: Name field contains restricted character: semicolon ( ' ) or dash ( - )!",4000);
-			alerts = true;
-		}
-
-		// check blueprint
-		if(this.state.strandlength != this.state.blueprint.split("-").length)
+// check blueprint (remove all - and spaces)
+		let blueprintTemp = this.state.blueprint.replace(/-/g,"");
+		blueprintTemp = blueprintTemp.replace(/ /g,"");
+		if(this.state.strandlength != blueprintTemp.length)
 		{
 			alerts = true;
 			Materialize.toast("Unfufilled Requirement: Blueprint length does not match Strand Length!",4000);
 		}
 
-		//check repeat name
+//check repeat name
 		for(let i = 0; i < this.props.strandlist.length;i++)
 		{
-			if(this.props.strandlist[i].name == this.state.name)
+			if(this.props.strandlist[i].name.replace(/ /g,"") == this.state.name.replace(/ /g,""))
 			{
 				alerts = true;
 				Materialize.toast("Unfufilled Requirement: Name already exists in Component List",4000);
@@ -139,7 +127,6 @@ export default class StrandComponentInput extends React.Component {
 		}*/
 
 
-
 		if(alerts == false)
 		{
 			StrandAction.Add_Component_StrandList(
@@ -148,24 +135,23 @@ export default class StrandComponentInput extends React.Component {
 					complement: this.state.complement, 
 					mismatch: this.state.mismatchlimit, 
 					self: this.state.selflimit, 
-					blueprint: this.state.blueprint,
+					blueprint: blueprintTemp,
 					meltingpoint:this.state.meltingpoint
 				}
 			);
 		}
 	}
+//
 	_handleKeyPress(input) 
 	{
 		if (input.key == 'Enter') 
-		{
 			this.tokenprocessor();
-		}
 	}
 	_isInt(number)
 	{
 		return number % 1 == 0;
 	}
-
+//
 	render()
 	{
 		let bodyStyle = {
@@ -261,7 +247,9 @@ export default class StrandComponentInput extends React.Component {
 						onClick = {this.handleComplement.bind(this)}
 					/> 
 					</Row>
-				<span className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px",fontSize:"9px"}}> Blueprint (optional):	</span>
+				<span className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px",fontSize:"9px"}}> 
+					Blueprint i.e. ATCGo ( "-" is optional):	
+				</span>
 
 				<textarea 
 					value = {this.state.blueprint} 
