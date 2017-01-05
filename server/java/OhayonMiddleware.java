@@ -81,6 +81,12 @@ public class OhayonMiddleware{
 		return this.comparer.compareTwo(a,b);
 
 	}
+	public String[][] compareAll(ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
+	{
+		this.buildComponents(unparsedComponentsList);
+		this.buildFullStrandList(unparsedFullStrandList);
+		return this.comparer.compareAll(this.componentList,this.fullStrandList);
+	}
 
 
 	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

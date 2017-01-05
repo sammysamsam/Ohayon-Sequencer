@@ -5,9 +5,7 @@ export default class ResultScreen extends React.Component {
 		let printedStrandsContainerStyle = {
 			fontFamily:"'Anaheim',serif",
 			padding:"25px",
-			overflowY:"scroll",
-			overflowWrap: "break-word",
-			height:"502px",
+			height:"712px",
 			width:"1035px",
 			fontWeight:"bold"
 		}
@@ -18,41 +16,42 @@ export default class ResultScreen extends React.Component {
 				<h6 style = {{textAlign:"center",textDecoration:"underline",marginBottom:"10px"}}>
 					Strand Order [5' to 3']
 				</h6>
-				<Table className = "responsive-table striped">
-			        <thead>
-			          <tr>
-			              <th data-field="id">Name</th>
-			              <th data-field="name">Sequence</th>
-			          </tr>
-			        </thead>
-				    <tbody>
-						{results.map(function(listValue,index){	
-							let values = listValue.split(":");
-							return     (<tr  key = {index} >
-									      <td>{values[0]}</td>
-									      <td style = {{fontFamily:"'Share Tech Mono',serif"}}>{values[1]}</td>
-									    </tr>)
-						})}
-		        	</tbody>
-		      	</Table>
+				<div style = {{	overflowY:"scroll",overflowWrap: "break-word",height:"660px"}}>
+					<Table className = "responsive-table striped">
+				        <thead>
+				          <tr>
+				              <th data-field="id">Name</th>
+				              <th data-field="name">Sequence</th>
+				          </tr>
+				        </thead>
+					    <tbody>
+							{results.map(function(listValue,index){	
+								let values = listValue.split(":");
+								return     (<tr  key = {index} >
+										      <td>{values[0]}</td>
+										      <td style = {{fontFamily:"'Share Tech Mono',serif"}}>{values[1]}</td>
+										    </tr>)
+							})}
+			        	</tbody>
+			      	</Table>
+			    </div>
 			</div>
 			)
 	}
 	loadcomparescreen()
 	{
 		let resultsContainer = {
-      		background:"rgba(0,0,0,.15)",
-      		fontFamily:"'Share Tech Mono',serif", 
+    		background:"rgba(255,255,255,.5)",
+    		fontFamily:"'Share Tech Mono',serif", 
       		whiteSpace:"pre",
     	}
     	let bestArrangementStyle = {
-    		background:"rgba(255,255,255,.5)",
+
     		height:"130px",
     		padding:"10px",
     	}
     	let allArrangementStyle = {
-     		background:"rgba(255,255,255,.2)",
-     		height:"371px",
+     		height:"426px",
      		padding:"2px",
      		overflow:"scroll",	
     		fontSize:"12px"
@@ -63,7 +62,7 @@ export default class ResultScreen extends React.Component {
     		transform: "translate(-50%, 0%)",
     		fontSize:"12px"
     	}
-    	if(this.props.list.length == 0)
+    	if(this.props.results[1] == "")
     		return(<div></div>)
     			
     	let shiftedarrays = (this.props.results[1][1]).split("$$$");
@@ -92,7 +91,8 @@ export default class ResultScreen extends React.Component {
 						{shiftedarrays.map(function(listValue,index){	
 								return (<tr key = {index} >
 									      <td>{listValue} </td>
-									    </tr>)
+									    </tr>
+								)
 						})}
 		        	</tbody>
 		      	</Table>
@@ -100,6 +100,80 @@ export default class ResultScreen extends React.Component {
 		</div>
 		)
 	}
+
+	loadfullanalysis()
+	{
+		let resultsContainer = {
+      		fontFamily:"'Share Tech Mono',serif", 
+      		whiteSpace:"pre",
+      		marginTop:"-1px",
+	      	overflow:"scroll",
+      		height:"600px",
+      		paddingBottom:"40px",
+      		paddingTop:"20px"
+    	}
+    	let bodyStyle = {
+     		padding:"10px",
+    		
+    	}
+    	let resultscomponents = [];
+    	if(this.props.results[1].length > 0)
+    		resultscomponents = this.props.results[1];
+    	let resultsfullstrands = [];
+    	if(this.props.results[2].length > 0)
+    		resultsfullstrands = this.props.results[2];
+
+
+		return  (
+			<div style = {resultsContainer}> 
+	 			<div style = {bodyStyle }>
+					<Table responsive = {true} 
+							stripped = {true} 
+							bordered = {true}
+							hoverable = {true}>
+					<thead>
+			          <tr>
+			              <th data-field="id">Components Analysis/Comparison</th>
+			          </tr>
+			        </thead>
+					    <tbody>
+							{resultscomponents.map(function(listValue,index){	
+									return (<tr key = {index} >
+										      <td>{listValue} </td>
+										    </tr>
+									)
+							})}
+			        	</tbody>
+			      	</Table>
+				</div>
+
+	 
+	 			<div style = {bodyStyle }>
+					<Table responsive = {true} 
+							stripped = {true} 
+							bordered = {true}
+							hoverable = {true}>
+					<thead>
+			          <tr>
+			              <th data-field="id">Full Strands Analysis/Comparison</th>
+			          </tr>
+			        </thead>
+					    <tbody style = {{fontSize:"15px"}}>
+							{resultsfullstrands.map(function(listValue,index){	
+									return (<tr key = {index} >
+										      <td>{listValue} </td>
+										    </tr>
+									)
+							})}
+			        	</tbody>
+			      	</Table>
+				</div>
+			</div>
+			)
+
+	}
+
+
 
 	loadresults()
 	{		
@@ -110,6 +184,10 @@ export default class ResultScreen extends React.Component {
 		if(this.props.results[0] == "COMPARE")
 		{
 			return this.loadcomparescreen();
+		}
+		if(this.props.results[0] == "FULLANALYSIS")
+		{
+			return this.loadfullanalysis();
 		}
 	}
 	

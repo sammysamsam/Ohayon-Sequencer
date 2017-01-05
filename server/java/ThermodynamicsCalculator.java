@@ -163,21 +163,13 @@ public class ThermodynamicsCalculator
 
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-	protected double nearestNeighbor(Base[] shift5to3, Base[] shift3to5, int blength, int thislength){
+	protected double nearestNeighbor(Base[] shift3to5,Base[] shift5to3,  int blength, int thislength){	
+// 3 b sequence ->  oooooooo  oooooooooooooo 5
+// 5 oooooooooo    this.sequence  oooooooooo 3
+
 			// Trim and put sequence of bases into an ArrayList for nearest neighbor calculations
-			int starter = thislength - 1;
+			int starter = blength - 1;
 			int end = thislength + blength + 1;
-			ArrayList<Base> seq5to3 = new ArrayList<Base>();
-			ArrayList<Base> seq3to5 = new ArrayList<Base>();
-			String a = "";
-			String b = "";
-			for(int k = starter; k < end; k++)
-            {
-				a = a + shift5to3[k].base;
-				b = b + shift3to5[k].base;
-				seq5to3.add(shift5to3[k]);
-				seq3to5.add(shift3to5[k]);
-			}	
 			
 			//System.out.println("\n"+a+"\n"+b);
 			boolean firstinitiation = false;
@@ -186,23 +178,20 @@ public class ThermodynamicsCalculator
 			
 			double sum = 0;
 			int counter =0;
-			for(int l = 2; l < seq5to3.size(); l++)
+			for(int l = blength-1; l < thislength+blength+2; l++)
             {	
-				String x = Character.toString(seq5to3.get(l).base);
+				String x = Character.toString(shift5to3[l].base);
+				double value = freeEnergyValue(l, shift5to3, shift3to5);//Nearest Neighbor Value 
 				
-				//Nearest Neighbor Value 
-				double value = freeEnergyValue(l, seq5to3, seq3to5);
 				sum = sum + value;
 				if(value != 0)
 					counter++;
 				
-				if(value == 0 || l == seq5to3.size() - 1)
+				if(value == 0 || l == shift5to3.length - 1)
                 {
 					// Case: previous was internal mismatch, than move to next base to test for nearest neighbor match
-					if(freeEnergyMismatch(l - 1, seq5to3, seq3to5) != 0)
-                    {
+					if(freeEnergyMismatch(l - 1, shift5to3, shift3to5) != 0)
 						continue;
-					}	
 					
 					//Case: consecutive hits (and internal mismatches) is larger can consecutive limit
 					if(counter >= this.consecutiveLimit)
@@ -211,7 +200,7 @@ public class ThermodynamicsCalculator
 						if (firstinitiation == false)
                         {		 
 							firstinitiation = true;
-							totalenergy = totalenergy + initiation(l - 1, seq5to3, seq3to5, 1);
+							totalenergy = totalenergy + initiation(l - 1, shift5to3, shift3to5, 1);
 						}
 						totalenergy = totalenergy + sum;
 						secondinitiation = l;
@@ -222,30 +211,29 @@ public class ThermodynamicsCalculator
 					counter = 0;
 				}
 			}
-			//System.out.println();
+
 			//initiation2 value
-			totalenergy = totalenergy + initiation(secondinitiation, seq5to3, seq3to5, 2);
+			totalenergy = totalenergy + initiation(secondinitiation, shift5to3, shift3to5, 2);
 			if (totalenergy == 0)
 				totalenergy = 100;
 			return totalenergy;
 		}
-	
-	
-	private double initiation(int l, ArrayList<Base> seq5to3, ArrayList<Base> seq3to5, int phase)
+
+	private double initiation(int l, Base[] seq5to3, Base[] seq3to5, int phase)
     {
 		if(l != 0)
         {
 			int position = l;
 			
-			if((phase == 1) && (!seq3to5.get(l).canPair(seq5to3.get(l))) && (seq3to5.get(l - 1).canPair(seq5to3.get(l - 1))))
+			if(phase == 1 && !seq3to5[l].canPair(seq5to3[l]) && seq3to5[l - 1].canPair(seq5to3[l - 1]))
 				position = l - 1;
-			if((phase == 2)  && l + 1 < seq5to3.size() && (!seq3to5.get(l).canPair(seq5to3.get(l)))&& (seq3to5.get(l + 1).canPair(seq5to3.get(l + 1))))
+			if(phase == 2  && l + 1 < seq5to3.length && !seq3to5[l].canPair(seq5to3[l])&& seq3to5[l + 1].canPair(seq5to3[l + 1]))
 				position = l + 1;
-			else if((phase == 2) && (!seq3to5.get(l).canPair(seq5to3.get(l))) && (seq3to5.get(l - 1).canPair(seq5to3.get(l - 1))))
+			else if(phase == 2 && !seq3to5[l].canPair(seq5to3[l]) && seq3to5[l - 1].canPair(seq5to3[l - 1]))
 				position = l - 1;
 			
-			String w = Character.toString(seq3to5.get(position).base); 
-			String y = Character.toString(seq5to3.get(position).base);		
+			String w = Character.toString(seq3to5[position].base); 
+			String y = Character.toString(seq5to3[position].base);		
 			
 			String finaltemp = y + "/" + w;
 			if (hmap.get(finaltemp) == null){
@@ -258,12 +246,12 @@ public class ThermodynamicsCalculator
 		return 0;
 	}
 	
-	private void danglingEnds(int l,ArrayList<Base> seqone,ArrayList<Base> seqtwo,boolean end)
+	private void danglingEnds(int l,Base[] seqone,Base[] seqtwo,boolean end)
     {
 	
 	}
 
-	private double freeEnergyValue(int l, ArrayList<Base> seqone,ArrayList<Base> seqtwo)
+	private double freeEnergyValue(int l, Base[] seqone,Base[] seqtwo)
     {
 		double matchvalue = freeEnergyMatch(l,seqone,seqtwo);
 	
@@ -272,22 +260,22 @@ public class ThermodynamicsCalculator
 			return matchvalue;
 		}
 	
-		if((l+2 < seqone.size()) && (freeEnergyMatch(l+2,seqone,seqtwo)!=1000)&&(freeEnergyMatch(l-1,seqone,seqtwo)!=1000))
+		if((l+2 < seqone.length) && (freeEnergyMatch(l+2,seqone,seqtwo)!=1000)&&(freeEnergyMatch(l-1,seqone,seqtwo)!=1000))
         {
 			return freeEnergyMismatch(l,seqone,seqtwo);
 		}
 		return 0;
 	}
 	
-    private double freeEnergyMatch(int l, ArrayList<Base> seqone,ArrayList<Base> seqtwo)
+    private double freeEnergyMatch(int l, Base[] seqone, Base[] seqtwo)
     {
-		String w = Character.toString(seqone.get(l - 1).base); 
-		String x = Character.toString(seqone.get(l).base);
-		String y = Character.toString(seqtwo.get(l - 1).base);
-		String z = Character.toString(seqtwo.get(l).base);
+		String w = Character.toString(seqone[l - 1].base); 
+		String x = Character.toString(seqone[l].base);
+		String y = Character.toString(seqtwo[l - 1].base);
+		String z = Character.toString(seqtwo[l].base);
 
 		//		A  T   /  T  A
-		if(seqone.get(l).canPair(seqtwo.get(l)) && seqone.get(l-1).canPair(seqtwo.get(l-1)))
+		if(seqone[l].canPair(seqtwo[l]) && seqone[l-1].canPair(seqtwo[l-1]))
         {
 			String finaltemp = w+x+"/"+y+z;
 			
@@ -302,17 +290,17 @@ public class ThermodynamicsCalculator
 		}
 	    return 1000;
 	}
-	private double freeEnergyMismatch(int l, ArrayList<Base> seqone, ArrayList<Base> seqtwo)
+	private double freeEnergyMismatch(int l, Base[] seqone, Base[] seqtwo)
     {
-		String w = Character.toString(seqone.get(l-1).base); 
-		String x = Character.toString(seqone.get(l).base);
-		String y = Character.toString(seqtwo.get(l-1).base);
-		String z = Character.toString(seqtwo.get(l).base);
+		String w = Character.toString(seqone[l-1].base); 
+		String x = Character.toString(seqone[l].base);
+		String y = Character.toString(seqtwo[l-1].base);
+		String z = Character.toString(seqtwo[l].base);
 
-		if(!seqone.get(l).canPair(seqtwo.get(l)) && seqone.get(l-1).canPair(seqtwo.get(l-1)))
+		if(!seqone[l].canPair(seqtwo[l]) && seqone[l-1].canPair(seqtwo[l-1]))
         {
 			//      X T  / X' T
-			if(seqone.get(l).base == seqtwo.get(l).base)
+			if(seqone[l].base == seqtwo[l].base)
             {	
 				String finaltemp = w + x + "/" + y + z;					
 				if (hmap.get(finaltemp) != null)
@@ -321,10 +309,10 @@ public class ThermodynamicsCalculator
 				}
 			}		
 			//      X C Y  / X' T Y'
-			else if((l + 1 < seqone.size()) && seqone.get(l + 1).canPair(seqtwo.get(l + 1)))
+			else if((l + 1 < seqone.length) && seqone[l + 1].canPair(seqtwo[l + 1]))
             {
-				String xnext = Character.toString(seqone.get(l + 1).base);
-				String znext = Character.toString(seqtwo.get(l + 1).base);
+				String xnext = Character.toString(seqone[l + 1].base);
+				String znext = Character.toString(seqtwo[l + 1].base);
 			
 				String finaltemp = w + x + xnext + "/" + y + z + znext;
 				if (hmap.get(finaltemp) == null)
@@ -407,161 +395,5 @@ public class ThermodynamicsCalculator
 		
 	}
 	
-	
-	
-	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-	PRINTER METHODS
-
-	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	protected double nearestNeighborPrint(Base[] shift5to3, Base[] shift3to5,int blength,int thislength)
-    {
-		// Trim and put sequence of bases into an ArrayList for nearest neighbor calculations
-		int starter = thislength - 1;
-		int end = thislength + blength + 1;
-		ArrayList<Base> seq5to3 = new ArrayList<Base>();
-		ArrayList<Base> seq3to5 = new ArrayList<Base>();
-		String a = "";
-		String b = "";
-		for(int k = starter; k < end; k++)
-        {
-			a = a + shift5to3[k].base;
-			b = b + shift3to5[k].base;
-			seq5to3.add(shift5to3[k]);
-			seq3to5.add(shift3to5[k]);
-		}	
-		
-		//System.out.println("\n"+a+"\n"+b);
-		boolean firstinitiation = false;
-		int secondinitiation = 0;		
-		double totalenergy = 0;
-		
-		String sumofNN = "";
-		
-		double sum = 0;
-		int counter =0;
-		for(int l = 2; l < seq5to3.size();l++)
-        {
-			//Nearest Neighbor Value 
-			double value = freeEnergyValuePrint(l,seq5to3,seq3to5);
-			sum = sum + value;
-			if(value != 0)
-				counter ++;
-			
-			if(value == 0 || l == seq5to3.size()-1)
-            {
-				// Case: previous was internal mismatch, than move to next base to test for nearest neighbor match
-				if(freeEnergyMismatch(l-1,seq5to3,seq3to5) != 0)
-                {
-					continue;
-				}	
-				
-				//Case: consecutive hits (and internal mismatches) is larger can consecutive limit
-				if(counter >= this.consecutiveLimit)
-                {
-					//Add first initation nearest neighbor value to total energy
-					if (firstinitiation == false)
-                    {
-						firstinitiation = true;
-						totalenergy = totalenergy + initiation(l - 1, seq5to3, seq3to5, 1);
-					}
-					totalenergy = totalenergy + sum;
-					secondinitiation = l;
-					System.out.println("(y)|"); 
-				}
-				else
-                {
-					if(counter != 0)
-                    {
-						System.out.println(counter + " " + this.consecutiveLimit + " (n)|"); 
-					}
-				}
-				//Case: consecutive hits is not larger than consecutive limit, don't add to total energy and reset counter and sum variables
-				sum = 0;
-				counter = 0;
-			}
-		}
-		//System.out.println();
-		//initiation2 value
-		totalenergy = totalenergy + initiation(secondinitiation, seq5to3, seq3to5, 2);
-		if (totalenergy == 0)
-			totalenergy = 100;
-		return totalenergy;
-	}
-	
-	private double freeEnergyValuePrint(int l, ArrayList<Base> seqone, ArrayList<Base> seqtwo) 
-    {
-        // 'l' (the letter) can be easily confused with 1 (the number) and isn't a descriptive variable name
-		double matchvalue = freeEnergyMatchPrint(l,seqone,seqtwo);
-		if(matchvalue !=1000)
-        {
-			return matchvalue;
-		}
-		if((l + 2 < seqone.size()) && (freeEnergyMatch(l + 2, seqone, seqtwo)!=1000) && (freeEnergyMatch(l - 1, seqone, seqtwo) != 1000))
-        {
-			return freeEnergyMismatchPrint(l, seqone, seqtwo);
-		}
-		return 0;
-	}
-	private double freeEnergyMatchPrint(int l, ArrayList<Base> seqone,ArrayList<Base> seqtwo)
-    {
-		String w = Character.toString(seqone.get(l-1).base); 
-		String x = Character.toString(seqone.get(l).base);
-		String y = Character.toString(seqtwo.get(l-1).base);
-		String z = Character.toString(seqtwo.get(l).base);
-
-		//		A  T   /  T  A
-		if(seqone.get(l).canPair(seqtwo.get(l)) && seqone.get(l-1).canPair(seqtwo.get(l-1)))
-        {
-			String finaltemp = w+x+"/"+y+z;	
-			if (hmap.get(finaltemp) == null)			
-				finaltemp = z+y+"/"+x+w;
-			if (hmap.get(finaltemp) != null)
-            {	
-				System.out.print(finaltemp+" , ");
-				return hmap.get(finaltemp).DeltaG;
-			}
-		}
-	    return 1000;
-	}
-
-	private double freeEnergyMismatchPrint(int l, ArrayList<Base> seqone, ArrayList<Base> seqtwo)
-    {
-		String w = Character.toString(seqone.get(l - 1).base); 
-		String x = Character.toString(seqone.get(l).base);
-		String y = Character.toString(seqtwo.get(l - 1).base);
-		String z = Character.toString(seqtwo.get(l).base);
-
-		if(!seqone.get(l).canPair(seqtwo.get(l)) && seqone.get(l - 1).canPair(seqtwo.get(l - 1)))
-        {					
-			//      X T  / X' T
-			if(seqone.get(l).base == seqtwo.get(l).base)
-            {
-				String finaltemp = w + x + "/" + y + z;					
-				if (hmap.get(finaltemp) != null)
-                {		
-					System.out.print(finaltemp + " , ");
-					return hmap.get(finaltemp).DeltaG;
-				}
-			}		
-			//      X C Y  / X' T Y'
-			else if((l + 1 < seqone.size()) &&seqone.get(l + 1).canPair(seqtwo.get(l + 1)))
-            {
-				String xnext = Character.toString(seqone.get(l + 1).base);
-				String znext = Character.toString(seqtwo.get(l + 1).base);
-			
-				String finaltemp = w + x + xnext + "/" + y + z + znext;
-				if (hmap.get(finaltemp) == null)
-					finaltemp = znext + z + y + "/" + xnext + x + w;
-				//      X C  / X' T 
-				if(hmap.get(finaltemp) == null)
-					finaltemp = w + x + "/" + y + z;						
-				if (hmap.get(finaltemp) != null){		
-					System.out.print(finaltemp + " , ");
-					return hmap.get(finaltemp).DeltaG;
-				}
-			}
-		}
-	    return 0;
-    }
 }

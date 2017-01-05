@@ -14,6 +14,53 @@ public class CompareStrands {
 				System.out.println(a.name + " vs " + b.name + "\n" 
                         + this.mismatch2Print(a, b, 5,restrictedshifts) + "\n");
 	}
+
+
+
+
+
+	public String[][] compareAll(ArrayList<Strand> componentList,ArrayList<FullStrand> fullStrandList )
+	{
+		int size = componentList.size();
+		size = (size*size + size)/2;
+	
+		//component vs component
+		String[] componentResult = new String[size];
+		int index = 0;
+		for(int x = 0; x < componentList.size(); x++)
+		{
+			for(int y = x; y < componentList.size(); y++)
+			{
+				componentResult[index] = componentList.get(x).name + " vs " + componentList.get(y).name + "\n\n";
+				componentResult[index] = componentResult[index] + this.mismatchPrint(componentList.get(x) , componentList.get(y) , 3);
+				index++;
+			}		
+		}
+
+		//full strand vs full strand
+		size = fullStrandList.size();
+		size = (size*size + size)/2;
+		String[] fullStrandResult = new String[size];
+		index = 0;
+		for(int x = 0; x < fullStrandList.size(); x++)
+		{
+			for(int y = x; y < fullStrandList.size(); y++)
+			{
+				int[] ignoreShifts = fullStrandList.get(x).getComplementShifts(fullStrandList.get(y),componentList);
+				fullStrandResult[index] = fullStrandList.get(x).name + " vs " + fullStrandList.get(y);
+				if (ignoreShifts.length == 0)
+					fullStrandResult[index] = this.mismatchPrint(fullStrandList.get(x).combine(componentList) , fullStrandList.get(y).combine(componentList) , 4);
+				else
+					fullStrandResult[index] = this.mismatch2Print(fullStrandList.get(x).combine(componentList) , fullStrandList.get(y).combine(componentList) , 4 , ignoreShifts);
+				index++;
+			}		
+		}
+		String[][] temp = {componentResult,fullStrandResult};
+		return temp;
+	}
+
+
+
 	public String[] compareTwo(Strand a, Strand b)
     {
 		String[] result = new String[2];
@@ -21,236 +68,68 @@ public class CompareStrands {
 		result[1] = this.shiftPrint;
 		return result;
 	}
-	/*
-	public void lowestEnergyConsec(Strand a, Strand b, ThermodynamicsCalculator x)
-    {
-		if(a.complementExists)
-        {
-			System.out.println(a.name + " vs " + b.name + "\n" 
-                    + this.ThermoMismatchPrint(a, b, 2) + "\n" 
-                    + this.shiftPrint + "\n" 
-                    + a.name + " Complement vs " + b.name + "\n"
-                    + this.mismatchPrint(a.complement(), b,2,x) + "\n"
-                    + this.shiftPrint);
 
-		}
-		else if(b.complementExists)
-        {
-			System.out.println(a.name + " vs " + b.name  + "\n" 
-                    + this.ThermoMismatchPrint(a, b, 2) + "\n" 
-                    + this.shiftPrint + "\n" 
-                    + a.name + " vs " + b.name + " Complement \n" 
-                    + this.mismatchPrint(a.complement(), b, 2, x) + "\n" 
-                    + this.shiftPrint);
-		}
-		else
-        {
-			System.out.println(a.name + " vs " + b.name + "\n" 
-                    + this.ThermoMismatchPrint(a, b, 2) + "\n" 
-                    + this.shiftPrint);
-		}
-	}
-	*/
-
-	private ArrayList<Base[]> baseArrayMaker(Strand a, Strand b, int shiftLength)
+	private Base[][] baseArrayMaker(Strand a, Strand b, int shiftlength)
     {
-		Base[] shift1 = new Base[a.length + b.length*2];   // o this sequence oooooooooo  oooooooooo
-        Base[] shift2 = new Base[a.length + b.length*2];   // oooooooooo   b sequence  oooooooooo
-        
-        for (int w = 0; w < a.length + b.length*2 ; w++)
+		Base[] shift1 = new Base[a.length+b.length*2];   // 3 b sequence ->  oooooooo  oooooooooooooo 5
+        Base[] shift2 = new Base[a.length+b.length*2];   // 5 oooooooooo    a sequence  oooooooooo 3
+       
+        for (int w = 0; w < a.length+b.length*2 ; w++)
         {
-			if(w < shiftLength)
-            {
+			if(w < shiftlength)
 				shift1[w] = new Base('o');
-            }
-			else if(w >= shiftLength && w < a.length + shiftLength)
-            {
-				shift1[w] = new Base(a.sequence.charAt(w - shiftLength));
-            }
+			else if(w >=shiftlength && w < b.length+shiftlength)
+				shift1[w] = new Base(b.sequence.charAt(w-shiftlength));
 			else
-            {
 				shift1[w]= new Base('o');
-            }
 		}
-
-		for(int i = 0; i < a.length; i++)
-		{
+		for(int i = 0; i < b.length; i++)
+        {
             shift2[i] = new Base('o');
         }		
-        for(int i = a.length; i < b.length + a.length; i++)
+        for(int i = b.length; i < a.length+b.length; i++)
         {
-        	shift2[i] = new Base(b.sequence.charAt(i - a.length));
-        }
-        for(int i = b.length + a.length; i < shift2.length; i++)
+        	shift2[i] = new Base(a.sequence.charAt(i-b.length));
+        }	       
+        for(int i = a.length+b.length; i < shift2.length; i++)
         {
         	shift2[i] = new Base('o');
-        }
-
-        ArrayList<Base[]> f = new ArrayList<Base[]>();
-        f.add(shift1);
-        f.add(shift2);
-        return f;
+        }		   
+        Base[][] result = {shift1,shift2};
+        return result;
 	}
 	
 	private String bestHitStringMaker(Strand a,Strand b,Base[] thisShift, Base[] bShift)
 	{	
-		String hitMarker = "";
+		String hitmarker = "";
 		String seq1 = "";
 		String seq2 = "";
-		for(int k = a.length; k < (a.length + b.length); k++)
+		for(int k = b.length; k < (a.length+b.length); k ++)
         {
-    		seq2 = seq2 + bShift[k];   		
+    		seq2 = seq2+thisShift[k];   		
+
     		//Case: if Base Array of Strand This is a base instead of 'o'
-			if(!thisShift[k].nonbase())
-            {
-    			seq1 = seq1 + thisShift[k];
-    			if(bShift[k].canPair(thisShift[k]))
-                {
-    				hitMarker = hitMarker + ":";
-                }
-    			else
-                {
-      				hitMarker = hitMarker + " ";
-    			}
-			}
-			else
-            {
-				seq1 = seq1 + " ";
-				hitMarker = hitMarker + " ";
-			}
-		}		
-		return " 5 " + seq1 + " 3 " + "\n   "
-            + hitMarker + "\n 3 "
-            + seq2 + " 5 ";
-	}
-	
-	private String[] bestHitStringMakerPrint(Strand a, Strand b, Base[] thisShift, Base[] bShift)
-	{
-		String hitMarker = "";
-		String seq1 = "";
-		String seq2 = "";
-		for(int k = a.length; k < (a.length + b.length); k++)
-		{
 			if(!bShift[k].nonbase())
             {
-    			seq2 = seq2 + bShift[k];
-            }
-			else 
-            {
-				seq2 = seq2 + " ";
-            }
-
-    		//Case: if Base Array of Strand This is a base instead of 'o'
-			if(!thisShift[k].nonbase())
-            {
-    			seq1 = seq1 + thisShift[k];
-    			
-                if(bShift[k].canPair(thisShift[k]))
-                {
-    				hitMarker = hitMarker + ":";
-                }
-                else
-                {
-      				hitMarker = hitMarker + " ";
-    			}
+    			seq1 = seq1+bShift[k];
+    			if( bShift[k].canPair(thisShift[k]))
+    				hitmarker = hitmarker + ":";
+    			else
+      				hitmarker = hitmarker + " ";
 			}
-			else{
-				seq1 = seq1 + " ";
-				hitMarker = hitMarker + " ";
+
+			else
+            {
+				seq1 = seq1+" ";
+				hitmarker = hitmarker + " ";
 			}
 		}		
-		String[] shiftedResult = {seq1, hitMarker, seq2};
-		return shiftedResult; 
+		return " 5 "+seq1+" 3 " +"\n   "+hitmarker + "\n 3 "+seq2+" 5 ";		
+
 	}
 	
-	private Base[][] lowestEnergyOrientationPrint(Strand a, Strand b, int consecLimit)
-	{
-		Base[] shiftB = new Base[a.length + b.length*2];        
-		Base[] shiftA = new Base[a.length + b.length*2];
-		double lowestFreeEnergy=1000;
 
-		for(int i = 0; i < b.length + a.length; i++)
-		{	
-			ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(a,b,i);
-			this.thermocalc.consecutiveLimit = consecLimit - 1;
-			
-			String[] temp = bestHitStringMakerPrint(a, b, shiftedBaseArray.get(0), shiftedBaseArray.get(1));
-			
-			double freeEnergy = this.thermocalc.nearestNeighbor(shiftedBaseArray.get(0), shiftedBaseArray.get(1), b.length, a.length);		
 
-			//save the shifted bases for printing
-			this.shiftPrint = this.shiftPrint + temp[0] + "\n" + temp[1] + "\n" + temp[2] + "\n";
-
-			if(lowestFreeEnergy > freeEnergy)
-			{
-	           lowestFreeEnergy = freeEnergy;              
-	    		for (int w = 0; w < a.length + b.length*2; w++)
-	    		{
-	    			shiftA = shiftedBaseArray.get(0);
-	    			shiftB = shiftedBaseArray.get(1);
-	    		}
-			}
-		}
-		//return Base array of Strand This and Strand B in lowest energy arrangement
-		Base[][] temp = {shiftA,shiftB};
-		return temp;
-	}
-
-	private String lowestFreeEnergyPrint(Strand a, Strand b)
-    { //returns the largest hits of all possible orientations			
-        if(!a.isFivePrime)	// 	5  strand this  ooooooooooo ooooooo 3  = shiftA
-            return lowestFreeEnergyPrint(a, b);
-        if(b.isFivePrime)		  
-            b = b.reverse(); 	//  3  ooooooooooooo   strand b ooooooo 5  = shiftB
-        
-        //Finds the lowest energy arrangement of Strand This and Strand B and returns the Base[] of Strand This and Strand B
-        Base[][] shiftedsequences = lowestEnergyOrientationPrint(a, b, a.mismatchThreshold);		
-        Base[] shiftA = shiftedsequences[0];
-        Base[] shiftB = shiftedsequences[1];
-
-       	this.thermocalc.consecutiveLimit = a.mismatchThreshold - 1;
-        double freeEnergy = this.thermocalc.nearestNeighbor(shiftA, shiftB, b.length, a.length);		
-
-        return (bestHitStringMaker(a, b, shiftA, shiftB)  + "\n" + freeEnergy);
-	}
-
-	private String ThermoMismatchPrint(Strand a,Strand b,int maxhitlimit)
-    { //returns the largest hits of all possible orientations			              
-		if(!a.isFivePrime)	// 	5  strand this  ooooooooooo ooooooo 3  = shiftb	
-			return ThermoMismatchPrint(a.reverse(), b,maxhitlimit);
-		if(b.isFivePrime)		  
-			return ThermoMismatchPrint(a, b.reverse(),maxhitlimit);
-        
-        Base[][] shiftedsequences = lowestEnergyOrientationPrint(a, b, maxhitlimit);		
-        Base[] shiftA = shiftedsequences[0];
-        Base[] shiftB = shiftedsequences[1];		
-
-        double consecCounter = 0;
-        double hitScore = 0;
-        
-        for(int k = 1; k < b.length + a.length + 1; k++)
-        {
-            if(shiftB[k].canPair(shiftA[k]))
-                consecCounter++;
-            else{
-                //Case: If the non - match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-                if(shiftB[k + 2].canPair(shiftA[k + 2]) 
-                        && shiftB[k - 2].canPair(shiftA[k - 2]) 
-                        && shiftB[k - 1].canPair(shiftA[k - 1]) 
-                        && shiftB[k + 1].canPair(shiftA[k + 1]) 
-                        && consecCounter > 0)					
-                    consecCounter--;
-                else{
-                    if(consecCounter >= maxhitlimit)
-                        hitScore++;
-                    if(consecCounter > maxhitlimit)
-                        hitScore = hitScore + (consecCounter - maxhitlimit);	
-                    consecCounter = 0;  	
-                }
-            }          
-        }
-        return bestHitStringMaker(a, b, shiftA, shiftB) + "\nconsec score:" + hitScore;
-	}
 
 	private String mismatchPrint(Strand a, Strand b, int maxhitlimit)
     {
@@ -267,15 +146,14 @@ public class CompareStrands {
 		
 		for(int i = 1; i < b.length + a.length; i++)
         {	
-			ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(a, b, i);
-			
-			Base[] shiftA = shiftedBaseArray.get(0);
-			shiftB = shiftedBaseArray.get(1);
+			Base[][] shiftedBaseArray = baseArrayMaker(a, b, i);
+			Base[] shiftA = shiftedBaseArray[0];
+			shiftB = shiftedBaseArray[1];
 			
 			double consecCounter = 0;
 			double hitScore = 0;
 
-			for(int k = a.length; k < b.length + a.length + 1; k++)
+			for(int k = b.length; k < b.length + a.length + 1; k++)
             {
 				if(shiftB[k].canPair(shiftA[k]))    			
 	    			consecCounter++;
@@ -301,8 +179,14 @@ public class CompareStrands {
 				}       
 			}
 			
-			String[] temp = bestHitStringMakerPrint(a,b,shiftedBaseArray.get(0), shiftedBaseArray.get(1));
-			this.shiftPrint = this.shiftPrint + temp[0] + "\n" + temp[1] + "\n" + temp[2] + "$$$";
+			//this accounts for if there are consec hits in the very end (dont delete this)
+			if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
+				hitScore++;
+			if(consecCounter > maxhitlimit)
+				hitScore = hitScore + (consecCounter - maxhitlimit);
+
+			this.shiftPrint = this.shiftPrint + bestHitStringMaker(a,b,shiftedBaseArray[0], shiftedBaseArray[1]) + "$$$";
+
 
 			if(highestscore < hitScore)
             {
@@ -310,7 +194,7 @@ public class CompareStrands {
 				shiftA_best = shiftA;
 			}
 		}	
-		return (bestHitStringMaker(a,b,shiftA_best, shiftB) + "\nconsec score:" + highestscore);
+		return (bestHitStringMaker(a,b,shiftA_best, shiftB));
 	}
 
 
@@ -337,14 +221,14 @@ public class CompareStrands {
 			if(!skipShift)
 			{
 				//Shift Bases over for each shift (0) = strand this  (1) = strand b
-				ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(a,b, i);			
-				Base[] shiftedA = shiftedBaseArray.get(0);
-				shiftedB = shiftedBaseArray.get(1);
+				Base[][] shiftedBaseArray = baseArrayMaker(a,b, i);			
+				Base[] shiftedA = shiftedBaseArray[0];
+				shiftedB = shiftedBaseArray[1];
 				
 				int consecCounter = 0;
 				int hitScore = 0;
 				
-				for(int k = a.length; k < b.length + a.length+1; k++)
+				for(int k = b.length; k < b.length + a.length+1; k++)
 	            {
 					if(shiftedB[k].canPair(shiftedA[k]))
 		    			consecCounter++;
@@ -368,8 +252,7 @@ public class CompareStrands {
 						// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
 					}
 				}
-				String[] temp = bestHitStringMakerPrint(a,b,shiftedBaseArray.get(0), shiftedBaseArray.get(1));
-				this.shiftPrint = this.shiftPrint + temp[0] + "\n" + temp[1] + "\n" + temp[2] + "\n";
+				this.shiftPrint = this.shiftPrint + bestHitStringMaker(a,b,shiftedBaseArray[0], shiftedBaseArray[1]) + "\n";
 
 				if(highestScore < hitScore){
 					highestScore = hitScore;
@@ -378,7 +261,6 @@ public class CompareStrands {
 
 			}
 		}
-		return (bestHitStringMaker(a,b,shiftedA_Best, shiftedB) + "\nconsec score:" + highestScore);
-
+		return (bestHitStringMaker(a,b,shiftedA_Best, shiftedB));
     }
 }

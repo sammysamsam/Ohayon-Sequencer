@@ -37,9 +37,7 @@ public class FullStrand
 	}
 
 	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
 	SETTER AND GETTERS METHOD:
-
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	
 	public void setName(String name)
@@ -58,11 +56,28 @@ public class FullStrand
 		this.componentNames = listOfNames;
 	}
 
-	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
+	public int mismatch(FullStrand other,ArrayList<Strand> componentsAvailable)
+	{
+		Strand thisStrand = this.combine(componentsAvailable);
+		Strand otherStrand = other.combine(componentsAvailable);
+		int[] complementShifts = this.getComplementShifts(other,componentsAvailable);
+        if(complementShifts.length == 0)
+        {
+            //System.out.println(this.name+" "+otherStrand.mismatch(thisStrand,5));
+            return otherStrand.mismatch(thisStrand,5);
+        }
+        else
+        {
+           //System.out.println(other.name+" "+thisStrand.mismatch2(otherStrand,5,complementShifts));
+           return otherStrand.mismatch2(thisStrand,5,complementShifts); 
+        }
+	}
+
+	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	OTHER METHODs:
      	
-	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */  
 
     public int[] getComplementShifts(FullStrand other, ArrayList<Strand> componentsAvailable)
     {
@@ -70,52 +85,54 @@ public class FullStrand
         int basesShiftedThis = 0;
         int basesShiftedOther = 0;
 
-        for(int thisIndex = this.componentsList.size()-1; thisIndex >= 0; thisIndex--)
+        for(int thisIndex = 0; thisIndex <this.componentsList.size(); thisIndex++)
         {
-    	
-          	basesShiftedOther = 0;
+         	//if component in fullstrand exists in componentsAvailable list
+            String thisComponentName = this.componentNames[thisIndex];  
+            boolean componentExist = this.componentExistsInComponentList(thisComponentName,componentsAvailable);
+            if(componentExist)
+            {
+	            basesShiftedOther = 0;
 
-          	//if component in fullstrand exists in componentsAvailable list
-          	String thisComponentName = this.componentNames[thisIndex];  
-          	boolean componentExist = this.componentExistsInComponentList(thisComponentName,componentsAvailable);
-
-	        for(int otherIndex = other.componentsList.size()-1; otherIndex >= 0; otherIndex--)
-	        {
-	          	//if other component in other fullstrand in componentsAvailable list
-	          	String otherComponentName = other.componentNames[otherIndex];   
-	        	boolean otherComponentExist = this.componentExistsInComponentList(otherComponentName,componentsAvailable);
-
-	        	if(otherComponentExist)
-	        		basesShiftedOther = basesShiftedOther + other.componentsList.get(otherIndex).length;
-        		else
-        			basesShiftedOther = basesShiftedOther + 5;
-
-        		//System.out.println("\n"+basesShiftedOther +" bases shifted at "+otherComponentName );
-        		if( (otherComponentName.equals(thisComponentName+"'") || (otherComponentName+"'").equals(thisComponentName) ) && componentExist)
-        		{
-        			   // this       ABC'D  ->    ABC'D         
-   					  //  other      ADC    ->         CDA
-
-        			int shift = basesShiftedOther+basesShiftedThis;
-        			//System.out.println(basesShiftedOther+","+basesShiftedThis + " | "+ otherComponentName + " "+ thisComponentName);
-        			restrictedShifts.add(shift);
-        		}
-	        }
+	            for(int otherIndex = 0; otherIndex <other.componentsList.size() ; otherIndex++)
+	            {
+	             	//if other component in other fullstrand in componentsAvailable list
+	                String otherComponentName = other.componentNames[otherIndex];   
+	                boolean otherComponentExist = this.componentExistsInComponentList(otherComponentName,componentsAvailable);
+					//System.out.println(otherComponentName);
+	                
+	               	if(otherComponentExist)
+	                    basesShiftedOther = basesShiftedOther + other.componentsList.get(otherIndex).length;
+	                else
+	                    basesShiftedOther = basesShiftedOther + 5;
 
 
-	        if(componentExist)
-	        	basesShiftedThis = basesShiftedThis + this.componentsList.get(thisIndex).length;
-	       	else
-	        	basesShiftedThis = basesShiftedThis + 5;
+	                if(otherComponentName.equals(thisComponentName+"'") || (otherComponentName+"'").equals(thisComponentName))
+	                {
+	                     //  other      CBA   ->      ABC                      
+	                    // this       A'B  ->            A'B    
+	                    
+	                    //System.out.println("\n\n\n"+basesShiftedOther+"||" +basesShiftedThis)  ;
+	                    int shift = basesShiftedOther+basesShiftedThis;
+	                    restrictedShifts.add(shift);
+	                }
+	            }
+
+	            basesShiftedThis = basesShiftedThis + this.componentsList.get(thisIndex).length;
+            }
+            else
+                basesShiftedThis = basesShiftedThis + 5;
         }
+
         int[] finalarray = new int[restrictedShifts.size()];
-    	for (int i=0; i < finalarray.length; i++)
-    	{
-        	//System.out.println("shift "+restrictedShifts.get(i).intValue());
-        	finalarray[i] = restrictedShifts.get(i).intValue();
-    	}
+        for (int i=0; i < finalarray.length; i++)
+        {
+         //   System.out.println("shift AT "+restrictedShifts.get(i).intValue());
+            finalarray[i] = restrictedShifts.get(i).intValue();
+        }
         return finalarray;
     }
+
 
 // Components will always be 5' to 3'
 
@@ -159,7 +176,6 @@ public class FullStrand
 	}
 
 	/** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
 	CONTAIN METHODs:
      	
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

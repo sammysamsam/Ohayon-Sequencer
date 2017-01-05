@@ -105,7 +105,9 @@ public class Strand
 		for(char f:this.blueprint)
         {
 			if(f == 'A'||f == 'T'||f == 'C'||f == 'G')
+            {
 				sequenceArray[counter] = f;
+			}
 			counter ++;
 		}		
 		this.setSequence(String.valueOf(sequenceArray));		
@@ -260,39 +262,7 @@ STRAND PROPERTIES/GETTER METHODS
 	STRAND VS COMPLEMENT SELF CHECKER METHOD
 
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	private Base[][] SelfvsCompShifter(ThermodynamicsCalculator z)
-	{
-		Base[] shiftedThis = new Base[this.length + this.length*2];
-		Base[] unshiftedComplement = new Base[this.length + this.length*2];        
-		double lowestFreeEnergy = 1000;
-		for(int i = 1; i < this.length + this.length; i++)
-        {
-			//Shift Bases over for each shift (0) = strand this  (1) = strand b
-			if(i != this.length)
-            {
-                ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(this.complement(),i);
-                
-                //Counter-limit disregards consecutive hits smaller than the mismatch threshold
-                z.consecutiveLimit = this.mismatchThreshold-1;
-                //Find the free energy of this arrangement of strand this and strand b
-                double freeEnergy = z.nearestNeighbor(shiftedBaseArray.get(0),shiftedBaseArray.get(1),this.length,this.length);		
 
-                // Save Score and Shifted Arrays of Strands (if its lower than current lowest energy score)
-                if(lowestFreeEnergy > freeEnergy)
-                {
-                   lowestFreeEnergy = freeEnergy;              
-                    for (int w = 0; w < this.length+this.length*2; w++)
-                    {
-                        shiftedThis = shiftedBaseArray.get(0);
-                        unshiftedComplement = shiftedBaseArray.get(1);
-                    }
-                }
-			}
-	    }
-        //return Base array of Strand This and Strand B in lowest energy arrangement
-        Base[][] temp = {shiftedThis,unshiftedComplement};
-        return temp;
-	}
 	
 	
 	public int selfvsComplementMismatch(ThermodynamicsCalculator z)
@@ -302,39 +272,12 @@ STRAND PROPERTIES/GETTER METHODS
 			return this.reverse().selfvsComplementMismatch(z);
 
 		int maxhitlimit = this.hairpinThreshold;
+		Strand complement = this.complement();
+		int[] ignoreShift = {this.length};
+		return this.mismatch2(complement,maxhitlimit,ignoreShift);
 		
-		Base[][] shiftedsequences = this.SelfvsCompShifter(z);		
-		Base[] shiftedThis = shiftedsequences[0];	// 	            5  strand this -> oooooooooooooooooooo  ooooooo 3 
-		Base[] unshiftedComplement = shiftedsequences[1];	//		3  ooooooooooo  strand this(complment)  ooooooo 5
-		int consecCounter = 0;
-		int hitScore = 0;
-		for(int k = this.length; k < this.length+this.length+1; k ++)
-        {
-				if(unshiftedComplement[k].canPair(shiftedThis[k]))    			
-	    			consecCounter ++;
-				else
-                {
-					//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-					if(unshiftedComplement[k+2].canPair(shiftedThis[k+2])&&
-							unshiftedComplement[k-2].canPair(shiftedThis[k-2])&&
-							unshiftedComplement[k-1].canPair(shiftedThis[k-1])&&
-							unshiftedComplement[k+1].canPair(shiftedThis[k+1]) && consecCounter >0)
-						consecCounter --;
-					// ::: :: = 4, :::: :: = 5
-					
-					//Case: if the non-match is not between two matches, then consecCounter returns to 0 
-					else
-                    {
-						if(consecCounter >= maxhitlimit)
-							hitScore++;
-						if(consecCounter > maxhitlimit)
-							hitScore++;
-						consecCounter = 0;  	
-					}
-				}          
-			}
-		return hitScore;			
 	}
+
 /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 	ARRAY MAKER/SHIFTER METHOD (Used in strand comparision methods)
@@ -342,56 +285,57 @@ STRAND PROPERTIES/GETTER METHODS
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 	
-	private ArrayList<Base[]> baseArrayMaker(Strand b, int shiftlength)
+	private Base[][] baseArrayMaker(Strand b, int shiftlength)
     {
-		Base[] shift1 = new Base[this.length+b.length*2];   // this sequence ->  oooooooo  oooooooooo
-        Base[] shift2 = new Base[this.length+b.length*2];   // oooooooooo      b sequence  oooooooooo
-        
+		Base[] shift1 = new Base[this.length+b.length*2];   // 3 b sequence ->  oooooooo  oooooooooooooo 5
+        Base[] shift2 = new Base[this.length+b.length*2];   // 5 oooooooooo    this.sequence  oooooooooo 3
+       
         for (int w = 0; w < this.length+b.length*2 ; w++)
         {
 			if(w < shiftlength)
 				shift1[w] = new Base('o');
-			else if(w >=shiftlength && w < this.length+shiftlength)
-				shift1[w] = new Base(this.sequence.charAt(w-shiftlength));
+			else if(w >=shiftlength && w < b.length+shiftlength)
+				shift1[w] = new Base(b.sequence.charAt(w-shiftlength));
 			else
 				shift1[w]= new Base('o');
 		}
-		for(int i = 0; i < this.length; i++)
+		for(int i = 0; i < b.length; i++)
         {
             shift2[i] = new Base('o');
         }		
-        for(int i = this.length; i < b.length+this.length; i++)
+        for(int i = b.length; i < this.length+b.length; i++)
         {
-        	shift2[i] = new Base(b.sequence.charAt(i-this.length));
+        	shift2[i] = new Base(this.sequence.charAt(i-b.length));
         }	       
-        for(int i = b.length+this.length; i < shift2.length; i++)
+        for(int i = this.length+b.length; i < shift2.length; i++)
         {
         	shift2[i] = new Base('o');
         }		   
-
-        ArrayList<Base[]> f = new ArrayList<Base[]>();
-        f.add(shift1);
-        f.add(shift2);
-        return f;
+        Base[][] result = {shift1,shift2};
+        return result;
 	}
 	
 	
 	
 	private Base[][] lowestEnergyOrientation(Strand b,ThermodynamicsCalculator z, int conseclimit)
 	{
-		Base[] shiftedB = new Base[this.length+b.length*2];        
-		Base[] shiftedThis = new Base[this.length+b.length*2];
+	
+		Base[] shiftedB = new Base[this.length+b.length*2];        // 3 b sequence ->  oooooooo  oooooooooooooo 5
+		Base[] shiftedThis = new Base[this.length+b.length*2];	   // 5 oooooooooo    this.sequence  oooooooooo 3
 		double lowestFreeEnergy=1000;
 
 		for(int i = 1; i < b.length+this.length; i ++)
         {
 			//Shift Bases over for each shift (0) = strand this  (1) = strand b
-			ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(b,i);
+			Base[][] shiftedBaseArray = baseArrayMaker(b,i);
 			
 			//Counter-limit disregards consecutive hits smaller than the mismatch threshold
 			z.consecutiveLimit = conseclimit-1;
+			
 			//Find the free energy of this arrangement of strand this and strand b
-			double freeEnergy = z.nearestNeighbor(shiftedBaseArray.get(0),shiftedBaseArray.get(1),b.length,this.length);		
+			double freeEnergy = z.nearestNeighbor(shiftedBaseArray[0] , shiftedBaseArray[1] , b.length , this.length);		
+			//System.out.println(bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
+			//System.out.println(freeEnergy);
 
 			// Save Score and Shifted Arrays of Strands (if its lower than current lowest energy score)
 			if(lowestFreeEnergy > freeEnergy)
@@ -399,13 +343,13 @@ STRAND PROPERTIES/GETTER METHODS
                lowestFreeEnergy = freeEnergy;              
         		for (int w = 0; w < this.length+b.length*2; w++)
                 {
-        			shiftedThis = shiftedBaseArray.get(0);
-        			shiftedB = shiftedBaseArray.get(1);
+        			shiftedB = shiftedBaseArray[0];
+        			shiftedThis = shiftedBaseArray[1];
         		}
 			}
 	    }
         //return Base array of Strand This and Strand B in lowest energy arrangement
-        Base[][] temp = {shiftedThis,shiftedB};
+        Base[][] temp = {shiftedB,shiftedThis};
         return temp;
 	}
 	
@@ -415,18 +359,20 @@ STRAND PROPERTIES/GETTER METHODS
 		String hitmarker = "";
 		String seq1 = "";
 		String seq2 = "";
-		for(int k = this.length; k < (this.length+b.length); k ++)
+		for(int k = b.length; k < (this.length+b.length); k ++)
         {
-    		seq2 = seq2+bShift[k];   		
+    		seq2 = seq2+thisShift[k];   		
+
     		//Case: if Base Array of Strand This is a base instead of 'o'
-			if(!thisShift[k].nonbase())
+			if(!bShift[k].nonbase())
             {
-    			seq1 = seq1+thisShift[k];
+    			seq1 = seq1+bShift[k];
     			if( bShift[k].canPair(thisShift[k]))
     				hitmarker = hitmarker + ":";
     			else
       				hitmarker = hitmarker + " ";
 			}
+
 			else
             {
 				seq1 = seq1+" ";
@@ -442,44 +388,22 @@ STRAND PROPERTIES/GETTER METHODS
 
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-
-	// lowest free energy: lowest energy configuration (nearest neighbor) and return string
-
-	public String[] lowestFreeEnergy(Strand b,ThermodynamicsCalculator z)
-    { //returns the largest hits of all possible orientations STRAND B VS STRAND THIS		
-        if(!this.isFivePrime)
-            return this.reverse().lowestFreeEnergy(b, z);
-       
-        if(b.isFivePrime)		  
-            b = b.reverse(); 
-            
-        //Finds the lowest energy arrangement of Strand This and Strand B and returns the Base[] of Strand This and Strand B
-        Base[][] shiftedSequences = this.lowestEnergyOrientation(b, z, this.mismatchThreshold);		
-        Base[] shiftedThis = shiftedSequences[0];
-        Base[] shiftedB = shiftedSequences[1];			
-        
-        z.consecutiveLimit = this.mismatchThreshold-1;
-        double freeEnergy = z.nearestNeighbor(shiftedThis, shiftedB, b.length, this.length);		
-        String[] temp = {Double.toString(freeEnergy), bestHitStringMaker(b, shiftedThis, shiftedB)};
-        return temp;
-	}
-
 	// Thermo Mismatch: lowest energy configuration (nearest neighbor) and return consec score
 
 	public double thermoMismatch(Strand b, ThermodynamicsCalculator z, int maxhitlimit)
     {
-		if(!this.isFivePrime)	// 	5  strand this  ooooooooooo ooooooo 3  = shiftedB	
+		if(!this.isFivePrime)	 // 	5  strand this  ooooooooooo ooooooo 3  = shiftedB	
 			return this.reverse().thermoMismatch(b, z, maxhitlimit);
 		if(b.isFivePrime)
-			b = b.reverse(); 	//  3  ooooooooooooo   strand b ooooooo 5  = shiftedThis
+			b = b.reverse(); 	 //  3  oooooooooo   	strand b   ooooooo 5  = shiftedThis
 			
         Base[][] shiftedSequences = this.lowestEnergyOrientation(b, z, maxhitlimit);
-        Base[] shiftedThis = shiftedSequences[0];
-        Base[] shiftedB = shiftedSequences[1];
+        Base[] shiftedB = shiftedSequences[0];
+        Base[] shiftedThis = shiftedSequences[1];
 
         double consecCounter = 0;
         double hitScore = 0;
-        for(int k = this.length; k < b.length + this.length + 1; k ++)
+        for(int k = b.length; k < b.length + this.length + 1; k ++)
         {
             if(shiftedB[k].canPair(shiftedThis[k]))
                 consecCounter++;
@@ -505,11 +429,18 @@ STRAND PROPERTIES/GETTER METHODS
                 // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
             }
         }
+
+        	//this accounts for if there are consec hits in the very end (dont delete this)
+		if(consecCounter >= maxhitlimit) 
+			hitScore++;
+		if(consecCounter > maxhitlimit)
+			hitScore = hitScore + (consecCounter - maxhitlimit);
+
+
         return hitScore;
 	}
 
-	// mismatch: most consecutive hits of maxhitlimit and above (no nearest neighbor)
-	
+//Mismatch: most consecutive hits of maxhitlimit and above (no nearest neighbor)
 	public int mismatch(Strand b, int maxhitlimit)
     {
 		if(!this.isFivePrime)
@@ -521,17 +452,17 @@ STRAND PROPERTIES/GETTER METHODS
 		Base[] shiftedB = new Base[this.length + b.length*2];
 		int highestScore = 0;
 
-		for(int i = 1; i < b.length + this.length; i++)//SHIFT LOOP
+		for(int i = 1; i < b.length + this.length; i++)
         {
 			//Shift Bases over for each shift (0) = strand this  (1) = strand b
-			ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(b, i);			
-			shiftedThis = shiftedBaseArray.get(0);
-			shiftedB = shiftedBaseArray.get(1);
+			Base[][] shiftedBaseArray = baseArrayMaker(b, i);			
+			shiftedThis = shiftedBaseArray[0];
+			shiftedB = shiftedBaseArray[1];
 			
 			int consecCounter = 0;
 			int hitScore = 0;
 			
-			for(int k = this.length; k < b.length + this.length+1; k++)
+			for(int k = b.length; k < b.length + this.length+1; k++)
             {
 				if(shiftedB[k].canPair(shiftedThis[k]))
 	    			consecCounter++;
@@ -546,16 +477,23 @@ STRAND PROPERTIES/GETTER METHODS
 					//Case: if the non-match is not between two matches, then consecCounter returns to 0 
 					else
                     {
-						if(consecCounter >= maxhitlimit)
+						if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
 							hitScore++;
 						if(consecCounter > maxhitlimit)
 							hitScore = hitScore + (consecCounter - maxhitlimit);
 						consecCounter = 0;  	
 					}      
-					// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
-					
 				}
 			}
+
+
+			//this accounts for if there are consec hits in the very end (dont delete this)
+			if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
+				hitScore++;
+			if(consecCounter > maxhitlimit)
+				hitScore = hitScore + (consecCounter - maxhitlimit);
+
+			//System.out.println(bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
 			if(highestScore < hitScore)
 				highestScore = hitScore;
 		}
@@ -563,6 +501,9 @@ STRAND PROPERTIES/GETTER METHODS
     }
 
 
+//Mismatch2: most consecutive hits of maxhitlimit and above AND ignores shifts in ignoreShifts array 
+ //(case: wanting to ignore shifts that would compare parts of strand designed to be complementary)
+    
     public int mismatch2(Strand b, int maxhitlimit, int[] ignoreShifts)
     {
 		if(!this.isFivePrime)
@@ -574,7 +515,7 @@ STRAND PROPERTIES/GETTER METHODS
 		Base[] shiftedB = new Base[this.length + b.length*2];
 		int highestScore = 0;
 
-		for(int i = 1; i < b.length + this.length; i++)//SHIFT LOOP
+		for(int i = 1; i < b.length + this.length; i++)
         {
 			boolean skipShift = false;
 			for(int ignoreShiftIndex = 0; ignoreShiftIndex < ignoreShifts.length;ignoreShiftIndex++)
@@ -585,14 +526,14 @@ STRAND PROPERTIES/GETTER METHODS
 			if(!skipShift)
 			{
 				//Shift Bases over for each shift (0) = strand this  (1) = strand b
-				ArrayList<Base[]> shiftedBaseArray = baseArrayMaker(b, i);			
-				shiftedThis = shiftedBaseArray.get(0);
-				shiftedB = shiftedBaseArray.get(1);
+				Base[][] shiftedBaseArray = baseArrayMaker(b, i);			
+				shiftedThis = shiftedBaseArray[0];
+				shiftedB = shiftedBaseArray[1];
 				
 				int consecCounter = 0;
 				int hitScore = 0;
 				
-				for(int k = this.length; k < b.length + this.length+1; k++)
+				for(int k = b.length; k < b.length + this.length; k++)
 	            {
 					if(shiftedB[k].canPair(shiftedThis[k]))
 		    			consecCounter++;
@@ -612,16 +553,125 @@ STRAND PROPERTIES/GETTER METHODS
 							if(consecCounter > maxhitlimit)
 								hitScore = hitScore + (consecCounter - maxhitlimit);
 							consecCounter = 0;  	
-						}      // ::: ::: 
+						}      
 						// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
 					}
 				}
+
+				/*
+				this accounts for if there are consec hits in the very end (dont delete this)
+				*/
+				if(consecCounter >= maxhitlimit)
+					hitScore++;
+				if(consecCounter > maxhitlimit)
+					hitScore = hitScore + (consecCounter - maxhitlimit);
+
+
 				if(highestScore < hitScore){
 					highestScore = hitScore;
 				}
-
+				//System.out.println("\n"+highestScore+"  "+hitScore);
+				//System.out.println("\n"+bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
 			}
+
 		}
 		return highestScore;
     }
+    
+
+    //baseArrayMismatch: returns worst base positions
+
+	public ArrayList<Integer> baseArrayMismatch(Strand b, int maxhitlimit)
+    {
+		if(!this.isFivePrime)
+        {
+			ArrayList<Integer> reversedBaseArrayMismatch = this.reverse().baseArrayMismatch(b, maxhitlimit);
+            ArrayList<Integer> worstBasePositions = new ArrayList<Integer>();
+            for(Integer basePosition: reversedBaseArrayMismatch)
+            {
+                worstBasePositions.add(this.length - basePosition);
+            }
+            return worstBasePositions;
+        }
+		if(b.isFivePrime)
+			b = b.reverse();
+
+
+
+		Base[] shiftedThis = new Base[this.length + b.length*2];
+		Base[] shiftedB = new Base[this.length + b.length*2];
+        ArrayList<Integer> worstBasePositions = new ArrayList<Integer>();
+		int highestScore = 0;
+
+		for(int i = 1; i < b.length + this.length; i++)
+        {
+			//Shift Bases over for each shift (0) = strand this  (1) = strand b
+			Base[][] shiftedBaseArray = baseArrayMaker(b, i);
+            ArrayList<Integer> badBasePositions = new ArrayList<Integer>();
+			shiftedThis = shiftedBaseArray[0];
+			shiftedB = shiftedBaseArray[1];
+			
+			int consecCounter = 0;
+			int hitScore = 0;
+			
+			for(int k = b.length; k < b.length + this.length; k++)
+            {
+				if(shiftedB[k].canPair(shiftedThis[k]))
+                {
+	    			consecCounter++;
+                    if(consecCounter > maxhitlimit)
+                    {
+                        badBasePositions.add(k - b.length);
+                    }
+                }
+				else
+                {
+					//*
+					//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
+					if(shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
+                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
+                            shiftedB[k - 1].canPair(shiftedThis[k - 1]) && 
+                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && consecCounter > 0)
+						consecCounter--;
+					//
+
+
+					//*
+					//Case: if the non-match is not between two matches, then consecCounter returns to 0 
+					else// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
+                    {
+						if(consecCounter >= maxhitlimit)
+                        {
+							hitScore++;
+
+							//***
+                            badBasePositions.add(k - b.length);
+                            //***
+
+                        }
+						if(consecCounter > maxhitlimit)
+							hitScore = hitScore + (consecCounter - maxhitlimit);
+						consecCounter = 0;
+					}
+					//
+				}
+			}
+
+			//*
+			//this accounts for if there are consec hits in the very end (dont delete this)
+			if(consecCounter >= maxhitlimit)
+				hitScore++;
+			if(consecCounter > maxhitlimit)
+				hitScore = hitScore + (consecCounter - maxhitlimit);
+			//
+
+			if(highestScore < hitScore)
+            {
+				highestScore = hitScore;
+                worstBasePositions = badBasePositions;
+            }    
+		}
+        return worstBasePositions;
+    }
+
 }

@@ -85,6 +85,7 @@ export default class Sequencer extends React.Component {
 		let errorStyle = { 
 			padding:"17px",
 			borderStyle:"solid",
+			background:"rgba(139, 179, 218,0.2)",
 			borderColor:"#ff9e80",
 			borderWidth:"thin",
 			width:"700px",

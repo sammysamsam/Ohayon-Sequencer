@@ -1,8 +1,7 @@
 import React from "react";
 import ResultScreen from "./ResultScreen";
-import Spinner from 'react-spinkit';
 import Select from 'react-select';
-
+import {Button} from 'react-materialize'
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
@@ -13,19 +12,18 @@ export default class StrandComparison extends React.Component {
 		this.deletecomparelist1 = this.deletecomparelist.bind(this,1);
 		this.deletecomparelist2 = this.deletecomparelist.bind(this,2);
 		this.callcomparelist = this.callcomparelist.bind(this);
-		this.callprintfullstrands = this.callprintfullstrands.bind(this);
-		this.callprintcomponents = this.callprintcomponents.bind(this)
 		this.addComponentsToComparelist = this.addComponentsToComparelist.bind(this);
 
 		this.state = {
-			comparelist:[]
+			comparelist:[],
 		}
 	}
 	//
 
 	addComponentsToComparelist(e)
 	{
-			StrandAction.ClearResults();		
+		StrandAction.ClearResults();		
+
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
 			temp.push( {name:e.label, components:e.value,loop:"false"} );		
@@ -34,7 +32,8 @@ export default class StrandComparison extends React.Component {
 	}
 	addFullStrandToComparelist(e)
 	{
-			StrandAction.ClearResults();		
+		StrandAction.ClearResults();		
+
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
 			temp.push( {name:e.label, components:e.value,loop:"false"} );		
@@ -43,8 +42,10 @@ export default class StrandComparison extends React.Component {
 	}
 	//
 
-	callcomparelist(){
+	callcomparelist()
+	{
 		StrandAction.ClearResults();
+
 		if(this.state.comparelist.length > 2 || this.state.comparelist.length == 0 )
 			Materialize.toast("Please Select 1 or 2 Strands to Compare",2000);
 		else 
@@ -53,20 +54,7 @@ export default class StrandComparison extends React.Component {
 				this.state.comparelist.push(this.state.comparelist[0]);
 			StrandAction.CompareStrands(this.state.comparelist);
 		}
-
 	}
-
-	callprintfullstrands()
-	{
-		StrandAction.ClearResults();	
-		StrandAction.PrintStrandList();
-	}
-	callprintcomponents()
-	{
-		StrandAction.ClearResults();	
-		StrandAction.PrintComponentList();
-	}
-
 	//
 
 
@@ -120,7 +108,7 @@ export default class StrandComparison extends React.Component {
 
 	//
 
-	loadheader()
+	loadComparisonSet()
 	{
 		let clearButttonStyle = {
 			verticalAlign:"top",
@@ -169,82 +157,38 @@ export default class StrandComparison extends React.Component {
 				)
 		}
 	}
-
-	loadbuttons(){
-		let analysisButtonStyle = {
-			fontFamily:"'Roboto',serif",
-			marginLeft:"60px",
-			borderWidth:"1px",
-			cursor:"pointer",
-			height:"40px",
-			width:"175px", 
-			paddingTop:"10px",
-			textAlign:"center",
-			display:"inline-block",
-			color:"#ff9e80",
-			fontSize:"14px"
-		}
-		switch(this.props.status){
-			case true:{ 
-				return	(
-				<div style = {{padding:"7px 30px 4px 390px",background:"rgba(0, 0, 0,.6)"}}> 
-						<Spinner spinnerName='wave' noFadeIn />
-				</div>)
-			}
-			case false:{ 
-					return (	
-						<div style = {{padding:"7px 30px 4px 20px",background:"rgba(0, 0, 0,.6)"}}>
-							<div style = {analysisButtonStyle} className= "hvr-underline-from-center" onClick = {this.callcomparelist}>  
-
-								Compare
-							</div>
-							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintfullstrands}>  
-
-								Print Full Strands
-							</div>
-							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" onClick = {this.callprintcomponents}>  
-					
-								Print Components
-							</div>
-							<div style = {analysisButtonStyle}  className= "hvr-underline-from-center" >  
-
-								Melting Point
-							</div>
-						</div>
-					)
-			}
-		}
-	}
-	render(){
+	renderCompareWorkspace()
+	{
 		let strandsToCompareStyle = {
- 	 		background:"rgba(255, 255, 255,.07)",
- 	 		height:"60px",
- 	 		padding:"20px 0px 5px 20px",
+ 	 		height:"55px",
+ 	 		padding:"25px 0px 5px 20px",
  	 		fontSize:"16px",
- 	 		color:"white",
+ 	 		color:"#333333",
  	 	}
 		let compareWorkspaceStyle = {
-			background:"rgba(28, 50, 74,.55)",
-			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"	,
+			background:"rgba(217, 217, 217,.95)",
+			boxShadow:" 9px 0px 12px -4px rgba(0,0,0,0.56)"	,
 		}
 		let resultSectionStyle = {
-			height:"553px",
+			height:"568px",
 			width:"1045px",
 			display:"block",
 			marginTop:"2px",
-			background:"rgba(255,255,255,.7)"
-			,boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
+			background:"rgba(255,255,255,.7)",
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
 		}
 
 		return(
-		<div style={{width:"1045px"}}> 	
+		<div>
 			<div style = {compareWorkspaceStyle}>
+
  	 			<div style={strandsToCompareStyle}> 
-					Strands/Components Comparison Set:
-					{this.loadheader()}
+					Select 1 or 2 Strands:
+					{this.loadComparisonSet()}
+
 				</div>
 
-		 		<div style = {{width:"400px",margin:"20px 10px 15px 95px ",display:"inline-block"}} >
+		 		<div style = {{width:"400px",margin:"15px 10px 10px 35px ",display:"inline-block"}} >
 		 			<Select 
 		 				placeholder="Add Strand Component"
 		 				name="form-field-name" 
@@ -252,7 +196,7 @@ export default class StrandComparison extends React.Component {
 		 				onChange = {this.addComponentsToComparelist} />
 				</div>
 				
-				<div style = {{width:"400px",margin:"20px 0px 20px 0px",display:"inline-block",verticalAlign:"top"}} >
+				<div style = {{width:"400px",margin:"15px 0px 10px 0px",display:"inline-block",verticalAlign:"top"}} >
 					<Select
 					 	placeholder="Add Full Strand" 
 						name="form-field-name" 
@@ -260,14 +204,38 @@ export default class StrandComparison extends React.Component {
 						onChange = {this.addComponentsToComparelist} 
 						/>
 				</div>
+				<Button 
+					style = {{width:"125px",float:"right",fontSize:"11px",margin:"15px 20px 0px 0px"}}
+					onClick = {this.callcomparelist}> 
+					Compare
+				</Button>
 			</div>
 
 			<div style={resultSectionStyle}> 
-				{this.loadbuttons()}
  				<ResultScreen list = {this.state.comparelist} results = {this.props.results}/>
 			</div>
 		</div>
 		)
+	}
+
+
+	render(){
+		let resultSectionStyle = {
+			height:"693px",
+			width:"1045px",
+			display:"block",
+			marginTop:"4px",
+			background:"rgba(255,255,255,.7)",
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
+		}
+		if(this.props.results[0] == "COMPARE")
+			return this.renderCompareWorkspace();
+
+		return(					
+			<div style={resultSectionStyle}> 
+ 				<ResultScreen list = {this.state.comparelist} results = {this.props.results}/>
+			</div>
+			)
 	}
 }
 

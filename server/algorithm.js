@@ -104,18 +104,36 @@ AlgorithmRouter.post('/Compare',(req,res)=>{
 		java.classpath.push(path.resolve(__dirname, './java'));
 		java.import('OhayonMiddleware');
 		var middleware = java.newInstanceSync("OhayonMiddleware");
-		
-		var data =  middleware.compareStrands(strand1.name , strand1.sequence , strand2.name , strand2.sequence , (err,data) =>{
+		var data =  middleware.compareStrands( strand1.name , strand1.sequence , strand2.name , strand2.sequence , (err,data) =>{
 			res.json({result:data});
 			res.end();
-		});
-
-
+		});		
 	}
+
 	catch(e){
 		res.send('invalid JSON String');
 		res.end();
 	}
+});
+
+AlgorithmRouter.post('/CompareAll',(req,res)=>{
+	
+			
+
+		java.classpath.push(path.resolve(__dirname, './java'));
+		java.import('OhayonMiddleware');
+		var middleware = java.newInstanceSync("OhayonMiddleware");
+		
+		var components =  processComponents(req.body.componentlist);
+		var fullstrands = processFullStrands(req.body.fullstrandlist);
+
+		var data =  middleware.compareAll( components, fullstrands , (err,data) =>{
+
+			res.json({ result1 : data[0] , result2 : data[1] });
+			res.end();
+
+		});
+	
 });
 
 export default AlgorithmRouter;

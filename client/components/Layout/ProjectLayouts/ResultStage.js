@@ -1,5 +1,7 @@
 import React from "react";
 import StrandComparison from "../../Pages/ResultStage/StrandComparison";
+import ResultStageButtons from "../../Pages/ResultStage/ResultStageButtons";
+
 
 //STORE
 import ProjectStore from "../../Store/ProjectStore";
@@ -55,14 +57,12 @@ export default class ResultStateLayout extends React.Component {
 	}
 	render(){
 		let topstyle = {
-			padding:"35px",
+			paddingTop:"35px",
 			background:"rgba(28, 50, 74,.8)",     
 			width:"1198px", 
 			textAlign:"center",
 			margin:"0px 0px 3px -153px",
 			height:"243px",
-			border:"solid #ff9e80",
-			borderWidth:"1px 0px 1px 0px"
 		}
 
 		return(
@@ -70,10 +70,13 @@ export default class ResultStateLayout extends React.Component {
 			<div style = {topstyle}>
 				<h2 style = {{color:"#ffccbc"}}> 
 				
-
 					DATA ANALYSIS 
+
 				</h2>
-				<p style = {{paddingTop:"30px",color:"#ffccbc"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
+				
+				<p style = {{paddingTop:"12px",color:"#ffccbc",paddingBottom:"2px"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
+				
+				<ResultStageButtons status = {this.state.programstatus}/>
 			</div>
 
 			<div className= "animated fadeIn">

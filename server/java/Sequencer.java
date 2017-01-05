@@ -8,8 +8,6 @@ public class Sequencer
     ThermodynamicsCalculator thermoCalc;
     ArrayList<FullStrand> fullStrandList;
 
-    int fullStrandMismatchLimit = 5;
-
     public Sequencer(ArrayList<Strand> componentList, ThermodynamicsCalculator x)
     {
         this.thermoCalc = x;
@@ -69,9 +67,8 @@ STATUS OF STRANDLIST METHODS
 
     //////
 
-    public void fullStrandOverview()
+    public void fullStrandOverview(CompareStrands c)
     {
-        CompareStrands c = new CompareStrands(this.thermoCalc);
         for(int x = 0; x < this.fullStrandList.size(); x++)
         {
             FullStrand currentFullStrand = this.fullStrandList.get(x);
@@ -79,20 +76,19 @@ STATUS OF STRANDLIST METHODS
             {
                 FullStrand tempFullStrand = this.fullStrandList.get(y);
 
-                int[] complementShifts = currentFullStrand.getComplementShifts(tempFullStrand,this.componentList);
+                int[] complementShifts = tempFullStrand.getComplementShifts(currentFullStrand,this.componentList);
                 if(complementShifts.length == 0)
                 {
-                    int[] compshift = new int[0];
                     System.out.print("\n\n"+currentFullStrand.name + " vs "+ tempFullStrand.name+": ");
-                    System.out.println(currentFullStrand.combine(this.componentList).mismatch(tempFullStrand.combine(this.componentList),this.fullStrandMismatchLimit));
-                    c.bestArrangementFull( currentFullStrand.combine(this.componentList) , tempFullStrand.combine(this.componentList) , compshift);
+                    System.out.println(currentFullStrand.combine(this.componentList).mismatch(tempFullStrand.combine(this.componentList),5));
+                    c.bestArrangement(currentFullStrand.combine(this.componentList),tempFullStrand.combine(this.componentList));
                    
                 }
                 else
                 {
                     System.out.print("\n\n* "+currentFullStrand.name + "vs "+tempFullStrand.name + ":"); // temp = this current = other
-                    System.out.println(currentFullStrand.combine(this.componentList).mismatch2(tempFullStrand.combine(this.componentList),this.fullStrandMismatchLimit,complementShifts));  //current slides through while other stays same
-                    c.bestArrangementFull(currentFullStrand.combine(this.componentList) , tempFullStrand.combine(this.componentList) , complementShifts);
+                    System.out.println(currentFullStrand.combine(this.componentList).mismatch2(tempFullStrand.combine(this.componentList),5,complementShifts));  //current slides through while other stays same
+                    c.bestArrangementFull(currentFullStrand.combine(this.componentList),tempFullStrand.combine(this.componentList),complementShifts);
                 }
             }
         }
@@ -126,91 +122,66 @@ STRAND SEQUENCING METHOD:
         ArrayList<FullStrand> fullStrandList = this.fullStrandList;
         this.componentList = new ArrayList<Strand>();
 
-        /* 
-        Step 1: add first strand to list
-        Step 2: run base fixing algorithm on phase 1 (eliminate restricted sequences) until 
-        no changes can be done anymore (the algorithm returns false) or until restricted sequence score is satisfied (checkpoint 1)
-        Step 3: (if necessary) randomize strand at first position and start again at step 2
-        */
-        this.componentList.add(fullComponentList.get(0)); //step1
-        while(true)
-        {
-            while(baseFixingAlgorithm(1, 0))  // step2
-            {
-            }
-
-            if(sequencingStageCheckpoint(1))
-                break;
-            else
-                this.strandRandomizer(30, 0); //step 3
-        }
 
         /*
-        step 4: add next strand
-        step 5: randomize strand
-        step 6: run base fixing algorithm, check if checkpoint 1 (restricted seq) is satisfied, if not go back to step 6
-        step 7: run base fixing algorithm, check if checkpoint 2 (restricted seq, mismatch < 5) is satisfied, if not go back to step 6
-        step 8: minimize component edges add next strand if checkpoint 3 is satisfied
+        step 1: add next strand
+        step 2: randomize strand
+        step 3: run base fixing algorithm, check if checkpoint 1 (restricted seq) is satisfied, if not go back to step 6
+        step 4: run base fixing algorithm, check if checkpoint 2 (restricted seq, mismatch < 5) is satisfied, if not go back to step 6
+        step 5: minimize component edges add next strand if checkpoint 3 is satisfied
         *: if strand is not successfully sequenced after 10 tries (numTries variable), 
         delete current and previous strand and start step 4 at previous step
         */
 
-        for(int i = 1; i < fullComponentList.size(); i++)
+        for(int i = 0; i < fullComponentList.size(); i++)
         {
             int numTries = 0;
 
-            this.componentList.add(fullComponentList.get(i)); //step 4
-            System.out.println("\nadd " + fullComponentList.get(i).name + " |  list size now:" + this.componentList.size());   
+            this.componentList.add(fullComponentList.get(i)); //step 1 and 2
+            this.strandRandomizer(15, i);
+            
+            System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");  
+     
             while(true)
             {
                     numTries++;
-                    this.strandRandomizer(8, i);   //step 5
-              
-                    if(numTries > 10)
+                    this.strandRandomizer(5, i);   //step 2
+
+                    if(numTries > (9*i))
                     {
-                        if(i > 1)                 
+                        if(i > 0)                 
                         {
-                            this.fullStrandOverview();                          
+                            System.out.println("back, list size now:" + this.componentList.size());
+     
                             this.componentList.remove(i);
                             i = i - 2;          
                             this.componentList.remove(i + 1);
-                            System.out.println("\nback, list size now:" + this.componentList.size());
-                            break;
+                           break;
                         }
                     }
 
-
-                    int[] stages = {1,2};
-                    boolean checkpointResult = false;    
-                    for(int stage: stages)
+                    while(baseFixingAlgorithm(1, i))     //step 3
                     {
-                        checkpointResult = false;
-                        System.out.println("stage : "+stage);  
-                        while(baseFixingAlgorithm(stage, i))     //step 6
-                        {
-                            if(sequencingStageCheckpoint(stage))
-                            {
-                                checkpointResult = true;
-                                break;
-                            }
-                        }
-                        if(!checkpointResult)
-                            break;
                     }
+                   if(!checkpoint1(i))  
+                        continue;
+
+                    while(baseFixingAlgorithm(2, i))     //step 4
+                    {
+                    } 
+                    
+                    System.out.print(" "+sumcheckpoint2());
                     if(!sequencingStageCheckpoint(2))
                         continue;
 
-                    System.out.println("\n___\n"+numTries+"\n");
-                    this.minimizeEdges();
-
+                    this.minimizeEdges(i);           //step 5
                     if(sequencingStageCheckpoint(3))
                         break;
+                    else
+                        System.out.println("\n___________\nunsuccessful\n____________");
             }
         }
-        System.out.println("\n_________________________________________________________________________________________\n");
-        this.componentOverview();
-        System.out.println("\n_________________________________________________________________________________________\n");
-        this.fullStrandOverview();
+        this.printFullStrand();
     }
 
 /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -218,6 +189,15 @@ STRAND SEQUENCING METHOD:
 CHECKPOINT FOR ALGORITHM METHODS:
 
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+    public int sumcheckpoint2()
+    {
+        int sum = 0;
+        for(int i = 0; i < this.componentList.size(); i++)
+        {
+            sum = sum + this.totalConsecutiveMatches(i);
+        }  
+        return sum;
+    }
 
     /** check if all strands have restricted sequence score above -100**/
     public boolean sequencingStageCheckpoint(int checkpointNumber)
@@ -236,14 +216,19 @@ CHECKPOINT FOR ALGORITHM METHODS:
     private boolean checkpoint3(int i)
     {
         if(this.fullStrandMatches(this.componentList.get(i).name) > 0)
+        {
+            //System.out.println("\nPROBLEM WITH: "+this.componentList.get(i).name + "|  "+this.fullStrandMatches(this.componentList.get(i).name) );
             return false;
+        }
         return checkpoint2(i);
     }
 
     private boolean checkpoint2(int i)
     {
         if(this.totalConsecutiveMatches(i) > 0)
+        {
             return false;
+        }
         return checkpoint1(i);
     }
 
@@ -258,7 +243,7 @@ CHECKPOINT FOR ALGORITHM METHODS:
         Strand currStrand = this.componentList.get(i);
         if (restrictedSequences(currStrand) < 0)
             return false;
-        if (selfBaseBalance(currStrand) > 10)
+        if (baseRatioScore(currStrand) > 10)
             return false;
         else
             return true;
@@ -268,28 +253,26 @@ CHECKPOINT FOR ALGORITHM METHODS:
 FULL STRAND/EDGE ALGORITHM METHODS:
 
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-public void minimizeEdges()
+public void minimizeEdges(int componentIndex)
 {   
     int[] shuffledStrandOrder = shuffleStrandIndices(this.componentList.size());  
-
+    
     while(true)
     {
         boolean changes = false;
         for(int i: shuffledStrandOrder)
         {
-            System.out.print(this.componentList.get(i).name+" before "+
-                this.fullStrandMatches(this.componentList.get(i).name));
-            
+            //System.out.print(this.componentList.get(i).name+" before "+
             if (edgeFixingAlgorithm(i))
                 changes = true;
 
-            int result = this.fullStrandMatches(this.componentList.get(i).name);            
-            System.out.println( "   after    "+result);
+            //int result = this.fullStrandMatches(this.componentList.get(i).name);            
+            //System.out.println( "   after    "+result);
         
         }
 
         //if conditions satisfied or no changes can be made, break;
-        if(!changes || sequencingStageCheckpoint(3))
+        if(!changes || checkpoint3(componentIndex))
             break;
     }
 }
@@ -371,7 +354,8 @@ private boolean testEdge(int componentIndex, char testBase,
     //if newscore (total mismatch score) is better( less than ) initial score
     if(initialFULLscore > newFULLscore)
         return true;
-    return false;
+    else
+        return false;
 }
 /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -383,27 +367,31 @@ COMPONENT ALGORITHM METHODS:
    {
         Strand currStrand = this.componentList.get(strandPosition);
         int[] basePositions = shuffleBaseArray(currStrand);
+        if(phase == 2)
+            basePositions = getBasePositions(strandPosition);
+
         char[] baseArray = currStrand.sequence.toCharArray(); // strand x's sequence now split by each letter into array
-        
+
 
         boolean changes = false;
         for (int basePosition: basePositions) // for every base in currStrand
         { 
             if(basePosition > -1)
             {
-                if(  (phase == 1 && checkpoint1(strandPosition) == true) 
-                        || (phase == 2 && checkpoint2(strandPosition) == true)
-                       )
-                    break;  
-                char[] bases = shuffleBase();     
+                if  (  (phase == 1 && checkpoint1(strandPosition) == true) 
+                      ||(phase == 2 && checkpoint2(strandPosition) == true)
+                    )
+                    break;
+
+                char[] bases = shuffleBase();
                 char originalbase = baseArray[basePosition];
                 for (char testBase: bases)
                 {
                     if (!(originalbase == testBase))
                     {
-                        if(  (phase == 1 && baseFixingTestSelf(strandPosition, testBase, baseArray, basePosition, originalbase) == true )
-                                || (phase == 2 && baseFixingTestMismatch(strandPosition, testBase, baseArray, basePosition, originalbase) == true)
-                             )
+                        if ( (phase == 1 && baseFixingTestSelf(strandPosition, testBase, baseArray, basePosition, originalbase) == true )
+                            || (phase == 2 && baseFixingTestMismatch(strandPosition, testBase, baseArray, basePosition, originalbase) == true)
+                           )
                         {
                             baseArray[basePosition] = testBase;
                             currStrand.setSequence(String.valueOf(baseArray));
@@ -491,13 +479,13 @@ COMPONENT ALGORITHM METHODS:
     {
         int[] test1scores = new int[4];
         
-        test1scores[0]= selfBaseBalance(this.componentList.get(componentIndex));    
+        test1scores[0]= baseRatioScore(this.componentList.get(componentIndex));    
         test1scores[1] = restrictedSequences(this.componentList.get(componentIndex));
         
         baseArray[basePosition] = testBase;
         this.componentList.get(componentIndex).setSequence(String.valueOf(baseArray));
         
-        test1scores[2] = selfBaseBalance(this.componentList.get(componentIndex));
+        test1scores[2] = baseRatioScore(this.componentList.get(componentIndex));
         test1scores[3] = restrictedSequences(this.componentList.get(componentIndex));
         
         baseArray[basePosition] = originalbase;
@@ -571,6 +559,7 @@ STRAND VS STRAND CHECK METHOD:
                                                     comparedStrand.mismatchThreshold);
                 //strand vs others
                 total = total + currStrand.mismatch(comparedStrand, consecNum);
+               
                 //strand complement vs others
                 if(currStrand.complementExists)
                 {
@@ -594,25 +583,9 @@ STRAND VS STRAND CHECK METHOD:
                 for(int y = 0; y < this.fullStrandList.size(); y++)
                 {
                     FullStrand tempFullStrand = this.fullStrandList.get(y);
-                    int[] complementShifts = currentFullStrand.getComplementShifts(tempFullStrand,this.componentList);
-                    
-                    if(complementShifts.length == 0)
-                    {
-                        Strand strand1 = currentFullStrand.combine(this.componentList);
-                        Strand strand2 = tempFullStrand.combine(this.componentList);
-                        sum = sum +strand1.mismatch(strand2,this.fullStrandMismatchLimit);
-                        //System.out.println(currentFullStrand.name+" "+currentFullStrand.combine(this.componentList).sequence+" vs "+tempFullStrand.name+" "+tempFullStrand.combine(this.componentList).sequence+" | "+sum);    
-                    }
-                    else
-                    {
-                        Strand strand1 = currentFullStrand.combine(this.componentList);
-                        Strand strand2 = tempFullStrand.combine(this.componentList);
-                        sum = sum +strand1.mismatch2(strand2,this.fullStrandMismatchLimit,complementShifts); 
-                       // System.out.println(currentFullStrand.name+" "+currentFullStrand.combine(this.componentList).sequence+" vs "+tempFullStrand.name+" "+tempFullStrand.combine(this.componentList).sequence+" | "+sum);
-                    }
+                    sum = sum + currentFullStrand.mismatch(tempFullStrand,this.componentList);
                 } 
             }
-
         }
         return sum;
     }
@@ -630,7 +603,7 @@ STRAND VS STRAND CHECK METHOD:
 
         int seqScore =  -1 * currentStrand.mismatch(currentStrand,currentStrand.hairpinThreshold);
         seqScore =  seqScore - currentStrand.selfvsComplementMismatch(this.thermoCalc);
-        
+
        /*
         // strand vs itself, 5 mismatch limit   (i think this is unnecessary cus it is checked with check above plus we want to give ppl freedom to make hairpin)
         seqScore = seqScore - 10*currentStrand.consecMismatch(this.thermoCalc, 5);
@@ -688,7 +661,9 @@ UTILITY METHODS:
 
   /** Return .500 - percentage of A and T in sequence (closer to 0 the better)
     */
-   public static int selfBaseBalance(Strand currentStrand)
+
+
+   public static int baseRatioScore(Strand currentStrand)
    {
         char[] currSeq = currentStrand.sequence.toCharArray();
         double c;
@@ -744,17 +719,39 @@ UTILITY METHODS:
             for (int f = 0; f < x.length; f++)
             {
                 if(x.blueprint[f] == 'o')
-                {
                     basePosition[f] = f;
-                }
                 else
-                {
                     basePosition[f] = -1;
-                }
             }
         }
         return basePosition;
    }
+    public int[] getBasePositions(int currStrandIndex)
+    {
+        ArrayList<Integer> worstBases = new ArrayList<Integer>();
+        Strand currStrand = this.componentList.get(currStrandIndex);
+
+        for(int i = 0; i < this.componentList.size(); i++)
+        {
+            Strand comparedStrand = this.componentList.get(i);
+            ArrayList<Integer> currBadBases = currStrand.baseArrayMismatch(comparedStrand, 5);
+            if(currBadBases.size() > worstBases.size())
+                worstBases = currBadBases;
+        }
+
+        if(currStrand.blueprintExists)
+        {
+            for (int f = 0; f < currStrand.length; f++)
+            {
+                if(currStrand.blueprint[f] != 'o')
+                {
+                    worstBases.set(f, -1);
+                }
+            }
+        }
+        int[] arr = worstBases.stream().mapToInt(i -> i).toArray();
+        return arr;
+    }
 
 
    public int[] shuffleEdgeArray(Strand x) 
@@ -768,12 +765,10 @@ UTILITY METHODS:
             int[] basePosition = {0,1,2,3,x.length-4,x.length-3,x.length-2,x.length-1};
             if(x.blueprintExists)
             {
-                int counter = 0;
                 for(int pos : basePosition)
                 {
-                    if(x.blueprint[pos] == 'A'||x.blueprint[pos] == 'T'||x.blueprint[pos] == 'C'||x.blueprint[pos] == 'G')
-                        basePosition[counter] = -1;
-                    counter ++;
+                    if(x.blueprint[pos] == 'o')
+                        basePosition[pos] = -1;
                 }
             }
            shuffleArray(basePosition);

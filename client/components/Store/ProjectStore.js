@@ -55,7 +55,10 @@ class ProjectStore extends EventEmitter{
 	}
  	clearResults()
  	{
- 		this.dataAnalysis_Results =["",""]
+ 		if(this.dataAnalysis_Results[0] = "COMPARE")
+ 			 this.dataAnalysis_Results =["COMPARE",""];
+ 		else 
+ 			this.dataAnalysis_Results =["",""];
  	}
 
 
@@ -128,6 +131,7 @@ class ProjectStore extends EventEmitter{
 	{
 		this.full_StrandList = StrandlistUpdate2;
 	}
+
 	add_Full_StrandList(NewStrand)
 	{
 		this.full_StrandList.push(NewStrand);
@@ -146,9 +150,29 @@ class ProjectStore extends EventEmitter{
 
 
  //   AXIOS POST METHODS
+ 
+ 	fullAnalysis()
+ 	{
+		this.backendStatus = true;
+		this.emit("Update_Backend_Status");
+
+		let strandlistStoreReference = this;
+
+ 		return axios.post('/DNASequenceProgram/CompareAll', {
+ 			componentlist: this.component_StrandList,
+ 			fullstrandlist: this.full_StrandList
+ 		}).then(function(response){
+			console.log(response.data);
+			strandlistStoreReference.dataAnalysis_Results = ["FULLANALYSIS",response.data.result1,response.data.result2];
+			strandlistStoreReference.emit("Update_Results");
+			strandlistStoreReference.backendStatus = false;
+			strandlistStoreReference.emit("Update_Backend_Status");
+ 		});
+
+ 	}
+
 	compareStrands(strandsToCompare)
 	{
-		console.log("WHITE");
 		this.backendStatus = true;
 		this.emit("Update_Backend_Status");
 
@@ -206,9 +230,6 @@ class ProjectStore extends EventEmitter{
  	}
 
 
-
-
-
 // Action Handler
 
 	handleActions(action)
@@ -237,13 +258,22 @@ class ProjectStore extends EventEmitter{
  				this.emit("Update_Backend_Status");
 				break;
 			}
-
 			case "SEQUENCE_STRANDLIST":{
 				this.runSequencer(action.time);
 				break;
 			}
 			case "COMPARE_STRANDS":{
-				this.compareStrands(action.strands);
+				if(action.strands.length == 0)
+				{
+					this.dataAnalysis_Results = ["COMPARE",""];
+					this.emit("Update_Results");
+				}
+				else
+					this.compareStrands(action.strands);
+				break;
+			}
+			case "FULL_ANALYSIS":{
+				this.fullAnalysis();
 				break;
 			}
 //

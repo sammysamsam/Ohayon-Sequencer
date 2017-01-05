@@ -78,12 +78,20 @@ import dispatcher from "../Dispatcher";
 			type:"CLEAR_RESULT",
 		});
 	}
+	
 	export function CompareStrands(strands){
 		dispatcher.dispatch({
 			type:"COMPARE_STRANDS",
 			strands,
 		});
 	}
+
+	export function FullCompareAnalysis(){
+			dispatcher.dispatch({
+			type:"FULL_ANALYSIS",
+		});	
+	}
+
 	export function PrintStrandList(){
 		dispatcher.dispatch({
 			type:"PRINT_FULL_STRANDLIST"

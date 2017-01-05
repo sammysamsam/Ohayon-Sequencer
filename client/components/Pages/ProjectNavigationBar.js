@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from "react-router";
+
 import image3 from "../../images/Icons/AnalysisIcon.png";
 import image2 from "../../images/Icons/SequencerIcon.png";
 import image1 from "../../images/Icons/WorkspaceIcon.png";
+
+
+
 export default class ProjectNagivationBar extends React.Component {
 	render()
 	{
