@@ -17,8 +17,10 @@ export default class DevelopmentStageLayout extends React.Component {
 		this.updateWorkspaceNavigation = this.updateWorkspaceNavigation.bind(this);
 		this.updateComponentlist = this.updateComponentlist.bind(this);
 		this.updatefullstrandlist = this.updatefullstrandlist.bind(this);
+		this.updatestatus = this.updatestatus.bind(this);
 
-		this.state = {  activedisplay: ProjectStore.getWorkspaceDisplay(),
+		this.state = {  backend_Status:  ProjectStore.getBackendStatus(),
+						activedisplay: ProjectStore.getWorkspaceDisplay(),
 						Salt: ProjectStore.getConditions().Salt, 
 						Concentration: ProjectStore.getConditions().Concentration,
 						Component_List: ProjectStore.getStrandComponents(),
@@ -30,26 +32,37 @@ export default class DevelopmentStageLayout extends React.Component {
 		ProjectStore.on("Change_Condition", this.updateconditions);
 		ProjectStore.on("Change_Full_Strandlist",this.updatefullstrandlist);
 		ProjectStore.on("Change_Component_Strandlist",this.updateComponentlist);
+		ProjectStore.on("Update_Backend_Status",this.updatestatus);	
 	}
 	componentWillUnmount() {
 		ProjectStore.removeListener("Change_Workspace_Display",this.updateWorkspaceNavigation)
 		ProjectStore.removeListener("Change_Condition", this.updateconditions)
 		ProjectStore.removeListener("Change_Component_Strandlist",this.updateComponentlist)
 		ProjectStore.removeListener("Change_Full_Strandlist",this.updatefullstrandlist);
+		ProjectStore.removeListener("Update_Backend_Status",this.updatestatus);	
 	}
+
+	updatestatus(){
+		this.setState({ backend_Status: ProjectStore.getBackendStatus() })
+	}
+
 	updateconditions(){
 		this.setState({ Salt: ProjectStore.getConditions().Salt})
 		this.setState({ Concentration: ProjectStore.getConditions().Concentration})
 	}
+
 	updateWorkspaceNavigation(){
 		this.setState({ activedisplay: ProjectStore.getWorkspaceDisplay()});
 	}
+
 	updateComponentlist(){
 		this.setState( {Component_List: ProjectStore.getStrandComponents()});
 	}
+
 	updatefullstrandlist(){
 		this.setState( {Full_List: ProjectStore.getFullStrands() })
 	}
+
 	ComponentDisplay(){
 		switch(this.state.activedisplay){
 			case "1":{
@@ -57,12 +70,12 @@ export default class DevelopmentStageLayout extends React.Component {
 			}
 			case "2":{
 				return <div style = {{paddingLeft:"10px"}}>
-					<StrandComponentsDisplay Component_list = {this.state.Component_List} Salt = {this.state.Salt} Concentration = {this.state.Concentration}/>
+					<StrandComponentsDisplay  status = {this.state.backend_Status} Component_list = {this.state.Component_List} Salt = {this.state.Salt} Concentration = {this.state.Concentration}/>
 				</div>
 			}
 			case "3":{
 				return <div style = {{paddingLeft:"10px"}} >
-					<FullStrandDisplay complist = {this.state.Component_List} strandlist = {this.state.Full_List}/>
+					<FullStrandDisplay  status = {this.state.backend_Status} complist = {this.state.Component_List} strandlist = {this.state.Full_List}/>
 				</div>
 			}
 		}
@@ -94,7 +107,6 @@ export default class DevelopmentStageLayout extends React.Component {
 			<div style = {topstyle} >
 				<h2 style = {{color:"#ffccbc"}}> 
 					
-
 					PROJECT WORKSPACE 
 
 				</h2>

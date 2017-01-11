@@ -13,7 +13,7 @@ class ProjectStore extends EventEmitter{
 		this.workspaceDisplay = "1";
 		this.dataAnalysis_Results = ["",""];
 
-		this.backendStatus = false;  // false = can not use sequencer (because sequencer is running or strandlist size < 1, true = sequencer is ready to sequence)
+		this.backendStatus = false;  // false = backend is not running any calculations
 		
 		this.compressedProjectData;
 	}
@@ -55,10 +55,10 @@ class ProjectStore extends EventEmitter{
 	}
  	clearResults()
  	{
- 		if(this.dataAnalysis_Results[0] = "COMPARE")
- 			 this.dataAnalysis_Results =["COMPARE",""];
+ 		if(this.dataAnalysis_Results[0] == "COMPARE")
+  			 this.dataAnalysis_Results = ["COMPARE",""];
  		else 
- 			this.dataAnalysis_Results =["",""];
+ 			this.dataAnalysis_Results = ["",""];
  	}
 
 
@@ -90,6 +90,9 @@ class ProjectStore extends EventEmitter{
 
 	update_Component_StrandList(data)
 	{
+		
+
+
 		//update component list
 		this.component_StrandList = data.complist;
 		this.emit("Change_Component_Strandlist");
@@ -162,7 +165,6 @@ class ProjectStore extends EventEmitter{
  			componentlist: this.component_StrandList,
  			fullstrandlist: this.full_StrandList
  		}).then(function(response){
-			console.log(response.data);
 			strandlistStoreReference.dataAnalysis_Results = ["FULLANALYSIS",response.data.result1,response.data.result2];
 			strandlistStoreReference.emit("Update_Results");
 			strandlistStoreReference.backendStatus = false;
@@ -211,6 +213,7 @@ class ProjectStore extends EventEmitter{
  			componentlist: this.component_StrandList,
  			fullstrandlist: this.full_StrandList
  		}).then(function(response){
+
 			let updatedComponentList = response.data.updatedComponentList;
 			for(var a = 0;a < updatedComponentList.length;a++)
 			{
@@ -262,6 +265,10 @@ class ProjectStore extends EventEmitter{
 				this.runSequencer(action.time);
 				break;
 			}
+			case "FULL_ANALYSIS":{
+				this.fullAnalysis();
+				break;
+			}
 			case "COMPARE_STRANDS":{
 				if(action.strands.length == 0)
 				{
@@ -272,10 +279,7 @@ class ProjectStore extends EventEmitter{
 					this.compareStrands(action.strands);
 				break;
 			}
-			case "FULL_ANALYSIS":{
-				this.fullAnalysis();
-				break;
-			}
+
 //
 			case "CLEAR_RESULT":{
 				this.clearResults();
@@ -363,9 +367,6 @@ class ProjectStore extends EventEmitter{
 					break;
 				}
 			}
-
-		//console.log(componentname);
-		//console.log(finalresults);
 		}
 
 		return finalresults;

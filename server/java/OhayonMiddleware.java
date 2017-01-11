@@ -60,8 +60,7 @@ public class OhayonMiddleware{
 	public String[] sequenceStrands(String salt, String concentration, ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
 	{
 		this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
-		
-		
+
 		//****
 		Sequencer OHAYON = new Sequencer(this.componentList , this.thermoCalc,this.fullStrandList);		
 		//****
@@ -72,12 +71,10 @@ public class OhayonMiddleware{
 		return results;
 	}
 
-	public String[] compareStrands(String name1, String seq1, String name2,String seq2)
+	public String[] compareStrands(String seq1, String seq2)
 	{
 		Strand a = new Strand(seq1,true);
 		Strand b = new Strand(seq2,true);
-		a.setName(name1);
-		b.setName(name2);
 		return this.comparer.compareTwo(a,b);
 
 	}
@@ -85,7 +82,8 @@ public class OhayonMiddleware{
 	{
 		this.buildComponents(unparsedComponentsList);
 		this.buildFullStrandList(unparsedFullStrandList);
-		return this.comparer.compareAll(this.componentList,this.fullStrandList);
+		String[][] results = this.comparer.compareAll(this.componentList,this.fullStrandList);
+		return results;
 	}
 
 
@@ -134,11 +132,11 @@ public class OhayonMiddleware{
 			String[] parameters = unparsedFullStrandList.get(y);
 			
 			//strandname
-			String strandname = parameters[parameters.length-1];
+			String strandname = parameters[parameters.length-2];
 
 			//build list of components that make this strand
-			String[] strandRecipe = new String[parameters.length-1];
-			for(int x = 0; x < parameters.length-1;x++)
+			String[] strandRecipe = new String[parameters.length-2];
+			for(int x = 0; x < parameters.length-2;x++)
 			{
 				strandRecipe[x] = parameters[x];
 			}
@@ -158,8 +156,21 @@ public class OhayonMiddleware{
 				}
 			}
 
-			FullStrand fullstrand = new FullStrand(	strandname , orderedComponents , strandRecipe);
-			this.fullStrandList.add(fullstrand);
+			//System.out.println("loop "+parameters[parameters.length-1]);
+			//System.out.println("name "+parameters[parameters.length-2]);		
+			
+			// if Full Strand is Loop DNA
+			if(parameters[parameters.length-1].equals("true"))
+			{
+				LoopDNA fullstrand = new LoopDNA(strandname , orderedComponents , strandRecipe);
+				this.fullStrandList.add(fullstrand);
+			}
+			// if Full Strand is not Loop DNA
+			else
+			{
+				FullStrand fullstrand = new FullStrand(	strandname , orderedComponents , strandRecipe);
+				this.fullStrandList.add(fullstrand);
+			}
 		}
 	}
 }

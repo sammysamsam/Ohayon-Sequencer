@@ -56,9 +56,14 @@ public class FullStrand
 		this.componentNames = listOfNames;
 	}
 
-
 	public int mismatch(FullStrand other,ArrayList<Strand> componentsAvailable)
 	{
+
+		//check: fullstrand other is LoopDNA
+		if(other instanceof LoopDNA)
+			return other.mismatch(this, componentsAvailable);
+		//
+
 		Strand thisStrand = this.combine(componentsAvailable);
 		Strand otherStrand = other.combine(componentsAvailable);
 		int[] complementShifts = this.getComplementShifts(other,componentsAvailable);

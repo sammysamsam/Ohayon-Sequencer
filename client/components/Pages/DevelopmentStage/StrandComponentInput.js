@@ -83,41 +83,39 @@ export default class StrandComponentInput extends React.Component {
 
 	tokenprocessor()
 	{
-		let alerts = false;
-
 //check if length,mismatch,self are whole numbers
 		if(!this._isInt(this.state.strandlength)||
 			!this._isInt(this.state.mismatchlimit)||
 			!this._isInt(this.state.selflimit))
-			alerts = true;
+			return;
 
 //check name contains requirements
 		if(!/\S/.test(this.state.name) || this.state.name.includes("'") || this.state.name.includes("-"))
 		{
 			Materialize.toast("Unfufilled Requirement: Name field must contain at least one character and not include restricted character: semicolon ( ' ) or dash ( - )!",4000);
-			alerts = true;
+			return;
 		}
-
-// check blueprint (remove all - and spaces)
-		let blueprintTemp = this.state.blueprint.replace(/-/g,"");
-		blueprintTemp = blueprintTemp.replace(/ /g,"");
-		if(this.state.strandlength != blueprintTemp.length)
-		{
-			alerts = true;
-			Materialize.toast("Unfufilled Requirement: Blueprint length does not match Strand Length!",4000);
-		}
-
 //check repeat name
 		for(let i = 0; i < this.props.strandlist.length;i++)
 		{
 			if(this.props.strandlist[i].name.replace(/ /g,"") == this.state.name.replace(/ /g,""))
 			{
-				alerts = true;
 				Materialize.toast("Unfufilled Requirement: Name already exists in Component List",4000);
-				break;
+				return;
 			}
 		}
 
+// check blueprint (remove all - and spaces)
+		let blueprintTemp  = this.state.blueprint.replace(/ |-/g,"");
+		if(this.state.strandlength != blueprintTemp.length)
+		{
+			Materialize.toast("Unfufilled Requirement: Blueprint length does not match Strand Length!",4000);
+			return;
+		}
+		for(let x = 0; x<blueprintTemp.length; x++)
+		{
+			let base = blueprintTemp.charAt(x).toUpperCase();
+		}
 
 		/*check melting point
 		if(this.state.meltingpoint < 0 || this.state.meltingpoint > this.state.maxMeltingPt)
@@ -127,24 +125,21 @@ export default class StrandComponentInput extends React.Component {
 		}*/
 
 
-		if(alerts == false)
-		{
-			StrandAction.Add_Component_StrandList(
-				{	name: this.state.name, 
-					length: this.state.strandlength, 
-					complement: this.state.complement, 
-					mismatch: this.state.mismatchlimit, 
-					self: this.state.selflimit, 
-					blueprint: blueprintTemp,
-					meltingpoint:this.state.meltingpoint
-				}
-			);
-		}
+		StrandAction.Add_Component_StrandList(
+			{	name: this.state.name, 
+				length: this.state.strandlength, 
+				complement: this.state.complement, 
+				mismatch: this.state.mismatchlimit, 
+				self: this.state.selflimit, 
+				blueprint: blueprintTemp,
+				meltingpoint:this.state.meltingpoint
+			}
+		);
 	}
 //
 	_handleKeyPress(input) 
 	{
-		if (input.key == 'Enter') 
+		if (input.key == 'Enter' && !this.props.status) 
 			this.tokenprocessor();
 	}
 	_isInt(number)
@@ -152,13 +147,35 @@ export default class StrandComponentInput extends React.Component {
 		return number % 1 == 0;
 	}
 //
+
+	renderButton()
+	{
+		if(!this.props.status)
+			return(
+				<Button 
+					style = {{width:"150px" , marginTop:"5px"}}
+					onClick = {this.tokenprocessor.bind(this)}> 
+					Submit 
+				</Button>
+			);
+		else
+			return(	
+				<Button 
+					style = {{width:"150px" , marginTop:"5px"}}
+					disabled
+					onClick = {this.tokenprocessor.bind(this)}> 
+					Submit 
+				</Button>
+				);
+	}
 	render()
 	{
 		let bodyStyle = {
 			width:"300px",
 			background:"rgba(100, 153, 206,0.4)",
-			padding:"15px 15px 10px 15px ",
-			marginTop:"1px"
+			padding:"10px 15px 10px 15px ",
+			marginTop:"1px",
+			height:"557px"
 		}
 		let headerStyle = {
 			background:"rgba(139, 179, 218,0.7)",
@@ -257,12 +274,8 @@ export default class StrandComponentInput extends React.Component {
 					style = {textAreaStyle} 
 					onChange = {this.handleblueprint.bind(this)} 
 				/>
+				{this.renderButton()}
 
-				<Button 
-					style = {{width:"150px" , marginTop:"5px"}}
-					onClick = {this.tokenprocessor.bind(this)}> 
-					Submit 
-				</Button>
 			</div>
 		</div>
 		);

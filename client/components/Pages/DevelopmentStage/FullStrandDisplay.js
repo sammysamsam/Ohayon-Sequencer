@@ -65,7 +65,7 @@ export default class FullStrandDisplay extends React.Component {
 			<div>
 
 				<div className= "animated fadeInUp" style = {{display:"inline-block"}}>
-  		 			<FullStrandInput  fulllist = {this.props.strandlist} complist = {this.props.complist}/>
+  		 			<FullStrandInput status = {this.props.status} fulllist = {this.props.strandlist} complist = {this.props.complist}/>
   		 		</div>
 
 		 		<div className= "animated fadeInUp" style = {fullStrandDisplayContainer}>
@@ -79,7 +79,7 @@ export default class FullStrandDisplay extends React.Component {
 							condensed = {true} 
 							pagination={true} 	
 							data={this.props.strandlist}   
-							deleteRow={true} 
+ 							deleteRow={!this.props.status}
 							striped={true} 
 							hover={true}
 							selectRow={selectRowProp}	

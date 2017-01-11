@@ -26,8 +26,7 @@ export default class Sequencer extends React.Component {
 		else 
 			StrandAction.SequenceStrandlist(this.state.time);
 	}
-	
-	renderSequencerStart()
+	renderInactiveSequencerStart()
 	{
 		let sequencerButtonStyle = {
 			height:"50px",
@@ -35,79 +34,161 @@ export default class Sequencer extends React.Component {
 			fontSize:"13px",
 			display:"inline-block"
 		}
+		let containerStyle = {
+			background:"rgba(0, 0, 0,0.1)",
+			margin:"30px 75px 0px 75px",
+			padding:"50px 0px 50px 100px"
+		}
+		let statusStyle = { 
+			margin:"-10px 75px 0px 75px",
+			padding:"22px",
+			background:"rgba(0, 0, 0,0.1)",
+			color:"#e6e6e6",
+			textDecoration:"underline",
+			textAlign:"center",
+			fontWeight:"bold",
+			fontSize:"14px",
+		}
 		return(
 			<div>
-				<div style = {{display:"inline-block",marginRight:"120px"}}>
-					<Button style = {sequencerButtonStyle}  onClick = {this.activatesequencer}> 
-						<i style = {{position:"relative",top:"2px",marginRight:"10px"}}className="material-icons">cloud_upload</i> 
-						Sequence Strands 
-					</Button>
-				</div>
+				<div style = {statusStyle} >  
+					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff4d4d"}}className="material-icons">error</i> 
+					Unfufilled Requirement: project must contain at least one strand component
+				</div>				
+				<div style = {containerStyle}>
 
-				<div style = {{display:"inline-block",width:"300px"}}>
-					<Input
-						label = "Algorithm Runtime (min.)"
-						s = {6}
-						defaultValue = {this.state.time}
-						style = {{color:"white"}}
-						type = "number"
-						min = "10"
-						max = "240"
-						className="validate"
-						onChange = {this.handleTime} 
-						>
-						<Icon>av_timer</Icon> 
-					</Input>
+					<div style = {{display:"inline-block",marginRight:"150px"}}>
+						<Button style = {sequencerButtonStyle}  onClick = {this.activatesequencer} disabled > 
+							<i style = {{position:"relative",top:"2px",marginRight:"10px"}}className="material-icons">cloud_upload</i> 
+							Sequence Strands 
+						</Button>
+					</div>
+
+					<div style = {{display:"inline-block",width:"300px"}}>
+						<Input
+							label = "Algorithm Runtime (min.)"
+							s = {6}
+							defaultValue = {this.state.time}
+							style = {{color:"white"}}
+							type = "number"
+							min = "10"
+							max = "240"
+							className="validate"
+							onChange = {this.handleTime} 
+							disabled
+							>
+							<Icon>av_timer</Icon> 
+						</Input>
+					</div>
 				</div>
 
 			</div>
 			)
 	}
+	renderSequencerStart()
+	{
+		let statusStyle = { 
+			margin:"0px 75px 0px 75px",
+			padding:"22px",
+			background:"rgba(139, 179, 218,0.1)",
+			color:"white",
+			textAlign:"center",
+			fontWeight:"bold",
+			fontSize:"14px",
+		}
+		let containerStyle = {
+			background:"rgba(139, 179, 218,0.15)",
+			margin:"50px 75px 0px 75px",
+			padding:"50px 0px 50px 100px"
+		}
+		let sequencerButtonStyle = {
+			height:"50px",
+			fontWeight:"bold",
+			fontSize:"15px",
+			display:"inline-block"
+		}
+		return(
+			<div>
+				<div style = {statusStyle} >  
+					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#42f448"}}className="material-icons">check_circle</i> 
+					Ready To Sequence
+				</div>		
+				<div style = {containerStyle}>
+					<div style = {{display:"inline-block",marginRight:"150px"}}>
+						<Button style = {sequencerButtonStyle}  onClick = {this.activatesequencer}  > 
+							<i style = {{position:"relative",top:"2px",marginRight:"10px"}}className="material-icons">cloud_upload</i> 
+							Sequence Strands 
+						</Button>
+					</div>
+
+					<div style = {{display:"inline-block",width:"300px"}}>
+						<Input
+							label = "Algorithm Runtime (min.)"
+							s = {6}
+							defaultValue = {this.state.time}
+							style = {{color:"white"}}
+							type = "number"
+							min = "10"
+							max = "240"
+							className="validate"
+							onChange = {this.handleTime} 
+							>
+							<Icon>av_timer</Icon> 
+						</Input>
+					</div>
+				</div>
+			</div>
+			)
+	}
+
+
 	renderSequencerRunning()
 	{
+		let statusStyle = {
+			width:"235px",
+			marginLeft:"-70px",
+			marginTop:"20px",
+			paddingTop:"5px",
+			paddingLeft:"35px",
+			color:"#ffccbc",
+			background:"rgba(139, 179, 218,0.1)",
+			height:"35px",
+			borderRadius:"4px"
+		}
 		return (
 			<div>
-				<div style = {{	height:"50px", width:"250px",marginTop:"-8px",marginLeft:"250px"}}>
-					<Spinner spinnerName='cube-grid' noFadeIn />
-				</div>
-				<div style = {{position:"relative",top:"-270px",left:"360px"}}>
+				<div style = {{position:"relative",top:"-360px",left:"870px"}}>
 					<ReactCountdownClock seconds={60 * this.state.time}
 	                 color="#ff7043"
 	                 alpha={0.9}
 	                 size={110}
 	                 />
-				</div>				
+				</div>	
+				<div style = {{	height:"50px", marginLeft:"450px"}}>
+					<Spinner spinnerName='cube-grid' noFadeIn />
+					<div style = {statusStyle}> Optimizing Sequences...</div>
+				</div>
+			
 			</div>
 			)
 	}
+
+
 	render()
 	{
-		let errorStyle = { 
-			padding:"17px",
-			borderStyle:"solid",
-			background:"rgba(139, 179, 218,0.2)",
-			borderColor:"#ff9e80",
-			borderWidth:"thin",
-			width:"700px",
-			color:"#ff9e80",
-			textAlign:"center",
-			fontWeight:"bold",
-			fontSize:"14px",
-			borderRadius:"2px"
-		}
-
 		var checkpoint = this.props.status;
 		if(this.props.componentlength == 0){
 			return (
-				<div style = {errorStyle} >  
-					<i style = {{position:"relative",top:"6px",marginRight:"15px"}}className="material-icons">error</i> 
-					Unfulfilled Requirement: Must have at least one or more Strand Components 
-				</div>)
+			<div>
+				{this.renderInactiveSequencerStart()}
+			</div>
+		)
 		}
+		console.log(checkpoint);
 		switch(checkpoint)
 		{
 			case true:{ 
-				return 	this.renderSequencerRunning();
+				return this.renderSequencerRunning();
 			}
 			case false:{ 
 				return  this.renderSequencerStart();

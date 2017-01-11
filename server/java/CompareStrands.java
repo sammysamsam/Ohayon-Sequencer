@@ -46,12 +46,13 @@ public class CompareStrands {
 		{
 			for(int y = x; y < fullStrandList.size(); y++)
 			{
+				fullStrandResult[index] = fullStrandList.get(x).name + " vs " + fullStrandList.get(y).name+"\n\n";
 				int[] ignoreShifts = fullStrandList.get(x).getComplementShifts(fullStrandList.get(y),componentList);
-				fullStrandResult[index] = fullStrandList.get(x).name + " vs " + fullStrandList.get(y);
+	
 				if (ignoreShifts.length == 0)
-					fullStrandResult[index] = this.mismatchPrint(fullStrandList.get(x).combine(componentList) , fullStrandList.get(y).combine(componentList) , 4);
+					fullStrandResult[index] = fullStrandResult[index]+ this.mismatchPrint(fullStrandList.get(x).combine(componentList) , fullStrandList.get(y).combine(componentList) , 4);
 				else
-					fullStrandResult[index] = this.mismatch2Print(fullStrandList.get(x).combine(componentList) , fullStrandList.get(y).combine(componentList) , 4 , ignoreShifts);
+					fullStrandResult[index] = fullStrandResult[index]+ this.mismatch2Print(fullStrandList.get(x).combine(componentList) , fullStrandList.get(y).combine(componentList) , 4 , ignoreShifts);
 				index++;
 			}		
 		}
@@ -193,6 +194,8 @@ public class CompareStrands {
 				highestscore = hitScore;
 				shiftA_best = shiftA;
 			}
+			if(hitScore == 0 && i == b.length)
+				shiftA_best = shiftA;
 		}	
 		return (bestHitStringMaker(a,b,shiftA_best, shiftB));
 	}
@@ -258,6 +261,8 @@ public class CompareStrands {
 					highestScore = hitScore;
 					shiftedA_Best = shiftedA;
 				}
+				if(hitScore == 0 && i == b.length)
+					shiftedA_Best = shiftedA;
 
 			}
 		}

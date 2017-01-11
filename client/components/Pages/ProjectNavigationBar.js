@@ -8,6 +8,10 @@ import image1 from "../../images/Icons/WorkspaceIcon.png";
 
 
 export default class ProjectNagivationBar extends React.Component {
+
+
+
+	
 	render()
 	{
 		const ulStyle = {

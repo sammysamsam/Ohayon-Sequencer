@@ -113,6 +113,42 @@ export default class StrandComponentInput extends React.Component {
 		}
 	}
 
+	renderButton()
+	{
+		if(!this.props.status)
+			return(
+				<div>
+					<Button style = {{margin:"30px 0px 10px 10px",fontSize:"12px"}} onClick = {this.pop}> 
+						Delete Recent Component
+					</Button>
+					<Button style = {{margin:"30px 0px 10px 5px",fontSize:"12px"}} onClick = {this.clear}> 
+						Clear All Components
+					</Button>
+					<Button style = {{margin:"3px 0px 10px 10px",fontSize:"13px"}} 
+						onClick = {this.tokenprocessor.bind(this)}> 
+						Submit 
+					</Button>
+				</div>
+			);
+
+		else
+			return(
+		<div>
+			<Button style = {{margin:"30px 0px 14px 10px",fontSize:"12px"}} disabled> 
+				Delete Recent Component
+			</Button>
+			<Button style = {{margin:"30px 0px 14px 5px",fontSize:"12px"}} disabled > 
+				Clear All Components
+			</Button>
+			<Button 
+				style = {{margin:"3px 0px 10px 10px",fontSize:"13px"}} 
+				disabled
+				>
+				Submit 
+			</Button>
+		</div>
+			);
+	}
 
 	rendercomponents(){
 		let componentStyle = {
@@ -143,7 +179,7 @@ export default class StrandComponentInput extends React.Component {
 
 	_handleKeyPress(input) 
 	{
-		if (input.key == 'Enter') 
+		if (input.key == 'Enter' && !this.props.status) 
 			this.tokenprocessor();
 	}
 
@@ -161,6 +197,7 @@ export default class StrandComponentInput extends React.Component {
 		}
 		const bodyStyle = { 
 			width:"530px",
+			height:"548px",
 			margin:"0px 0px 15px 1px",
 			background:"rgba(100, 153, 206,0.5)",
 			color:"white",
@@ -221,17 +258,8 @@ export default class StrandComponentInput extends React.Component {
 							onChange = {this.handlecomponents.bind(this)} 
 					/>
 
-					<Button style = {{margin:"30px 0px 10px 10px",fontSize:"12px"}} onClick = {this.pop}> 
-						Delete Recent Component
-					</Button>
-					<Button style = {{margin:"30px 0px 10px 5px",fontSize:"12px"}} onClick = {this.clear}> 
-						Clear All Components
-					</Button>
-					<Button 
-						style = {{margin:"3px 0px 10px 10px",fontSize:"13px"}} 
-						onClick = {this.tokenprocessor.bind(this)}> 
-						Submit 
-					</Button>
+					{this.renderButton()}
+
 				</div>
 			</div>
 		);

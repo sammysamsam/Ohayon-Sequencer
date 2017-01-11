@@ -61,7 +61,7 @@ export default class StrandComponentsDisplay extends React.Component {
 			<div style = {{height:"655px",marginLeft:"0px"}}>
 
 				<div className= "animated fadeInUp" style = {{display:"inline-block"}}>
-					<StrandComponentInput strandlist = {this.props.Component_list}/>
+					<StrandComponentInput status = {this.props.status} strandlist = {this.props.Component_list}/>
 				</div>
 
 				<div className= "animated fadeInUp" style = {{display:"inline-block",verticalAlign:"top",marginLeft:"5px"}}>
@@ -81,7 +81,7 @@ export default class StrandComponentsDisplay extends React.Component {
   							pagination={true} 
   							striped={true} 
   							hover={true}  
-  							deleteRow={true}
+  							deleteRow={!this.props.status}
   							selectRow={selectRowProp}	
   							options={{onDeleteRow: this.updateStoreComponentList}} >
     			    

@@ -91,6 +91,12 @@ public class Strand
     {
 		this.mismatchThreshold = i;
 	}
+	public void setSequence(String sequence)
+	{
+	   	sequence = sequence.replace(", ",  "");
+		this.sequence = sequence.replaceAll("[^a-zA-Z0-9]", "");
+        this.length = this.sequence.length();
+	}
     public void setBlueprint(String blueprint)
     {
 		this.blueprintExists = true;
@@ -212,11 +218,7 @@ STRAND PROPERTIES/GETTER METHODS
         int num = ThreadLocalRandom.current().nextInt(0,4); 
         return possible[num];
     }
-	public void setSequence(String sequence)
-	{
-	   	sequence = sequence.replace(", ",  "");
-		this.sequence = sequence.replaceAll("[^a-zA-Z0-9]", "");
-	}
+
 	
 	@Override
 	public String toString() 
@@ -493,6 +495,7 @@ STRAND PROPERTIES/GETTER METHODS
 			if(consecCounter > maxhitlimit)
 				hitScore = hitScore + (consecCounter - maxhitlimit);
 
+
 			//System.out.println(bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
 			if(highestScore < hitScore)
 				highestScore = hitScore;
@@ -570,7 +573,7 @@ STRAND PROPERTIES/GETTER METHODS
 				if(highestScore < hitScore){
 					highestScore = hitScore;
 				}
-				//System.out.println("\n"+highestScore+"  "+hitScore);
+				//System.out.println("\n"+highestScore+"  "+hitScore + " / "+i);
 				//System.out.println("\n"+bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
 			}
 

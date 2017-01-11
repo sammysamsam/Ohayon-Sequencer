@@ -1,6 +1,7 @@
 import React from "react";
 import {Table} from 'react-materialize';
 export default class ResultScreen extends React.Component {
+	
 	loadprintscreen(){
 		let printedStrandsContainerStyle = {
 			fontFamily:"'Anaheim',serif",

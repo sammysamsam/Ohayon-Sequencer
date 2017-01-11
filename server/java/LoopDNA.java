@@ -3,22 +3,66 @@ import java.lang.*;
 
 public class LoopDNA extends FullStrand
 {
+	 public LoopDNA(String name, ArrayList<Strand> parts, String[] listOfNames)
+	 {
+	    super(name, parts, listOfNames);
+	 }    
 
-	public int mismatch(FullStrand other,ArrayList<Strand> componentsAvailable)
+	public int mismatch(FullStrand other, ArrayList<Strand> componentsAvailable)
 	{
+        Strand loopStrandForm = this.combine(componentsAvailable);
+        Strand otherStrandForm = other.combine(componentsAvailable); 
 
-	}
-	public int mismatch(LoopDNA other,ArrayList<Strand> componentsAvailable)
-	{
+        if(other instanceof LoopDNA) // If the other strand is also LoopDNA
+        {
+            String thisSeq = loopStrandForm.sequence;
+            String thisAddedBases = thisSeq.substring(0, 4);
+            loopStrandForm.setSequence(loopStrandForm.sequence + thisAddedBases);
 
-	}
+            String otherSeq = otherStrandForm.sequence;
+            String otherAddedBases = otherSeq.substring(0, 4);
+            otherStrandForm.setSequence(otherStrandForm.sequence + otherAddedBases);
+            
+            int[] complementShifts = this.getComplementShifts(other, componentsAvailable);
+            int score = loopStrandForm.mismatch2(otherStrandForm, 5, complementShifts);
+
+            return score;
+        }
+        else // If the other strand is a FullStrand
+        {
+            // case: full strand is longer than loop strand or loop strand length is less than 4
+
+            if((otherStrandForm.length > loopStrandForm.length) || (loopStrandForm.length < 4))
+            {
+                String thisSeq = loopStrandForm.sequence;
+                String addedBases = thisSeq.substring(0, 4);
+                loopStrandForm.setSequence(loopStrandForm.sequence + addedBases);
+                
+                int[] complementShifts = this.getComplementShifts(other, componentsAvailable);
+                int score = loopStrandForm.mismatch2(otherStrandForm, 5,complementShifts);
+                return score;
+            }
+
+            //  case: loop strand is longer than full strand
+
+            String thisSeq = loopStrandForm.sequence;
+            String addedBases = thisSeq.substring(0, 4);
+            loopStrandForm.setSequence(loopStrandForm.sequence + addedBases);
+
+            int[] complementShifts = this.getComplementShifts(other, componentsAvailable);
+            int score = loopStrandForm.mismatch2(otherStrandForm, 5, complementShifts);
+
+            return score;
+        }
+	}	
+
+
 
 /** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 OTHER METHODs:
  	
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */  
-
-	
+/*
     public int[] getComplementShifts(LoopDNA other, ArrayList<Strand> componentsAvailable)
     {
         ArrayList<Integer> restrictedShifts = new ArrayList<Integer>();
@@ -39,8 +83,7 @@ OTHER METHODs:
 	             	//if other component in other fullstrand in componentsAvailable list
 	                String otherComponentName = other.componentNames[otherIndex];   
 	                boolean otherComponentExist = this.componentExistsInComponentList(otherComponentName,componentsAvailable);
-					//System.out.println(otherComponentName);
-	                
+
 	               	if(otherComponentExist)
 	                    basesShiftedOther = basesShiftedOther + other.componentsList.get(otherIndex).length;
 	                else
@@ -50,8 +93,7 @@ OTHER METHODs:
 	                if(otherComponentName.equals(thisComponentName+"'") || (otherComponentName+"'").equals(thisComponentName))
 	                {
 	                     //  other      CBA   ->      ABC                      
-	                    // this       A'B  ->            A'B    
-	                    //System.out.println("\n\n\n"+basesShiftedOther+"||" +basesShiftedThis)  ;
+	                    // this         A'B  ->            A'B    
 	                    int shift = basesShiftedOther+basesShiftedThis;
 	                    restrictedShifts.add(shift);
 	                }
@@ -66,12 +108,9 @@ OTHER METHODs:
         int[] finalarray = new int[restrictedShifts.size()];
         for (int i=0; i < finalarray.length; i++)
         {
-         //   System.out.println("shift AT "+restrictedShifts.get(i).intValue());
             finalarray[i] = restrictedShifts.get(i).intValue();
         }
         return finalarray;
     }
-
-
-
+*/
 }

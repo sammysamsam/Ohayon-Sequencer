@@ -2,14 +2,16 @@ import java.util.ArrayList;
 
 public class Tester
 {
+
 	public static void main(String[] args)
     {
 		//testConsecPossible();
 		//testSelfChecker();
 		//testThermoMismatch();
-		//testAlgorithm();
+		//testFullAlgorithm();
+		testCompAlgorithm();
 		//testBaseArrayMismatch();
-		testCompareStrands();
+		//testCompareStrands();
 		//testFullStrandMismatch();
 	}
 
@@ -69,19 +71,45 @@ public class Tester
 		//System.out.println(a.mismatch(b,list));  //current slides through while other stays same
  
 	}
-	public static void testAlgorithm()
+	public static void testFullAlgorithm()
     {
 		ThermodynamicsCalculator x = new ThermodynamicsCalculator();
 		Sequencer g = sequencerGenerator();
 
 		g.minimizeInteractions();
-		//System.out.println("most consecutive hits for stand 0: " + g.totalConsecutiveMatches(0));
-		//System.out.println("most consecutive hits for stand 1: " + g.totalConsecutiveMatches(1));
-		//System.out.println("most consecutive hits for stand 2: " + g.totalConsecutiveMatches(2));
-		//System.out.println("most consecutive hits for stand 3: " + g.totalConsecutiveMatches(3));
 		CompareStrands comparer = new CompareStrands(x);
 		g.fullStrandOverview(comparer);
 
+	}
+	public static void testCompAlgorithm()
+	{
+		Strand h = new Strand("CGCATAACCACCTTGTTAGAGAGAGAGCCG",true); //30
+		Strand g = new Strand("GTTAGAGAGAGAGCAGTTAGAGAGAGAGCAATCGA",true); //35
+		Strand i = new Strand("CATCTGCACGTATGTGAGCTAGCTT",true); //25
+		Strand j = new Strand("ATCATGTGAGTGCACAGATG",true);  //20
+
+		h.setComplement(true);
+		g.setComplement(true);
+		i.setComplement(true);
+		j.setComplement(true);
+		
+		h.name = "compA";
+		g.name = "compB";
+		i.name = "compC";
+		j.name = "compD";
+
+		ArrayList<Strand> list = new ArrayList<Strand>();
+		list.add(h);
+		list.add(g);	
+		list.add(i);
+		list.add(j);		
+		ArrayList<FullStrand> fulllist = new ArrayList<FullStrand>();
+		ThermodynamicsCalculator calc = new ThermodynamicsCalculator();	
+		CompareStrands comparer = new CompareStrands(calc);			
+		Sequencer alg = new Sequencer(list, calc,fulllist);
+
+		alg.minimizeInteractions();
+		//System.out.println(alg.fullStrandOverview(comparer));	
 	}
 	public static void testConsecPossible()
     {
@@ -109,6 +137,8 @@ public class Tester
 		comparer.compareAll(g.componentList,g.fullStrandList);
 	}
 
+
+
 //
 
 
@@ -120,20 +150,18 @@ public class Tester
 		Strand g = new Strand("GTTAGAGAGAGAGCAGTTAGAGAGAGAGCAATCGA",true); //35
 		Strand i = new Strand("CATCTGCACGTATGTGAGCTAGCTT",true); //25
 		Strand j = new Strand("ATCATGTGAGTGCACAGATG",true);  //20
-		Strand x = new Strand("CGCATAACCACCTTGTTAGAGAGAGAGCCGATATCGATCATCGAGAGCTA",true); //50
-		x.setComplement(true);
+
 		h.setComplement(true);
 		g.setComplement(true);
 		i.setComplement(true);
 		j.setComplement(true);
 		
-		x.setMismatchThreshold(5);
+
 		h.setMismatchThreshold(5);
 		g.setMismatchThreshold(5);
 		i.setMismatchThreshold(5);
 		j.setMismatchThreshold(5);
 		
-		x.setHairpinThreshold(5);
 		h.setHairpinThreshold(5);
 		g.setHairpinThreshold(5);
 		i.setHairpinThreshold(5);
@@ -143,19 +171,17 @@ public class Tester
 		g.name = "compB";
 		i.name = "compC";
 		j.name = "compD";
-		x.name = "compE";
 
 		ArrayList<Strand> list = new ArrayList<Strand>();
 		list.add(h);
 		list.add(g);	
 		list.add(i);
 		list.add(j);
-		list.add(x);
 
 		// ABC'DE , A'B', C'DA , DCB' , E'CA'B
 
-		String[] temp = {"compA" , "compB" , "compC'" , "compD","compE"};
-		FullStrand b = new FullStrand("ABC'DE",list,temp); 
+		String[] temp = {"compA" , "compB" , "compC'" , "compD"};
+		FullStrand b = new FullStrand("ABC'D",list,temp); 
 
 		
 		ArrayList<Strand> list2 = new ArrayList<Strand>();
@@ -180,12 +206,11 @@ public class Tester
 		FullStrand d = new FullStrand("DCB'",list4,temp4);  
 		
 		ArrayList<Strand> list5 = new ArrayList<Strand>();
-		list5.add(x);
 		list5.add(i);
 		list5.add(h);
 		list5.add(g);
-		String[] temp5 = {"compE'","compC","compA'","compB"};
-		FullStrand e = new FullStrand("E'CA'B",list5,temp5);  
+		String[] temp5 = {"compC","compA'","compB"};
+		FullStrand e = new FullStrand("CA'B",list5,temp5);  
 		
 
 		ArrayList<FullStrand> fulllist = new ArrayList<FullStrand>();

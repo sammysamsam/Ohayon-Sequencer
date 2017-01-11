@@ -123,9 +123,9 @@ export default class StrandComparison extends React.Component {
 
 		if(this.state.comparelist.length == 1){
 			return 	(
-			<div className= "animated fadeIn" style = {{display:"inline-block",margin:"-10px 0px 0px 15px"}}>
+			<div style = {{display:"inline-block",margin:"-10px 0px 0px 15px"}}>
 				<div className = "chip"> 
-					{this.state.comparelist[0].name} 
+					<span  style = {{fontSize:"16px"}} >{this.state.comparelist[0].name} </span>
 					<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist1}> 
 						[clear]
 					</span>
@@ -136,9 +136,9 @@ export default class StrandComparison extends React.Component {
 		if(this.state.comparelist.length == 2)
 		{
 			return(
-				<div className= "animated fadeIn" style = {{display:"inline-block",margin:"-10px 0px 0px 15px"}}>
+				<div style = {{display:"inline-block",margin:"-10px 0px 0px 15px"}}>
 					<div className = "chip"> 
-						{this.state.comparelist[0].name}
+						<span  style = {{fontSize:"16px"}} >{this.state.comparelist[0].name}</span>
 						<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist1}> 
 							[clear]
 						</span>	
@@ -147,8 +147,8 @@ export default class StrandComparison extends React.Component {
 					vs 
 					</span>
 					
-					<div className = "chip"> 
-						{this.state.comparelist[1].name} 
+					<div className = "chip"  style = {{fontSize:"12px"}}> 
+						<span  style = {{fontSize:"16px"}} > {this.state.comparelist[1].name} </span>
 						<span className="hvr-grow" style = {clearButttonStyle} onClick = {this.deletecomparelist2}> 
 							[clear]
 						</span>
@@ -220,6 +220,7 @@ export default class StrandComparison extends React.Component {
 
 
 	render(){
+			console.log(this.props.results[0]);
 		let resultSectionStyle = {
 			height:"693px",
 			width:"1045px",
