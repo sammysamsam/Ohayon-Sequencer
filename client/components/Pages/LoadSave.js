@@ -59,7 +59,7 @@ export default class LoadSave extends React.Component {
 
 		}catch(e)
 		{
-			Materialize.toast("Unsuccessful!");
+			Materialize.toast("Unsuccessful!",1000);
 		}
 	}
 

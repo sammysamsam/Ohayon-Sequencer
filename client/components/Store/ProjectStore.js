@@ -14,6 +14,7 @@ class ProjectStore extends EventEmitter{
 		this.dataAnalysis_Results = ["",""];
 
 		this.backendStatus = false;  // false = backend is not running any calculations
+		this.sequencerPrompt = "ready";	
 		
 		this.compressedProjectData;
 	}
@@ -37,31 +38,24 @@ class ProjectStore extends EventEmitter{
 	{
 		return this.workspaceDisplay;
 	}
-	getBackendStatus()
-	{
-		return this.backendStatus;
-	}
-
 	getJSONProjectData()
 	{
 		let data = JSON.stringify({C:this.conditions,CL:this.component_StrandList,FSL:this.full_StrandList}); 
 		return data;
 	}
-
- // RESULTS
+	
+	getBackendStatus()
+	{
+		return this.backendStatus;
+	}
+	 getSequencerPrompt()
+ 	{
+ 		return this.sequencerPrompt;
+ 	}
 	getDataAnalysisResults()
 	{
 		return this.dataAnalysis_Results;
 	}
- 	clearResults()
- 	{
- 		if(this.dataAnalysis_Results[0] == "COMPARE")
-  			 this.dataAnalysis_Results = ["COMPARE",""];
- 		else 
- 			this.dataAnalysis_Results = ["",""];
- 	}
-
-
 // PROJECT SAVE/LOAD
 
 
@@ -72,8 +66,19 @@ class ProjectStore extends EventEmitter{
 		this.conditions = data.C;
 	}
 
+// 
+
+ 	clearResults()
+ 	{
+ 		if(this.dataAnalysis_Results[0] == "COMPARE")
+  			 this.dataAnalysis_Results = ["COMPARE",""];
+ 		else 
+ 			this.dataAnalysis_Results = ["",""];
+ 	}
+
 
 //   COMPONENT LIST
+
 
 	print_Component_StrandList()
 	{
@@ -90,9 +95,6 @@ class ProjectStore extends EventEmitter{
 
 	update_Component_StrandList(data)
 	{
-		
-
-
 		//update component list
 		this.component_StrandList = data.complist;
 		this.emit("Change_Component_Strandlist");
@@ -142,11 +144,21 @@ class ProjectStore extends EventEmitter{
 
 	print_Full_StrandList()
 	{
-		let finalresults = [];
+		var finalresults = [];
 		for(let i = 0 ; i < this.full_StrandList.length; i ++)
 		{
-			let fs = this.full_StrandList[i];
-			finalresults.push(fs.name + " [ " + fs.componentsDisplay + " ]:\n" + this.fullStrandSequenceBuilder(fs.components));
+			if(this.full_StrandList[i].fiveprime == "3' to 5'")
+			{
+				var display = this.full_StrandList[i].componentsDisplay.split(" - ").reverse();
+				var components = this.fullStrandSequenceBuilder(display);
+				display = display.join(" - ");
+
+				finalresults.push(this.full_StrandList[i].name + " [ " + display + " ]:" + components);
+			}
+			else
+			{
+				finalresults.push(this.full_StrandList[i].name + " [ " + this.full_StrandList[i].componentsDisplay + " ]:" + this.fullStrandSequenceBuilder(this.full_StrandList[i].components));
+			}
 		}
 		this.dataAnalysis_Results = ["PRINT",finalresults];
 	}
@@ -166,7 +178,7 @@ class ProjectStore extends EventEmitter{
  			fullstrandlist: this.full_StrandList
  		}).then(function(response){
 			strandlistStoreReference.dataAnalysis_Results = ["FULLANALYSIS",response.data.result1,response.data.result2];
-			strandlistStoreReference.emit("Update_Results");
+			strandlistStoreReference.emit("Update_Results");	
 			strandlistStoreReference.backendStatus = false;
 			strandlistStoreReference.emit("Update_Backend_Status");
  		});
@@ -178,23 +190,37 @@ class ProjectStore extends EventEmitter{
 		this.backendStatus = true;
 		this.emit("Update_Backend_Status");
 
-		//let loop1 = strandsToCompare[0].loop;
-		//let loop2 = strandsToCompare[1].loop;
 		var strandlistStoreReference = this;
+		let name = strandsToCompare[0].name +" vs "+strandsToCompare[1].name;
+
+
+		if(strandsToCompare[0].fiveprime ==  "3' to 5'")
+			strandsToCompare[0].components.reverse();
+		if(strandsToCompare[1].fiveprime ==  "3' to 5'")
+			strandsToCompare[1].components.reverse();
+
 		let strand1 = { 
-			sequence:this.fullStrandSequenceBuilder(strandsToCompare[0].components)  
+			sequence:this.fullStrandSequenceBuilder(strandsToCompare[0].components),
+			direction: strandsToCompare[0].fiveprime 
 		}
 		let strand2 = { 
-			sequence:this.fullStrandSequenceBuilder(strandsToCompare[1].components)
+			sequence:this.fullStrandSequenceBuilder(strandsToCompare[1].components),
+			direction: strandsToCompare[1].fiveprime 
 		}
+		
+		if(strandsToCompare[0].fiveprime ==  "3' to 5'")
+			strandsToCompare[0].components.reverse();
+		if(strandsToCompare[1].fiveprime ==  "3' to 5'")
+			strandsToCompare[1].components.reverse();
 
 		return axios.post('/DNASequenceProgram/Compare', {
 			salt:this.conditions.Salt,
  			concentration: this.conditions.Concentration ,
 			strand1,strand2
  		}).then(function(response){
-			strandlistStoreReference.dataAnalysis_Results = ["COMPARE",response.data.result];
+ 			strandlistStoreReference.dataAnalysis_Results = ["COMPARE",response.data.data,name];
 			strandlistStoreReference.emit("Update_Results");
+			
 			strandlistStoreReference.backendStatus = false;
 			strandlistStoreReference.emit("Update_Backend_Status");
  		});
@@ -204,31 +230,43 @@ class ProjectStore extends EventEmitter{
  	{ 
 		this.backendStatus = true;
 		this.emit("Update_Backend_Status");
-		
+
+		this.clearResults();
+		this.emit("Update_Results");
+
 		let strandlistStoreReference = this;
  		return axios.post('/DNASequenceProgram/', {
  			timelimit: timelimit,
  			salt: this.conditions.Salt,
  			concentration: this.conditions.Concentration ,
  			componentlist: this.component_StrandList,
- 			fullstrandlist: this.full_StrandList
- 		}).then(function(response){
+ 			fullstrandlist: this.full_StrandList,
 
-			let updatedComponentList = response.data.updatedComponentList;
-			for(var a = 0;a < updatedComponentList.length;a++)
+ 		}).then(function(response){
+			if(response.data.updatedComponentList[0] == "" )
+				strandlistStoreReference.sequencerPrompt = "fail";
+			else
 			{
-				for(var b = 0; b < strandlistStoreReference.component_StrandList.length; b++)
+				let updatedComponentList = response.data.updatedComponentList;
+				for(var a = 0;a < strandlistStoreReference.component_StrandList.length;a++)
 				{
-					if(updatedComponentList[a].split(":")[0] == strandlistStoreReference.component_StrandList[b].name)
+					for(var b = 0; b < strandlistStoreReference.component_StrandList.length; b++)
 					{
-						strandlistStoreReference.component_StrandList[b].sequence = updatedComponentList[a].split(":")[1];
-						break;
+						if(updatedComponentList[a].split(":")[0] == strandlistStoreReference.component_StrandList[b].name)
+						{
+							strandlistStoreReference.component_StrandList[b].sequence = updatedComponentList[a].split(":")[1];
+							break;
+						}
 					}
-				}
-			} 	
+				} 	
+				strandlistStoreReference.sequencerPrompt = "success";
+				strandlistStoreReference.emit("Change_Component_Strandlist");
+			}
+			
+			strandlistStoreReference.emit("Update_Sequencer_Prompt");
+
 			strandlistStoreReference.backendStatus = false;
 			strandlistStoreReference.emit("Update_Backend_Status");
-			strandlistStoreReference.emit("Change_Component_Strandlist");
  		});
  	}
 
@@ -241,6 +279,7 @@ class ProjectStore extends EventEmitter{
 
 			case "OPEN_PROJECT":{
 				this.loadProject(action.data);
+				this.clearResults();	
 				this.emit("Change_Component_Strandlist");
 				this.emit("Change_Condition");
 				this.emit("Change_Full_Strandlist");
@@ -254,7 +293,6 @@ class ProjectStore extends EventEmitter{
 				this.emit("Change_Workspace_Display");
 				break;
 			}
-
 //
 			case "UPDATE_BACKEND_STATUS":{
 				this.backendStatus = action.status1;
@@ -341,7 +379,7 @@ class ProjectStore extends EventEmitter{
 
 		for (let h = 0 ; h < componentlist.length; h ++)
 		{
-			
+			console.log(componentlist[h]);
 			//account for complements
 			let componentname = componentlist[h];
 			let complement = false;
@@ -361,7 +399,9 @@ class ProjectStore extends EventEmitter{
 					if(complement == false)
 					{
 						finalresults = finalresults + this.component_StrandList[g].sequence
-					}else{
+					}
+					else
+					{
 						finalresults = finalresults + this.complement_Maker(this.component_StrandList[g].sequence);
 					}
 					break;

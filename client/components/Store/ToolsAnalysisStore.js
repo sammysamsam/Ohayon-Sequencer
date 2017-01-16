@@ -24,22 +24,21 @@ class ToolsAnalysisStore extends EventEmitter{
  //   AXIOS POST METHODS
 	compare_Strands(strandsToCompare)
 	{
-		let strandlistStoreReference = this;
-		let loop1 = strandsToCompare[2];
-		let loop2 = strandsToCompare[5];
+		let strandlistStoreReference = this;		
+		let name = strandsToCompare[0] + " vs " + strandsToCompare[3];
 
 		return axios.post('/DNASequenceProgram/Compare', {
 			strand1:{ 
-				name: strandsToCompare[0], 
-				sequence:strandsToCompare[1]   
+				sequence: strandsToCompare[1],
+				direction: strandsToCompare[2] 
 			},
 			strand2:{ 
-				name: strandsToCompare[3],  
-				sequence:strandsToCompare[4]  
+				sequence: strandsToCompare[4],
+				direction: strandsToCompare[5]
 			}
  		}).then(function(response)
  		{
-			strandlistStoreReference.toolsAnalysis_Compare = response.data.result;
+			strandlistStoreReference.toolsAnalysis_Compare = [name,response.data.data];
 			strandlistStoreReference.emit("Update_ToolsAnalysis_Compare");
  		});
 	}

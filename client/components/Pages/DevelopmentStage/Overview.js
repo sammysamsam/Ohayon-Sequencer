@@ -76,6 +76,19 @@ export default class Overview extends React.Component {
 		})
 	}
 
+
+	renderButton()
+	{
+		if(!this.props.status)
+			return(
+				<Button  style = {{marginTop:"10px",marginLeft:"10px"}} waves='light' onClick = {this.submit}>Submit</Button>
+			)
+		else
+			return(
+				<Button  style = {{marginTop:"10px",marginLeft:"10px"}} waves='light' disabled>Submit</Button>
+
+			)
+	}
 	render()
 	{
 
@@ -95,7 +108,7 @@ export default class Overview extends React.Component {
 		}
 		const bodyStyle2 = {
 			background:"rgba(100, 153, 206,0.3)",
-			padding:"15px 0px 12px 30px",
+			padding:"15px 30px 2px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
@@ -106,6 +119,12 @@ export default class Overview extends React.Component {
 			width:"500px",
 			margin:"1.5px",
 			fontSize:"16px"
+		}
+		const bodyStyle3 = {
+			background:"rgba(100, 153, 206,0.3)",
+			padding:"15px 30px 12px 30px",
+			width:"500px",
+			margin:"1.5px",
 		}
 		const conditionsPosition = {
 			display:"inline-block",
@@ -127,7 +146,7 @@ export default class Overview extends React.Component {
 
 					<div style = {header2Style}> 
 						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">perm_data_setting</i>
-						 <span className="badge">{this.props.Salt} [{this.props.Concentration}]</span> 
+						 <span style = {{marginTop:"8px"}}className="badge">{this.props.Salt} [{this.props.Concentration}]</span> 
 						  Adjust Experimental Conditions: 
 					</div>						
 
@@ -147,7 +166,10 @@ export default class Overview extends React.Component {
 								onChange={this.handleSaltConcentration} 
 								style = {{fontSize:"14px"}} 
 								/>
-							<Button waves='light' onClick = {this.submit}>Submit</Button>
+
+								{this.renderButton()}
+
+
 							</Row>
 						</div>
 				</div>
@@ -178,7 +200,7 @@ export default class Overview extends React.Component {
 							<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">toc</i>
 							Strand Component Overview: 
 						</div>						
-						<div style = {bodyStyle2}>
+						<div style = {bodyStyle3}>
 							<h6 style = {{color:"#9e9e9e"}}> 
 								Number of Components: {this.props.complist.length}
 							</h6>

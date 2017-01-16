@@ -93,8 +93,7 @@ public class Strand
 	}
 	public void setSequence(String sequence)
 	{
-	   	sequence = sequence.replace(", ",  "");
-		this.sequence = sequence.replaceAll("[^a-zA-Z0-9]", "");
+		this.sequence = sequence;
         this.length = this.sequence.length();
 	}
     public void setBlueprint(String blueprint)
@@ -412,7 +411,8 @@ STRAND PROPERTIES/GETTER METHODS
             else
             {
                 //Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-                if(shiftedB[k - 2].canPair(shiftedThis[k - 2])
+                if(k+2 < shiftedB.length && k -2 >= 0
+                		&& shiftedB[k - 2].canPair(shiftedThis[k - 2])
                         && shiftedB[k+1].canPair(shiftedThis[k+2])
                         && shiftedB[k-1].canPair(shiftedThis[k-1])
                         && shiftedB[k+1].canPair(shiftedThis[k+1]) && consecCounter > 0)
@@ -463,7 +463,8 @@ STRAND PROPERTIES/GETTER METHODS
 			
 			int consecCounter = 0;
 			int hitScore = 0;
-			
+
+			boolean singleMismatch = false;
 			for(int k = b.length; k < b.length + this.length+1; k++)
             {
 				if(shiftedB[k].canPair(shiftedThis[k]))
@@ -471,14 +472,23 @@ STRAND PROPERTIES/GETTER METHODS
 				else
                 {
 					//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-					if(shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
+					if( 	singleMismatch = false &&
+							k+2 < shiftedB.length && k -2 >= 0 && 
+							shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
                             shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
                             shiftedB[k - 1].canPair(shiftedThis[k - 1]) && 
-                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && consecCounter > 0)
-						consecCounter--;
+                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && 
+                            consecCounter > 0)
+						singleMismatch = true;
+
 					//Case: if the non-match is not between two matches, then consecCounter returns to 0 
 					else
                     {
+						if(singleMismatch)
+						{
+							hitScore = hitScore/2 + 1;
+							singleMismatch = false;
+						}
 						if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
 							hitScore++;
 						if(consecCounter > maxhitlimit)
@@ -488,7 +498,11 @@ STRAND PROPERTIES/GETTER METHODS
 				}
 			}
 
-
+			if(singleMismatch)
+			{
+				hitScore = hitScore/2 + 1;
+				singleMismatch = false;
+			}
 			//this accounts for if there are consec hits in the very end (dont delete this)
 			if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
 				hitScore++;
@@ -535,35 +549,49 @@ STRAND PROPERTIES/GETTER METHODS
 				
 				int consecCounter = 0;
 				int hitScore = 0;
-				
-				for(int k = b.length; k < b.length + this.length; k++)
+
+				boolean singleMismatch = false;
+				for(int k = b.length; k < b.length + this.length+1; k++)
 	            {
 					if(shiftedB[k].canPair(shiftedThis[k]))
 		    			consecCounter++;
 					else
 	                {
 						//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-						if(shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
+						if( 	singleMismatch = false &&
+								k+2 < shiftedB.length && k -2 >= 0 && 
+								shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
 	                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
 	                            shiftedB[k - 1].canPair(shiftedThis[k - 1]) && 
-	                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && consecCounter > 0)
-							consecCounter--;
+	                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && 
+	                            consecCounter > 0)
+							singleMismatch = true;
+
 						//Case: if the non-match is not between two matches, then consecCounter returns to 0 
 						else
 	                    {
-							if(consecCounter >= maxhitlimit)
+							if(singleMismatch)
+							{
+								hitScore = hitScore/2 + 1;
+								singleMismatch = false;
+							}
+							if(consecCounter >= maxhitlimit) 
 								hitScore++;
 							if(consecCounter > maxhitlimit)
 								hitScore = hitScore + (consecCounter - maxhitlimit);
 							consecCounter = 0;  	
 						}      
-						// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
 					}
 				}
 
 				/*
 				this accounts for if there are consec hits in the very end (dont delete this)
 				*/
+				if(singleMismatch)
+				{
+					hitScore = hitScore/2 + 1;
+					singleMismatch = false;
+				}
 				if(consecCounter >= maxhitlimit)
 					hitScore++;
 				if(consecCounter > maxhitlimit)
@@ -600,11 +628,11 @@ STRAND PROPERTIES/GETTER METHODS
 			b = b.reverse();
 
 
-
 		Base[] shiftedThis = new Base[this.length + b.length*2];
 		Base[] shiftedB = new Base[this.length + b.length*2];
         ArrayList<Integer> worstBasePositions = new ArrayList<Integer>();
 		int highestScore = 0;
+
 
 		for(int i = 1; i < b.length + this.length; i++)
         {
@@ -616,7 +644,8 @@ STRAND PROPERTIES/GETTER METHODS
 			
 			int consecCounter = 0;
 			int hitScore = 0;
-			
+	
+			boolean singleMismatch = false;		
 			for(int k = b.length; k < b.length + this.length; k++)
             {
 				if(shiftedB[k].canPair(shiftedThis[k]))
@@ -631,26 +660,29 @@ STRAND PROPERTIES/GETTER METHODS
                 {
 					//*
 					//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-					if(shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
-                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
-                            shiftedB[k - 1].canPair(shiftedThis[k - 1]) && 
-                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && consecCounter > 0)
-						consecCounter--;
-					//
+					if( 	singleMismatch = false &&
+								k+2 < shiftedB.length && k -2 >= 0 && 
+								shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
+	                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
+	                            shiftedB[k - 1].canPair(shiftedThis[k - 1]) && 
+	                            shiftedB[k + 1].canPair(shiftedThis[k + 1]) && 
+	                            consecCounter > 0)
+							singleMismatch = true;
 
 
 					//*
 					//Case: if the non-match is not between two matches, then consecCounter returns to 0 
 					else// :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
                     {
+						if(singleMismatch)
+						{
+							hitScore = hitScore/2 + 1;
+							singleMismatch = false;
+						}
 						if(consecCounter >= maxhitlimit)
                         {
 							hitScore++;
-
-							//***
                             badBasePositions.add(k - b.length);
-                            //***
-
                         }
 						if(consecCounter > maxhitlimit)
 							hitScore = hitScore + (consecCounter - maxhitlimit);
@@ -662,6 +694,11 @@ STRAND PROPERTIES/GETTER METHODS
 
 			//*
 			//this accounts for if there are consec hits in the very end (dont delete this)
+			if(singleMismatch)
+			{
+				hitScore = hitScore/2 + 1;
+				singleMismatch = false;
+			}
 			if(consecCounter >= maxhitlimit)
 				hitScore++;
 			if(consecCounter > maxhitlimit)

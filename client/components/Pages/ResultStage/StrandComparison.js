@@ -13,6 +13,7 @@ export default class StrandComparison extends React.Component {
 		this.deletecomparelist2 = this.deletecomparelist.bind(this,2);
 		this.callcomparelist = this.callcomparelist.bind(this);
 		this.addComponentsToComparelist = this.addComponentsToComparelist.bind(this);
+		this.addFullStrandToComparelist = this.addFullStrandToComparelist.bind(this);
 
 		this.state = {
 			comparelist:[],
@@ -26,7 +27,7 @@ export default class StrandComparison extends React.Component {
 
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
-			temp.push( {name:e.label, components:e.value,loop:"false"} );		
+			temp.push( {name:e.label, components:e.value,fiveprime:"5' to 3'"} );		
 			this.setState({comparelist : temp});
 		}
 	}
@@ -36,7 +37,7 @@ export default class StrandComparison extends React.Component {
 
 		if(this.state.comparelist.length != 2){
 			var temp = this.state.comparelist;
-			temp.push( {name:e.label, components:e.value,loop:"false"} );		
+			temp.push( {name:e.label, components:e.value.components,fiveprime: e.value.fiveprime} );		
 			this.setState({comparelist : temp});
 		}
 	}
@@ -100,7 +101,7 @@ export default class StrandComparison extends React.Component {
 		for(let i = 0; i < this.props.fulllist.length;i ++)
 		{
 			let fullstrand = this.props.fulllist[i];
-			strandlist.push({ value:fullstrand.components , label:fullstrand.name});
+			strandlist.push({ value:fullstrand , label:fullstrand.name});
 		}
 		return strandlist;
 	}
@@ -201,7 +202,7 @@ export default class StrandComparison extends React.Component {
 					 	placeholder="Add Full Strand" 
 						name="form-field-name" 
 						options={this.fullStrandListProcessor()}	
-						onChange = {this.addComponentsToComparelist} 
+						onChange = {this.addFullStrandToComparelist} 
 						/>
 				</div>
 				<Button 
@@ -220,7 +221,6 @@ export default class StrandComparison extends React.Component {
 
 
 	render(){
-			console.log(this.props.results[0]);
 		let resultSectionStyle = {
 			height:"693px",
 			width:"1045px",

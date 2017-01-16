@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 
+
+import java.util.concurrent.*;
+
+
 public class OhayonMiddleware{
 	ArrayList<Strand> componentList;
 	ArrayList<FullStrand> fullStrandList;
@@ -41,7 +45,7 @@ public class OhayonMiddleware{
 
 	private String[] getParsedData()
 	{
-		String[] parsedComponentData = new String[this.componentList.size()];
+		String[] parsedComponentData = new String[this.componentList.size()+1];
 		for( int i = 0; i < this.componentList.size();i++)
 		{
 			Strand temp = this.componentList.get(i);
@@ -57,25 +61,27 @@ public class OhayonMiddleware{
 	SEQUENCING/COMPARING METHODS:
 
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-	public String[] sequenceStrands(String salt, String concentration, ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
+	public String[] sequenceStrands(int timelimit, String salt, String concentration, ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
 	{
-		this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
-
+        this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
+		
 		//****
 		Sequencer OHAYON = new Sequencer(this.componentList , this.thermoCalc,this.fullStrandList);		
 		//****
 
-		OHAYON.minimizeInteractions();
-
-		String[] results = this.getParsedData();
-		return results;
+		boolean success = OHAYON.minimizeInteractions(timelimit);
+		String[] results = {""};
+		if(!success)
+			return results;
+		else 
+			return this.getParsedData();
 	}
 
-	public String[] compareStrands(String seq1, String seq2)
+	public String[] compareStrands(String seq1, boolean loop1, String seq2, boolean loop2)
 	{
 		Strand a = new Strand(seq1,true);
 		Strand b = new Strand(seq2,true);
-		return this.comparer.compareTwo(a,b);
+		return this.comparer.compareTwo(a,loop1,b,loop2);
 
 	}
 	public String[][] compareAll(ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
@@ -114,9 +120,10 @@ public class OhayonMiddleware{
 			component.setComplement( Boolean.parseBoolean(parameters[2]) );				//complement
 			component.setMismatchThreshold( Integer.valueOf(parameters[3]) );			//mismatch
 			component.setHairpinThreshold( Integer.valueOf(parameters[4]) );			//hairpin
-			component.setBlueprint(parameters[5]);										//blueprint
+			component.setSequence(parameters[5]);
+			component.setBlueprint(parameters[6]);										//blueprint
 			
-			//f.setTm( Float.valueOf(parameters[6]) , this.thermoCalc );				//meltingpoint
+			//f.setTm( Float.valueOf(parameters[7]) , this.thermoCalc );				//meltingpoint
 			this.componentList.add(component);											//add strandlist
 		}
 	}
@@ -127,6 +134,7 @@ public class OhayonMiddleware{
 	private void buildFullStrandList(ArrayList<String[]> unparsedFullStrandList )
 	{
 		this.fullStrandList.clear();
+
 		for(int y = 0; y < unparsedFullStrandList.size();y++)
 		{	
 			String[] parameters = unparsedFullStrandList.get(y);
@@ -156,11 +164,11 @@ public class OhayonMiddleware{
 				}
 			}
 
-			//System.out.println("loop "+parameters[parameters.length-1]);
-			//System.out.println("name "+parameters[parameters.length-2]);		
+			System.out.println("direction "+parameters[parameters.length-1]);
+			System.out.println("name "+parameters[parameters.length-2]);		
 			
 			// if Full Strand is Loop DNA
-			if(parameters[parameters.length-1].equals("true"))
+			if(parameters[parameters.length-1].equals("loop"))
 			{
 				LoopDNA fullstrand = new LoopDNA(strandname , orderedComponents , strandRecipe);
 				this.fullStrandList.add(fullstrand);

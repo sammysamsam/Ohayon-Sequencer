@@ -13,7 +13,7 @@ export default class Sequencer extends React.Component {
 		super();
 		this.activatesequencer = this.activatesequencer.bind(this);
 		this.handleTime = this.handleTime.bind(this);
-		this.state = {time:15}
+		this.state = {time:5}
 	}
 	handleTime(input)
 	{
@@ -21,7 +21,7 @@ export default class Sequencer extends React.Component {
 	}
 	activatesequencer()
 	{
-		if(this.state.time < 0 || this.state.time > 180)
+		if(this.state.time < 0 || this.state.time > 60)
 			Materialize.toast("Unfufilled Requirement: Invalid Time Limit",3000);
 		else 
 			StrandAction.SequenceStrandlist(this.state.time);
@@ -44,7 +44,6 @@ export default class Sequencer extends React.Component {
 			padding:"22px",
 			background:"rgba(0, 0, 0,0.1)",
 			color:"#e6e6e6",
-			textDecoration:"underline",
 			textAlign:"center",
 			fontWeight:"bold",
 			fontSize:"14px",
@@ -107,12 +106,24 @@ export default class Sequencer extends React.Component {
 			fontSize:"15px",
 			display:"inline-block"
 		}
-		return(
-			<div>
+		let loadprompt = () =>{
+			if(this.props.prompt == "fail")
+				return(				
+				<div style = {statusStyle} >  
+					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff661a"}}className="material-icons">offline_pin</i> 
+					Previous Sequencing Attempt Unsucessful (Ready To Sequence)
+				</div>)
+			else
+				return(	
 				<div style = {statusStyle} >  
 					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#42f448"}}className="material-icons">check_circle</i> 
 					Ready To Sequence
-				</div>		
+				</div>)
+		}
+
+		return(
+			<div>
+				{loadprompt()}
 				<div style = {containerStyle}>
 					<div style = {{display:"inline-block",marginRight:"150px"}}>
 						<Button style = {sequencerButtonStyle}  onClick = {this.activatesequencer}  > 
@@ -128,8 +139,8 @@ export default class Sequencer extends React.Component {
 							defaultValue = {this.state.time}
 							style = {{color:"white"}}
 							type = "number"
-							min = "10"
-							max = "240"
+							min = "1"
+							max = "120"
 							className="validate"
 							onChange = {this.handleTime} 
 							>

@@ -17,7 +17,7 @@ export default class ResultScreen extends React.Component {
 				<h6 style = {{textAlign:"center",textDecoration:"underline",marginBottom:"10px"}}>
 					Strand Order [5' to 3']
 				</h6>
-				<div style = {{	overflowY:"scroll",overflowWrap: "break-word",height:"660px"}}>
+				<div style = {{	overflowY:"scroll",overflowWrap: "break-word",height:"630px"}}>
 					<Table className = "responsive-table striped">
 				        <thead>
 				          <tr>
@@ -53,15 +53,15 @@ export default class ResultScreen extends React.Component {
     	}
     	let allArrangementStyle = {
      		height:"426px",
-     		padding:"2px",
+     		padding:"5px",
      		overflow:"scroll",	
-    		fontSize:"12px"
+    		fontSize:"13px"
     	}
     	let bestarrangementItemStyle = {
     		display: "inline-block",
     		marginLeft: "50%",
     		transform: "translate(-50%, 0%)",
-    		fontSize:"12px"
+    		fontSize:"14px"
     	}
     	if(this.props.results[1] == "")
     		return(<div></div>)
@@ -71,7 +71,7 @@ export default class ResultScreen extends React.Component {
 		<div style = {resultsContainer}> 
 			<div style = {bestArrangementStyle}>
 				<div style = {{textDecoration:"underline",textAlign:"center",fontSize:"17px",padding:"5px"}}>
-					Best Arrangement: {this.props.list[0].components.toString()} vs {this.props.list[1].components.toString()}
+					Strongest Base Pairing Arrangement:  {this.props.results[2]}
 				</div>
 				<div style = {bestarrangementItemStyle}>
 					{this.props.results[1][0]}

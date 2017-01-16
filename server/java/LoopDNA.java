@@ -16,13 +16,25 @@ public class LoopDNA extends FullStrand
         if(other instanceof LoopDNA) // If the other strand is also LoopDNA
         {
             String thisSeq = loopStrandForm.sequence;
-            String thisAddedBases = thisSeq.substring(0, 4);
-            loopStrandForm.setSequence(loopStrandForm.sequence + thisAddedBases);
 
+            if(thisSeq.length() > 4)
+            {
+                String thisAddedBases = thisSeq.substring(0, 4);
+                loopStrandForm.setSequence(loopStrandForm.sequence + thisAddedBases); 
+            }
+            else
+                loopStrandForm.setSequence(loopStrandForm.sequence + loopStrandForm.sequence); 
+        
             String otherSeq = otherStrandForm.sequence;
-            String otherAddedBases = otherSeq.substring(0, 4);
-            otherStrandForm.setSequence(otherStrandForm.sequence + otherAddedBases);
-            
+
+            if(otherSeq.length() > 4)
+            {
+                String otherAddedBases = otherSeq.substring(0, 4);
+                otherStrandForm.setSequence(otherStrandForm.sequence + otherAddedBases);
+            }
+            else
+                   otherStrandForm.setSequence(otherStrandForm.sequence + otherStrandForm.sequence);
+             
             int[] complementShifts = this.getComplementShifts(other, componentsAvailable);
             int score = loopStrandForm.mismatch2(otherStrandForm, 5, complementShifts);
 
@@ -35,9 +47,14 @@ public class LoopDNA extends FullStrand
             if((otherStrandForm.length > loopStrandForm.length) || (loopStrandForm.length < 4))
             {
                 String thisSeq = loopStrandForm.sequence;
-                String addedBases = thisSeq.substring(0, 4);
-                loopStrandForm.setSequence(loopStrandForm.sequence + addedBases);
-                
+                if(thisSeq.length() > 4)
+                {
+                    String thisAddedBases = thisSeq.substring(0, 4);
+                    loopStrandForm.setSequence(loopStrandForm.sequence + thisAddedBases); 
+                }
+                else
+                    loopStrandForm.setSequence(loopStrandForm.sequence + loopStrandForm.sequence); 
+                    
                 int[] complementShifts = this.getComplementShifts(other, componentsAvailable);
                 int score = loopStrandForm.mismatch2(otherStrandForm, 5,complementShifts);
                 return score;

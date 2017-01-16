@@ -24,6 +24,9 @@ export default class StrandComponentInput extends React.Component {
 					};
 	}
 
+	//
+
+
 	handlename(input)
 	{
 		this.setState({name : input.target.value});
@@ -50,6 +53,7 @@ export default class StrandComponentInput extends React.Component {
 			this.setState({blueprint});			//set blueprint	
 		}
 	}
+
 	handlemismatchlimit(input)
 	{
 		if(input.target.value == "")
@@ -80,6 +84,50 @@ export default class StrandComponentInput extends React.Component {
 	{
 		this.setState({ complement : input.target.value });
 	}
+//
+
+	validateblueprint()
+	{
+		// check blueprint (remove all - and spaces)
+		let blueprintTemp = ""
+		let bases = this.state.blueprint.toUpperCase().split("");
+		for(let x = 0; x<bases.length; x++)
+		{
+			if( (bases[x] == "O") )
+				blueprintTemp = blueprintTemp + 'o';
+			if((bases[x] == "A") || 
+				(bases[x] == "T") || 	
+				(bases[x] == "C") || 
+				(bases[x] == "G"))
+				blueprintTemp = blueprintTemp + bases[x];
+		}
+		if(this.state.strandlength != blueprintTemp.length)
+		{
+			Materialize.toast("Unfufilled Requirement: Blueprint contains invalid character or length does not match Strand Length!",4000);
+			return "invalid"
+		}
+		return blueprintTemp;
+	}
+	validatename()
+	{
+		//check name contains requirements
+		if( this.state.name.length > 25 || !/\S/.test(this.state.name) || this.state.name.includes("'") || this.state.name.includes("-"))
+		{
+			Materialize.toast("Unfufilled Requirement: Name field must contain 1-25 characters and not include restricted character: semicolon ( ' ) or dash ( - )!",4000);
+			return false;
+		}
+		//check repeat name
+		for(let i = 0; i < this.props.strandlist.length;i++)
+		{
+			if(this.props.strandlist[i].name.replace(/ /g,"") == this.state.name.replace(/ /g,""))
+			{
+				Materialize.toast("Unfufilled Requirement: Name already exists in Component List",4000);
+				return false;
+			}
+		}	
+		return true;
+	}
+//
 
 	tokenprocessor()
 	{
@@ -89,33 +137,10 @@ export default class StrandComponentInput extends React.Component {
 			!this._isInt(this.state.selflimit))
 			return;
 
-//check name contains requirements
-		if(!/\S/.test(this.state.name) || this.state.name.includes("'") || this.state.name.includes("-"))
-		{
-			Materialize.toast("Unfufilled Requirement: Name field must contain at least one character and not include restricted character: semicolon ( ' ) or dash ( - )!",4000);
-			return;
-		}
-//check repeat name
-		for(let i = 0; i < this.props.strandlist.length;i++)
-		{
-			if(this.props.strandlist[i].name.replace(/ /g,"") == this.state.name.replace(/ /g,""))
-			{
-				Materialize.toast("Unfufilled Requirement: Name already exists in Component List",4000);
-				return;
-			}
-		}
+		let processBlueprint = this.validateblueprint();
 
-// check blueprint (remove all - and spaces)
-		let blueprintTemp  = this.state.blueprint.replace(/ |-/g,"");
-		if(this.state.strandlength != blueprintTemp.length)
-		{
-			Materialize.toast("Unfufilled Requirement: Blueprint length does not match Strand Length!",4000);
+		if(!this.validatename() || processBlueprint == "invalid")
 			return;
-		}
-		for(let x = 0; x<blueprintTemp.length; x++)
-		{
-			let base = blueprintTemp.charAt(x).toUpperCase();
-		}
 
 		/*check melting point
 		if(this.state.meltingpoint < 0 || this.state.meltingpoint > this.state.maxMeltingPt)
@@ -131,7 +156,7 @@ export default class StrandComponentInput extends React.Component {
 				complement: this.state.complement, 
 				mismatch: this.state.mismatchlimit, 
 				self: this.state.selflimit, 
-				blueprint: blueprintTemp,
+				blueprint: processBlueprint,
 				meltingpoint:this.state.meltingpoint
 			}
 		);

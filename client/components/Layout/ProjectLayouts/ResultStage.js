@@ -68,15 +68,17 @@ export default class ResultStateLayout extends React.Component {
 		return(
 		<div >
 			<div style = {topstyle}>
-				<h2 style = {{color:"#ffccbc"}}> 
+				<h2 style = {{color:"#ffccbc",height:"80px",margin:"0",paddingTop:"20px"}}> 
 				
 					DATA ANALYSIS 
 
 				</h2>
 				
-				<p style = {{paddingTop:"12px",color:"#ffccbc",paddingBottom:"2px"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
+				<p style = {{paddingTop:"35px",color:"#ffccbc",height:"70px",margin:"0"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
 				
-				<ResultStageButtons status = {this.state.programstatus}/>
+				<div style = {{height:"60px",paddingTop:"5px",margin:"0"}}>
+					<ResultStageButtons status = {this.state.programstatus}/>
+				</div>
 			</div>
 
 			<div className= "animated fadeIn">

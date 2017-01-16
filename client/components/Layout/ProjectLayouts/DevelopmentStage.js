@@ -66,7 +66,7 @@ export default class DevelopmentStageLayout extends React.Component {
 	ComponentDisplay(){
 		switch(this.state.activedisplay){
 			case "1":{
-				return <Overview Salt = {this.state.Salt} Concentration = {this.state.Concentration} strandlist = {this.state.Full_List} complist = {this.state.Component_List}/>
+				return <Overview  status = {this.state.backend_Status} Salt = {this.state.Salt} Concentration = {this.state.Concentration} strandlist = {this.state.Full_List} complist = {this.state.Component_List}/>
 			}
 			case "2":{
 				return <div style = {{paddingLeft:"10px"}}>
@@ -100,6 +100,7 @@ export default class DevelopmentStageLayout extends React.Component {
 			width:"1045px",
 			height:"693px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
+
 		}
 
 		return(

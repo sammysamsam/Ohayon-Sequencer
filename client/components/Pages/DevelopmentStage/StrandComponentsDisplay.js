@@ -23,11 +23,22 @@ export default class StrandComponentsDisplay extends React.Component {
 		StrandAction.Update_Component_Strandlist({complist:newList,deletedlist:deletedStrands});
 	}
 
+/*
+	// table methods
+	onAfterSaveCell(row, cellName, cellValue) {
+
+	}
+	onBeforeSaveCell(row, cellName, cellValue) {
+
+	  return true;
+	}
+
+	//
+*/
 	render()
 	{
-		
 		//  inline styles
-		const conditionStyle = {
+		let conditionStyle = {
 			textAlign:"right",
 			position:"relative", 
 			fontFamily:"'Anaheim',serif",
@@ -36,7 +47,7 @@ export default class StrandComponentsDisplay extends React.Component {
 			top:"35px",
 			color:"white"
 		}
-		const tableHeaderStyle = {
+		let tableHeaderStyle = {
 			 width:"713px",
 			 height:"50px",
 			 padding:"10px 10px 5px 40px",
@@ -46,17 +57,30 @@ export default class StrandComponentsDisplay extends React.Component {
 			 fontSize:"16px"
 		}
 
-		const tableBodyStyle ={
+		let tableBodyStyle ={
 			background:"rgba(100, 153, 206,0.5)",
 			width:"713px",
 			height:"557px"
 		}
+		
 		//
-		const selectRowProp = {
+		let selectRowProp = {
   			mode: "checkbox",
   			clickToSelect: true,
   			bgColor: "rgb(238, 193, 213)",
 		}
+		/*
+		const cellEditProp = {
+		  mode: 'click',
+		  blurToSave: true,
+		  beforeSaveCell: this.onBeforeSaveCell, // a hook for before saving cell
+		  afterSaveCell: this.onAfterSaveCell  // a hook for after saving cell
+		};
+
+		//cellEdit={ cellEditProp }
+		*/
+		//
+
 		return(
 			<div style = {{height:"655px",marginLeft:"0px"}}>
 
@@ -74,13 +98,12 @@ export default class StrandComponentsDisplay extends React.Component {
   					<div style = { tableBodyStyle}>
 						<div style  = {conditionStyle}> Salt: {this.props.Salt}  ,  Concentration of Salt: {this.props.Concentration}</div> 
   						<BootstrapTable  
-  							tableStyle = {{backgroundColor:"#f2f4f7",opacity:".95",height:"415px"}}	
+  							tableStyle = {{backgroundColor:"#f2f4f7",opacity:".95"}}	
   							data={this.props.Component_list}   
   							height="405px"
   							condensed = {true} 
   							pagination={true} 
   							striped={true} 
-  							hover={true}  
   							deleteRow={!this.props.status}
   							selectRow={selectRowProp}	
   							options={{onDeleteRow: this.updateStoreComponentList}} >
@@ -89,26 +112,28 @@ export default class StrandComponentsDisplay extends React.Component {
 	    			    		dataField="name" 
 	    			    		isKey={true} 
 	    			    		dataSort={true} 
-	    			    		width = "150px"> 
+	    			    		width = "200px"
+	    			    		>
 	    			    		Name
 	    			    	</TableHeaderColumn>
-	   			    		
-	   			    		<TableHeaderColumn 
+
+	 				    	<TableHeaderColumn dataAlign = 'center'  dataField="meltingpoint" width = "85px"> Melting Pt. </TableHeaderColumn>
+	 				    	
+	 				    	<TableHeaderColumn dataAlign = 'center' dataField="length"  width = "95px"> Length </TableHeaderColumn>
+
+	 			    		<TableHeaderColumn dataAlign = 'center' dataField="mismatch" width = "70px"> Mismatch </TableHeaderColumn>
+	 			    		
+	 			    		<TableHeaderColumn 	dataAlign = 'center' dataField="self" width = "95px"> Self-Mismatch </TableHeaderColumn>
+	 			    		
+	 			    		<TableHeaderColumn dataAlign = 'center'  dataField="complement"> Complement </TableHeaderColumn>
+ 							
+ 							<TableHeaderColumn 
 	   			    			dataSort={true} 
 	   			    			dataField="blueprint"  
-	   			    			width = "235px">
+	   			    			width = "500px"
+	   			    			>
 	   			    			Blueprint   
 	   			    		</TableHeaderColumn>
-	 				    	
-	 				    	<TableHeaderColumn dataAlign = 'center'  dataField="meltingpoint" width = "70px"> Melting Pt. </TableHeaderColumn>
-	 				    	
-	 				    	<TableHeaderColumn dataAlign = 'center' dataField="length"  width = "50px"> Length </TableHeaderColumn>
-
-	 			    		<TableHeaderColumn dataAlign = 'center' dataField="mismatch" width = "63px"> Mismatch </TableHeaderColumn>
-	 			    		
-	 			    		<TableHeaderColumn 	dataAlign = 'center' dataField="self" width = "40px"> Self </TableHeaderColumn>
-	 			    		
-	 			    		<TableHeaderColumn dataAlign = 'center'  dataField="complement"> Comp </TableHeaderColumn>
  						</BootstrapTable>
  					</div>
  				</div>

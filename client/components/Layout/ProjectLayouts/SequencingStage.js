@@ -7,38 +7,52 @@ import ProjectStore from "../../Store/ProjectStore";
 
 export default class SequencingStageLayout extends React.Component {
 	
-	constructor(){
+	constructor()
+	{
 		super();
-		this.updateconditions = this.updateconditions.bind(this);
+		this.updateConditions = this.updateConditions.bind(this);
 		this.updateComponentlist = this.updateComponentlist.bind(this);
 		this.updatestatus = this.updatestatus.bind(this);
+		this.updatePrompt = this.updatePrompt.bind(this);
 		this.state = {  
 						Salt: ProjectStore.getConditions().Salt, 
 						Concentration: ProjectStore.getConditions().Concentration,
 						Component_List: ProjectStore.getStrandComponents(),
-						backend_Status:  ProjectStore.getBackendStatus(),
+						Backend_Status:  ProjectStore.getBackendStatus(),
+						Prompt: ProjectStore.getSequencerPrompt()
 					}
 	}
-	componentWillMount() {
-		ProjectStore.on("Change_Condition", this.updateconditions);
+	componentWillMount() 
+	{
+		ProjectStore.on("Change_Condition", this.updateConditions);
 		ProjectStore.on("Change_Component_Strandlist",this.updateComponentlist);
 		ProjectStore.on("Update_Backend_Status",this.updatestatus);
+		ProjectStore.on("Update_Sequencer_Prompt",this.updatePrompt);
 	}
-	componentWillUnmount() {
-		ProjectStore.removeListener("Change_Condition", this.updateconditions)
+	componentWillUnmount() 
+	{
+		ProjectStore.removeListener("Change_Condition", this.updateConditions)
 		ProjectStore.removeListener("Change_Component_Strandlist",this.updateComponentlist)
 		ProjectStore.removeListener("Update_Backend_Status",this.updatestatus);
+		ProjectStore.removeListener("Update_Sequencer_Prompt",this.updatePrompt);
 	}
 
-	updateconditions(){
+	updateConditions()
+	{
 		this.setState({ Salt: ProjectStore.getConditions().Salt})
 		this.setState({ Concentration: ProjectStore.getConditions().Concentration})
 	}
-	updateComponentlist(){
-		this.setState( {Component_List: ProjectStore.getStrandComponents()});
+	updateComponentlist()
+	{
+		this.setState({ Component_List: ProjectStore.getStrandComponents() });
 	}
-	updatestatus(){
-		this.setState({ backend_Status: ProjectStore.getBackendStatus() })
+	updatestatus()
+	{
+		this.setState({ Backend_Status: ProjectStore.getBackendStatus() })
+	}
+	updatePrompt()
+	{
+		this.setState({ Prompt: ProjectStore.getSequencerPrompt() })		
 	}
 	render(){
 
@@ -74,7 +88,7 @@ export default class SequencingStageLayout extends React.Component {
 			</div>
 			
 			<div className= "animated fadeIn"  style = {bottomstyle}>
-				<Sequencer status = {this.state.backend_Status} componentlength = {this.state.Component_List.length}/>
+				<Sequencer prompt = {this.state.Prompt} status = {this.state.Backend_Status} componentlength = {this.state.Component_List.length}/>
 			</div>
 		</div>
 		);

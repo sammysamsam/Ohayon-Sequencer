@@ -61,15 +61,15 @@ export default class StrandComparer extends React.Component {
 	handleprime(f)
 	{
 		if(f.target.value == 1)
-			this.state.fiveprime1 = "true";
+			this.state.fiveprime1 = "5' to 3'";
 		else if(f.target.value == 2)
-			this.state.fiveprime1 = "false";
+			this.state.fiveprime1 = "3' to 5'";
 		else if(f.target.value == 3)
 			this.state.fiveprime1 = "loop";
 		else if(f.target.value == 4)
-			this.state.fiveprime2 = "true";
+			this.state.fiveprime2 = "5' to 3'";
 		else if(f.target.value == 5)
-			this.state.fiveprime2 = "false";
+			this.state.fiveprime2 = "3' to 5'";
 		else if(f.target.value == 6)
 			this.state.fiveprime2 = "loop";
 	}
@@ -92,11 +92,11 @@ export default class StrandComparer extends React.Component {
 		let checkpoint = true;
 		for(let i = 0 ;i < bases.length;i++)
 		{
-			if( (bases[i].toUpperCase() != "O") && 
-				(bases[i].toUpperCase() != "A") && 
-				(bases[i].toUpperCase() != "T") && 	
-				(bases[i].toUpperCase() != "C") && 
-				(bases[i].toUpperCase() != "G")){
+			if( (bases[i] != "O") && 
+				(bases[i] != "A") && 
+				(bases[i] != "T") && 	
+				(bases[i] != "C") && 
+				(bases[i] != "G")){
 				checkpoint = false;
 			}
 		}
@@ -107,13 +107,17 @@ export default class StrandComparer extends React.Component {
 	{
 		if(this.state.sequence1 == "" || this.state.sequence2 == "" )
 			Materialize.toast("Unfulfilled Requirement: Both strand sequences must have at least one base",3000);
-		if(this.sequencechecker(this.state.sequence1) == false)
-			Materialize.toast("Unfulfilled Requirement: Sequence of strand 1  o A T C or G characters",3000);
 
-		if(this.sequencechecker(this.state.sequence2) == false)
+		let seq1 = this.state.sequence1.replace(/[^a-zA-Z-]/g, '').toUpperCase();
+		
+		if(this.sequencechecker(seq1) == false)
+			Materialize.toast("Unfulfilled Requirement: Sequence of strand 1  o A T C or G characters",3000);
+		
+		let seq2 = this.state.sequence2.replace(/[^a-zA-Z-]/g, '').toUpperCase();
+		if(this.sequencechecker(seq2) == false)
 			Materialize.toast("Unfulfilled Requirement: Sequence of strand 2 contains o A T C or G characters",3000);
 
-		let seq1 = this.state.sequence1;
+
 		if(this.state.fiveprime1 == 'false')
 			seq1 = this.state.sequence1.split("").reverse().join("");
 
@@ -121,7 +125,6 @@ export default class StrandComparer extends React.Component {
 		if(this.state.fiveprime1 == "loop")
 			loop1 = true;
 
-		let seq2 = this.state.sequence2;
 		if(this.state.fiveprime2 == 'true')
 			seq2 = this.state.sequence2.split("").reverse().join("");
 
@@ -143,55 +146,54 @@ export default class StrandComparer extends React.Component {
 	  		width:"1100px",
 		}
 		let bestarrangementstyle = {
-    		background:"rgba(255,255,255,.5)",
+    		background:"rgba(255,255,255,.7)",
     		height:"170px",
-    		padding:"15px",
+    		paddingBottom:"30px",
     	}
     	let allarrangementstyle = {
      		height:"678px",
-     		padding:"4px",
-     		overflow:"scroll"		
-    	}
-    	let allarrangementitemstyle = {
-    		display: "inline-block",
-    		marginLeft: "50%",
-    		transform: "translate(-50%, 0%)",
-    		height:"50px",
-    		marginTop:"15px",
-    		marginBottom:"20px",
-    		display:"inline-block"
+     		overflow:"scroll",	
+    	    background:"rgba(255,255,255,.5)",
     	}
     	let bestarrangementitemstyle = {
     		display: "inline-block",
     		marginLeft: "50%",
-    		transform: "translate(-50%, 0%)"
+    		transform: "translate(-50%, 0%)",
+    		marginTop:"20px"
     	}
-
-		if(!(this.state.output[0] == ""))
+    	let bestarrangementtitlestyle = {
+    		fontSize:"15px",
+			height:"55px",
+			paddingTop:"13px",
+			fontFamily:"'Share Tech Mono',serif",
+			textAlign:"center"
+		}
+		console.log(this.state.output);
+		if(!(this.state.output[1].length == 0))
 		{
-			let shiftedarrays = this.state.output[1].split("$$$");
+			let shiftedarrays = this.state.output[1][1].split("$$$");
 			return  (
 				<div style = {resultstyle}> 
 					<div style = {bestarrangementstyle}>
-						<h5 style = {{textDecoration:"underline",textAlign:"center"}}>
-							Best Arrangement
-						</h5>
+						<div style = {bestarrangementtitlestyle}>
+							Strongest Base Pairing Arrangement:  {this.state.output[0]}
+						</div>
 						<div style = {bestarrangementitemstyle}>
-							{this.state.output[0]}
+							{this.state.output[1][0]}
 						</div>
 					</div>
 
 		 			<div style = {allarrangementstyle}>
-						<Table className = "responsive-table hover">
+						<Table className = "responsive-table striped">
 					        <thead>
 					          <tr>
-					              <th data-field="id">All Arrangements</th>
+					              <th data-field="id" style = {{paddingLeft:"30px"}}>All Arrangements</th>
 					          </tr>
 					        </thead>
 						    <tbody>
 								{shiftedarrays.map(function(listValue,index){	
 										return (<tr key = {index} >
-											      <td>{listValue} </td>
+											      <td style = {{paddingLeft:"20px"}} >{listValue} </td>
 											    </tr>)
 								})}
 				        	</tbody>
