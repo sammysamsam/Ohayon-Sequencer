@@ -13,16 +13,25 @@ export default class StrandComparer extends React.Component {
 	constructor()
 	{
 		super();
+
 		this.state = {
 			output:toolsAnalysisStore.get_Compare_Results() , 
-			name1:"",
+			name1:"A",
 			sequence1:"",
-			fiveprime1:"true",
-			name2:"",
+			fiveprime1:"5' to 3'",
+			name2:"B",
 			sequence2:"",
-			fiveprime2:"false"
+			fiveprime2:"3' to 5'"
 		}
 		this.updateresults = this.updateresults.bind(this);
+		this.handleprime = this.handleprime.bind(this);
+		this.handlename = this.handlename.bind(this);
+		this.mismatchfunction = this.mismatchfunction.bind(this);
+		this.handlename2 = this.handlename2.bind(this);
+		this.handleinput = this.handleinput.bind(this);
+		this.handleinput2 = this.handleinput2.bind(this);
+		this.clear = this.clear.bind(this);
+		this._handleKeyPress = this._handleKeyPress.bind(this);
 	}
 	componentWillMount() 
 	{
@@ -44,11 +53,18 @@ export default class StrandComparer extends React.Component {
 
 	handlename(e)
 	{
-		this.setState({ name1:e.target.value});
+		if(e.target.value == "")
+			this.setState({ name1:"A"});
+		else
+			this.setState({ name1:e.target.value});
+
 	}
 	handlename2(e)
 	{
-		this.setState({ name2:e.target.value});	
+		if(e.target.value == "")
+			this.setState({ name2:"B"});
+		else
+			this.setState({ name2:e.target.value});
 	}
 	handleinput(e)
 	{
@@ -117,22 +133,7 @@ export default class StrandComparer extends React.Component {
 		if(this.sequencechecker(seq2) == false)
 			Materialize.toast("Unfulfilled Requirement: Sequence of strand 2 contains o A T C or G characters",3000);
 
-
-		if(this.state.fiveprime1 == 'false')
-			seq1 = this.state.sequence1.split("").reverse().join("");
-
-		let loop1 = false;
-		if(this.state.fiveprime1 == "loop")
-			loop1 = true;
-
-		if(this.state.fiveprime2 == 'true')
-			seq2 = this.state.sequence2.split("").reverse().join("");
-
-		let loop2 = false;
-		if(this.state.fiveprime2 == 'loop')
-			loop2 = true;
-
-		let strandlist = [this.state.name1,seq1,loop1,this.state.name2,seq2,loop2]
+		let strandlist = [this.state.name1,seq1,this.state.fiveprime1,this.state.name2,seq2,this.state.fiveprime2]
 		StrandAction.CompareStrandsTA(strandlist);
 	}
 
@@ -168,7 +169,6 @@ export default class StrandComparer extends React.Component {
 			fontFamily:"'Share Tech Mono',serif",
 			textAlign:"center"
 		}
-		console.log(this.state.output);
 		if(!(this.state.output[1].length == 0))
 		{
 			let shiftedarrays = this.state.output[1][1].split("$$$");
@@ -235,41 +235,41 @@ export default class StrandComparer extends React.Component {
 							type = "text" 
 							 s={12}
 							className = "validate"
-							onChange = {this.handlename.bind(this)}
+							onChange = {this.handlename}
 						/>
 
 						<Input 					
 							name="dnadirection" 		
-							defaultChecked = {(this.state.fiveprime1 == "true")}  
+							defaultChecked = {true}  
 							value={1}  
 							type="radio"
 							label = "5' to 3'"
-							onClick = {this.handleprime.bind(this)}
+							onClick = {this.handleprime}
 						/>
 						<Input 					
 							name="dnadirection" 		
-							defaultChecked = {(this.state.fiveprime1  == "false")}  
+							defaultChecked = {false}  
 							value={2}  
 							type="radio"
 							label = "3' to 5'"
-							onClick = {this.handleprime.bind(this)}
+							onClick = {this.handleprime}
 						/>
 						<Input 					
 							name="dnadirection" 		
-							defaultChecked = {(this.state.fiveprime1 == "loop")}  
+							defaultChecked = {false}  
 							value={3}  
 							type="radio"
 							label = "Loop DNA"
-							onClick = {this.handleprime.bind(this)}
+							onClick = {this.handleprime}
 						/>			
 
 						<Input
 							s={12}
 							value = {this.state.blueprint} 
-							onKeyPress={this._handleKeyPress.bind(this)} 
+							onKeyPress={this._handleKeyPress} 
 							label="Strand Sequence (i.e.) ATCG"
 							type = "text"
-							onChange = {this.handleinput.bind(this)}
+							onChange = {this.handleinput}
 						/>
 					</div>
 					<div style = {labelStyle}> 
@@ -278,44 +278,44 @@ export default class StrandComparer extends React.Component {
 							type = "text" 
 							s={12}
 							className = "validate"
-							onChange = {this.handlename2.bind(this)}
+							onChange = {this.handlename2}
 						/>
 						<Input 					
 							name="dnadirection2" 		
-							defaultChecked = {(this.state.fiveprime2 == "true")}  
+							defaultChecked = {false}  
 							value={4}  
 							type="radio"
 							label = "5' to 3'"
-							onClick = {this.handleprime.bind(this)}
+							onClick = {this.handleprime}
 						/>
 						<Input 					
 							name="dnadirection2" 		
-							defaultChecked = {(this.state.fiveprime2 == "false")}  
+							defaultChecked = {true}  
 							value={5}  
 							type="radio"
 							label = "3' to 5'"
-							onClick = {this.handleprime.bind(this)}
+							onClick = {this.handleprime}
 						/>
 						<Input 					
 							name="dnadirection2" 		
-							defaultChecked = {(this.state.fiveprime2 == "loop")}  
+							defaultChecked = {false}  
 							value={6}  
 							type="radio"
 							label = "Loop DNA"
-							onClick = {this.handleprime.bind(this)}
+							onClick = {this.handleprime}
 						/>					
 						<Input
 							s={12}
 							value = {this.state.blueprint} 
-							onKeyPress={this._handleKeyPress.bind(this)} 
+							onKeyPress={this._handleKeyPress} 
 							label="Strand Sequence (i.e.) ATCG"
 							type = "text"
-							onChange = {this.handleinput2.bind(this)}
+							onChange = {this.handleinput2}
 						/>
 					</div>	
 
-					<Button style = {{marginLeft:"40px"}} onClick = {this.clear.bind(this)}> CLEAR</Button>
-					<Button style = {{marginLeft:"20px"}} onClick = {this.mismatchfunction.bind(this)}> SUBMIT</Button>
+					<Button style = {{marginLeft:"40px"}} onClick = {this.clear}> CLEAR</Button>
+					<Button style = {{marginLeft:"20px"}} onClick = {this.mismatchfunction}> SUBMIT</Button>
 				
 					<div style = {{marginTop:"20px", height:"670px",background:"rgba(0,0,0,.15)",overflow:"hidden"}}> 
 						{this.loadcomparescreen()} 

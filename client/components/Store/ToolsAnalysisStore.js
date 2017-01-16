@@ -26,7 +26,13 @@ class ToolsAnalysisStore extends EventEmitter{
 	{
 		let strandlistStoreReference = this;		
 		let name = strandsToCompare[0] + " vs " + strandsToCompare[3];
-
+		console.log("lol"+strandsToCompare);
+		if(strandsToCompare[2] == "3' to 5'")
+			strandsToCompare[1] = strandsToCompare[1].split("").reverse().join("");
+		if(strandsToCompare[5] == "3' to 5'")
+			strandsToCompare[4] = strandsToCompare[4].split("").reverse().join("");
+		
+		console.log("lol2"+strandsToCompare);
 		return axios.post('/DNASequenceProgram/Compare', {
 			strand1:{ 
 				sequence: strandsToCompare[1],
