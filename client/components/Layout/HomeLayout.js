@@ -8,7 +8,7 @@ export default class HomeLayout extends React.Component {
 	render(){		
 
 		let yoel = {
-			height:"615px",
+			minHeight:"615px",height:"80vh",
 			width:"400px",
 			float:"left"
 		}
@@ -35,7 +35,7 @@ export default class HomeLayout extends React.Component {
 						Optimizing Hybridization AnalYsis Of Nucleotides Program 
 				</div>
 
-				<div style = {{backgroundColor:"#155151",height:"615px",width:"100%"}}> 
+				<div style = {{backgroundColor:"#155151",minHeight:"615px",height:"80vh",width:"100%"}}> 
 					<img style = {yoel} src={'http://bestanimations.com/Science/Biology/DNA/dna/dna-rna-chromosomes-double-helix-rotating-animated-gif-8.gif'} alt="YOEL" className="img-responsive"/>
 					
 					<div style = {{paddingTop:"100px",paddingBottom:"100px",textAlign:"center"}} className= "animated fadeInUp" >

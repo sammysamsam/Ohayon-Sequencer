@@ -10,6 +10,13 @@ AlgorithmRouter.post('/',(req,res)=>{
 
 	//instanciate node-java and get Middleware
 
+	var timeLimit = req.body.timelimit;
+    res.setTimeout(60000*(timeLimit+1), function(){
+    console.log('Request has timed out.');
+        res.send(408);
+    });
+
+
 	java.classpath.push(path.resolve(__dirname, './java'));
 	java.import('OhayonMiddleware');
 	var middleware = java.newInstanceSync("OhayonMiddleware");			
@@ -18,19 +25,18 @@ AlgorithmRouter.post('/',(req,res)=>{
 	var concentration = JSON.stringify(req.body.concentration);
 	var components =  processComponents(req.body.componentlist);
 	var fullstrands = processFullStrands(req.body.fullstrandlist);
-	var timeLimit = req.body.timelimit;
-	console.log("\n\nstart\n\n");
-	middleware.sequenceStrands(parseInt(timeLimit),salt,concentration,components, fullstrands, function(err, data) {
-		console.log("end");
+
+
+	java.callMethod(middleware,"sequenceStrands",parseInt(timeLimit),salt,concentration,components, fullstrands,function(err, data) {
+		console.log("\n\n\nresponse started\n\n");
 		res.json({updatedComponentList:data});
 		res.end();	
 		if(err) { 
 			res.send('Error During Sequencing!');
 			res.end();
 		}
-
+		console.log("response sent?\n\n");
 	});
-
 });
 
 AlgorithmRouter.post('/Compare',(req,res)=>{

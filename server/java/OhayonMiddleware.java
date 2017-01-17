@@ -63,19 +63,26 @@ public class OhayonMiddleware{
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	public String[] sequenceStrands(int timelimit, String salt, String concentration, ArrayList<String[]> unparsedComponentsList,ArrayList<String[]> unparsedFullStrandList )
 	{
+ 		long start = System.currentTimeMillis();
         this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
 		
 		//****
 		Sequencer OHAYON = new Sequencer(this.componentList , this.thermoCalc,this.fullStrandList);		
-		//****
+		//**** 
 
 		boolean success = OHAYON.minimizeInteractions(timelimit);
-		
+
 		String[] results = {""};
 		if(!success)
+		{
+			System.out.println("Unsuccessful due to Timeout!");		
 			return results;
+		}
 		else 
+		{
+			System.out.println("Success!");
 			return this.getParsedData();
+		}
 	}
 
 	public String[] compareStrands(String seq1, boolean loop1, String seq2, boolean loop2)

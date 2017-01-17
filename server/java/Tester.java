@@ -9,7 +9,7 @@ public class Tester
 		//testSelfChecker();
 		//testThermoMismatch();
 		//testFullAlgorithm();
-		testCompAlgorithm();
+		//testCompAlgorithm();
 		//testCompleteAlgorithm();
 		//testBaseArrayMismatch();
 		//testCompareStrands();
@@ -36,37 +36,39 @@ public class Tester
 	}
 	public static void testCompAlgorithm()
 	{
+		
+		System.out.println("\nCALLED\n\n");
 		//Strand h = new Strand("CGCATAACCACCTTGTTAGAGAGAGAGCCG",true); //30
 		//Strand g = new Strand("GTTAGAGAGAGAGCAGTTAGAGAGAGAGCAATCGA",true); //35
 
-		Strand h = new Strand(50,true); //30
-		Strand g = new Strand(50,true); //35
+		Strand h = new Strand(100,true); //30
+		Strand g = new Strand(100,true); //35
 
 
-		Strand i = new Strand("CATCTGCACGTATGTGAGCTAGCTT",true); //25
+		//Strand i = new Strand("CATCTGCACGTATGTGAGCTAGCTT",true); //25
 		//Strand j = new Strand("TAA",true);  //20
 
 		h.setComplement(true);
 		g.setComplement(true);
-		i.setComplement(true);
+		//i.setComplement(true);
 		//j.setComplement(true);
 		
 		h.name = "compA";
 		g.name = "compB";
-		i.name = "compC";
+		//i.name = "compC";
 		//j.name = "compD";
 
 		ArrayList<Strand> list = new ArrayList<Strand>();
 		list.add(h);
 		list.add(g);	
-		list.add(i);
+		//list.add(i);
 		//list.add(j);		
 		ArrayList<FullStrand> fulllist = new ArrayList<FullStrand>();
 		ThermodynamicsCalculator calc = new ThermodynamicsCalculator();	
 		CompareStrands comparer = new CompareStrands(calc);			
 		Sequencer alg = new Sequencer(list, calc,fulllist);
 
-		alg.minimizeInteractions(1000);
+		alg.minimizeInteractions(3);
 		//System.out.println(alg.fullStrandOverview(comparer));	
 	}
 

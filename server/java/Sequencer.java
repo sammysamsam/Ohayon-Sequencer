@@ -118,7 +118,7 @@ STRAND SEQUENCING METHOD:
         //componentOverview();
         //this.printFullStrand();
 
-        System.out.println("\n\nRunning Sequencing Algorithm:");
+        System.out.println("\nRunning Sequencing Algorithm");
 
         CompareStrands comparer = new CompareStrands(thermoCalc);
 
@@ -143,15 +143,12 @@ STRAND SEQUENCING METHOD:
             this.componentList.add(comp); //step 1 and 2
             this.strandRandomizer(comp.length, i);
             
-            System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");  
+            //System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");  
      
             while(true)
             {
                     if (System.currentTimeMillis() > end)
-                    {
-                        System.out.println("UNSUCCESSFUL");
-                       return false;
-                    }
+                        return false;
 
                     numTries++;
 
@@ -160,7 +157,7 @@ STRAND SEQUENCING METHOD:
                         if(i > 0)                 
                         { 
                             //this.fullStrandOverview(comparer);
-                            System.out.println("back, list size now:" + this.componentList.size());
+                            //System.out.println("back, list size now:" + this.componentList.size());
      
                             this.componentList.remove(i);
                             i = i - 2;          
@@ -174,7 +171,6 @@ STRAND SEQUENCING METHOD:
                     while(baseFixingAlgorithm(1, i))     //step 3
                     {
                     }
-                    System.out.print(".");
 
                    if(!checkpoint1(i))  
                    {
@@ -186,7 +182,7 @@ STRAND SEQUENCING METHOD:
                     {
                     } 
                     
-                    System.out.print("( "+this.totalConsecutiveMatches(i) +" )");
+                    //System.out.print("( "+this.totalConsecutiveMatches(i) +" )");
 
 
                     if(!sequencingStageCheckpoint(2))
@@ -194,16 +190,16 @@ STRAND SEQUENCING METHOD:
 
                     this.minimizeEdges(i);           //step 5
 
-                    System.out.print("[ "+sumFullStrand()+" ]");   
+                    //System.out.print("[ "+sumFullStrand()+" ]");   
 
                     if(sequencingStageCheckpoint(3))
                         break;
-                    else
-                        System.out.println("\n___________\nunsuccessful\n____________");
+                    //else
+                    //    System.out.println("\n___________\nunsuccessful\n____________");
             }
         }
         componentOverview();
-        this.printFullStrand();
+        //this.printFullStrand();
         return true;
 }
 

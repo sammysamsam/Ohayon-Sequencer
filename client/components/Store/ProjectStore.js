@@ -232,7 +232,7 @@ class ProjectStore extends EventEmitter{
 
 		let strandlistStoreReference = this;
 
-		console.log("STARTTTT");
+		console.log("AXIOS POST");
  		axios.post('/DNASequenceProgram/', {
  			timelimit: timelimit,
  			salt: this.conditions.Salt,
@@ -241,6 +241,7 @@ class ProjectStore extends EventEmitter{
  			fullstrandlist: this.full_StrandList,
 
  		}).then(function(response){
+ 			console.log("RECIEVED");
 			if(response.data.updatedComponentList[0] == "" )
 				strandlistStoreReference.sequencerPrompt = "fail";
 			else
