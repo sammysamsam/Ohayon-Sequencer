@@ -19,54 +19,17 @@ AlgorithmRouter.post('/',(req,res)=>{
 	var components =  processComponents(req.body.componentlist);
 	var fullstrands = processFullStrands(req.body.fullstrandlist);
 	var timeLimit = req.body.timelimit;
-
+	console.log("\n\nstart\n\n");
 	middleware.sequenceStrands(parseInt(timeLimit),salt,concentration,components, fullstrands, function(err, data) {
+		console.log("end");
 		res.json({updatedComponentList:data});
 		res.end();	
 		if(err) { 
 			res.send('Error During Sequencing!');
 			res.end();
 		}
+
 	});
-
-/*
-	// run logic 
-	async.waterfall([
-	    async.apply( 
-		    function(req, middleware, callback){		//parsing json data
-		    	
-		    	var salt = req.body.salt;
-				var concentration = JSON.stringify(req.body.concentration);
-				var components =  processComponents(req.body.componentlist);
-				var fullstrands = processFullStrands(req.body.fullstrandlist);
-	        	var timeLimit = req.body.timelimit;
-
-	        	callback(null, middleware, timeLimit, salt, concentration, components, fullstrands );	
-		    }, req, middleware 
-		),
-	    function(middleware, timeLimit, salt, concentration, components, fullstrands, callback){		
-	        	console.log("start")
-	        	middleware.sequenceStrands(parseInt(timeLimit),salt,concentration,components, fullstrands, function(err, data) {
-					res.json({updatedComponentList:data});
-					res.end();	
-					if(err) { 
-						res.send('Error During Sequencing!');
-						res.end();
-					}
-				});
-	        	console.log("end")
-	       		callback(null);
-	    }
-	], function (err) {
-			if(err)
-			{
-				res.send('Error! Invalid or Corrupted Data');
-				res.end();
-			}
-	});
-	*/
-
-
 
 });
 
@@ -77,44 +40,27 @@ AlgorithmRouter.post('/Compare',(req,res)=>{
 	java.classpath.push(path.resolve(__dirname, './java'));
 	java.import('OhayonMiddleware');
 	var middleware = java.newInstanceSync("OhayonMiddleware");			
+	var strand1 = req.body.strand1;
+	var strand2 = req.body.strand2;
 
-	// run logic 
-	async.waterfall([
-	    async.apply( 
-		    function(req, middleware, callback){		//parsing json data
-				var strand1 = req.body.strand1;
-				var strand2 = req.body.strand2;
+	let direction1 = false;
+	let direction2 = false;
+	if(strand1.direction == "loop")
+		direction1 = true;
+	if(strand2.direction == "loop")
+		direction2 = true;
 
-	        	callback(null, middleware, strand1, strand2 );	
-		    }, req, middleware 
-		),
-	    function(middleware, strand1, strand2, callback){	
-	    		let direction1 = false;
-	    		let direction2 = false;
-	    		if(strand1.direction == "loop")
-	    			direction1 = true;
-	    		if(strand2.direction == "loop")
-	    			direction2 = true;
-
-	        	middleware.compareStrands( strand1.sequence , direction1, strand2.sequence, direction2 ,function(err, data) {
-		        	res.json({data:data});
-					res.end();
-				
-					if(err)
-					{
-						res.send('Error During Comparison Calculations!');
-						res.end();
-					}
-	        	});
-	        	callback(null);
-	    }
-	], function (err) {
-			if(err)
-			{
-				res.send('Error! Invalid or Corrupted Data');
-				res.end();
-			}
+	middleware.compareStrands( strand1.sequence , direction1, strand2.sequence, direction2 ,function(err, data) {
+    	res.json({data:data});
+		res.end();
+	
+		if(err)
+		{
+			res.send('Error During Comparison Calculations!');
+			res.end();
+		}
 	});
+
 });
 
 AlgorithmRouter.post('/CompareAll',(req,res)=>{
@@ -122,45 +68,22 @@ AlgorithmRouter.post('/CompareAll',(req,res)=>{
 
 	java.classpath.push(path.resolve(__dirname, './java'));
 	java.import('OhayonMiddleware');
-	var middleware = java.newInstanceSync("OhayonMiddleware");			
+	var middleware = java.newInstanceSync("OhayonMiddleware");	
 
-	// run logic 
-	async.waterfall([
-	    async.apply( 
-		    function(req, middleware, callback){		//parsing json data
-
-				var components =  processComponents(req.body.componentlist);
-				var fullstrands = processFullStrands(req.body.fullstrandlist);
-	        	
-	        	callback(null, middleware, components, fullstrands);	
-		    }, req, middleware 
-		),
-
-	    function(middleware, components, fullstrands, callback){		
-
-			let data =  middleware.compareAll( components, fullstrands ,function(err, data) {
-				res.json({ result1 : data[0] , result2 : data[1] });
-				res.end();
-				if(err)
-				{
-					res.send('Error During Comparison Calculations!');
-					res.end();
-				}
-			});
+	var components =  processComponents(req.body.componentlist);
+	var fullstrands = processFullStrands(req.body.fullstrandlist);
 	
-	        callback(null);
-	    }
-	], function (err) {
-		if(err){
-			res.send('Error! Invalid or Corrupted Data');
+
+	let data =  middleware.compareAll( components, fullstrands ,function(err, data) {
+		res.json({ result1 : data[0] , result2 : data[1] });
+		res.end();
+		if(err)
+		{
+			res.send('Error During Comparison Calculations!');
 			res.end();
 		}
-
-	});	
-
+	});
 });
-
-
 
 
 

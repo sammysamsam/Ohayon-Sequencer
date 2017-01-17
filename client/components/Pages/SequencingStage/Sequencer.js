@@ -166,10 +166,12 @@ export default class Sequencer extends React.Component {
 			height:"35px",
 			borderRadius:"4px"
 		}
+		let d = new Date();
+		let timeLeft = this.props.time - d.getTime(); 
 		return (
 			<div>
 				<div style = {{position:"relative",top:"-360px",left:"870px"}}>
-					<ReactCountdownClock seconds={60 * this.state.time}
+					<ReactCountdownClock seconds={timeLeft/1000}
 	                 color="#ff7043"
 	                 alpha={0.9}
 	                 size={110}
@@ -195,7 +197,6 @@ export default class Sequencer extends React.Component {
 			</div>
 		)
 		}
-		console.log(checkpoint);
 		switch(checkpoint)
 		{
 			case true:{ 

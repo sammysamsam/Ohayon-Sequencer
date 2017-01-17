@@ -113,10 +113,10 @@ STRAND SEQUENCING METHOD:
     public boolean minimizeInteractions(int timeLimit)
     {
         long start = System.currentTimeMillis();
-        long end = start + timeLimit*60*1000; // 60 seconds * 1000 ms/sec
+        long end = start - 2000 + timeLimit*60*1000; // 60 seconds * 1000 ms/sec
 
-        componentOverview();
-        this.printFullStrand();
+        //componentOverview();
+        //this.printFullStrand();
 
         System.out.println("\n\nRunning Sequencing Algorithm:");
 
@@ -125,7 +125,6 @@ STRAND SEQUENCING METHOD:
         ArrayList<Strand> fullComponentList = this.componentList;
         ArrayList<FullStrand> fullStrandList = this.fullStrandList;
         this.componentList = new ArrayList<Strand>();
-
 
         /*
         step 1: add next strand
@@ -150,9 +149,10 @@ STRAND SEQUENCING METHOD:
             {
                     if (System.currentTimeMillis() > end)
                     {
-                        this.componentList = fullComponentList;
-                        return false;
+                        System.out.println("UNSUCCESSFUL");
+                       return false;
                     }
+
                     numTries++;
 
                     if(numTries > (10*i))
@@ -168,6 +168,7 @@ STRAND SEQUENCING METHOD:
                            break;
                         }
                     }
+
                     this.strandRandomizer(comp.length/8, i);   //step 2
 
                     while(baseFixingAlgorithm(1, i))     //step 3

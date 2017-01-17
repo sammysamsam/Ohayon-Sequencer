@@ -19,7 +19,8 @@ export default class SequencingStageLayout extends React.Component {
 						Concentration: ProjectStore.getConditions().Concentration,
 						Component_List: ProjectStore.getStrandComponents(),
 						Backend_Status:  ProjectStore.getBackendStatus(),
-						Prompt: ProjectStore.getSequencerPrompt()
+						Prompt: ProjectStore.getSequencerPrompt(),
+						TimeLimit:ProjectStore.getSequencerTimeLimit(),
 					}
 	}
 	componentWillMount() 
@@ -49,6 +50,7 @@ export default class SequencingStageLayout extends React.Component {
 	updatestatus()
 	{
 		this.setState({ Backend_Status: ProjectStore.getBackendStatus() })
+		this.setState({ TimeLimit: ProjectStore.getSequencerTimeLimit() })
 	}
 	updatePrompt()
 	{
@@ -88,7 +90,7 @@ export default class SequencingStageLayout extends React.Component {
 			</div>
 			
 			<div className= "animated fadeIn"  style = {bottomstyle}>
-				<Sequencer prompt = {this.state.Prompt} status = {this.state.Backend_Status} componentlength = {this.state.Component_List.length}/>
+				<Sequencer time = {this.state.TimeLimit} prompt = {this.state.Prompt} status = {this.state.Backend_Status} componentlength = {this.state.Component_List.length}/>
 			</div>
 		</div>
 		);

@@ -70,6 +70,7 @@ public class OhayonMiddleware{
 		//****
 
 		boolean success = OHAYON.minimizeInteractions(timelimit);
+		
 		String[] results = {""};
 		if(!success)
 			return results;
@@ -164,8 +165,8 @@ public class OhayonMiddleware{
 				}
 			}
 
-			System.out.println("direction "+parameters[parameters.length-1]);
-			System.out.println("name "+parameters[parameters.length-2]);		
+			//System.out.println("direction "+parameters[parameters.length-1]);
+			//System.out.println("name "+parameters[parameters.length-2]);		
 			
 			// if Full Strand is Loop DNA
 			if(parameters[parameters.length-1].equals("loop"))

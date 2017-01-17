@@ -8,7 +8,7 @@ export default class HomeLayout extends React.Component {
 	render(){		
 
 		let yoel = {
-			height:"550px",
+			height:"615px",
 			width:"400px",
 			float:"left"
 		}
@@ -35,10 +35,10 @@ export default class HomeLayout extends React.Component {
 						Optimizing Hybridization AnalYsis Of Nucleotides Program 
 				</div>
 
-				<div style = {{backgroundColor:"#155151",height:"550px",width:"100%"}}> 
+				<div style = {{backgroundColor:"#155151",height:"615px",width:"100%"}}> 
 					<img style = {yoel} src={'http://bestanimations.com/Science/Biology/DNA/dna/dna-rna-chromosomes-double-helix-rotating-animated-gif-8.gif'} alt="YOEL" className="img-responsive"/>
 					
-					<div style = {{paddingTop:"100px",paddingBottom:"60px",textAlign:"center"}} className= "animated fadeInUp" >
+					<div style = {{paddingTop:"100px",paddingBottom:"100px",textAlign:"center"}} className= "animated fadeInUp" >
 						<h1 style = {{color:"#ff7043"}}> 
 							OHAYON PROGRAM 
 						</h1>
@@ -57,7 +57,7 @@ export default class HomeLayout extends React.Component {
 							</Link>  
 						</div> 	
 
-						 <div className= "animated fadeInUp"  style = {{position:"relative",top:"-60px",left:"400px"}}> 
+						 <div className= "animated fadeInUp"  style = {{position:"relative",top:"-60px",left:"385px"}}> 
 						 	<Link className = " z-depth-3 hvr-grow"  style = {linkstyle} to = "ToolsAnalysis">
 							 	<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
 							 		polymer

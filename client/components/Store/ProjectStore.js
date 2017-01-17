@@ -13,9 +13,9 @@ class ProjectStore extends EventEmitter{
 		this.workspaceDisplay = "1";
 		this.dataAnalysis_Results = ["",""];
 
-		this.backendStatus = false;  // false = backend is not running any calculations
+		this.backendStatus = false;  // false = backend is not running any calculations, endtime
 		this.sequencerPrompt = "ready";	
-		
+		this.sequencerTimeLimit = 0;
 		this.compressedProjectData;
 	}
 
@@ -51,6 +51,10 @@ class ProjectStore extends EventEmitter{
 	 getSequencerPrompt()
  	{
  		return this.sequencerPrompt;
+ 	}
+ 	getSequencerTimeLimit()
+ 	{
+ 		return this.sequencerTimeLimit;
  	}
 	getDataAnalysisResults()
 	{
@@ -168,9 +172,6 @@ class ProjectStore extends EventEmitter{
  
  	fullAnalysis()
  	{
-		this.backendStatus = true;
-		this.emit("Update_Backend_Status");
-
 		let strandlistStoreReference = this;
 
  		return axios.post('/DNASequenceProgram/CompareAll', {
@@ -179,17 +180,11 @@ class ProjectStore extends EventEmitter{
  		}).then(function(response){
 			strandlistStoreReference.dataAnalysis_Results = ["FULLANALYSIS",response.data.result1,response.data.result2];
 			strandlistStoreReference.emit("Update_Results");	
-			strandlistStoreReference.backendStatus = false;
-			strandlistStoreReference.emit("Update_Backend_Status");
  		});
-
  	}
 
 	compareStrands(strandsToCompare)
 	{
-		this.backendStatus = true;
-		this.emit("Update_Backend_Status");
-
 		var strandlistStoreReference = this;
 		let name = strandsToCompare[0].name +" vs "+strandsToCompare[1].name;
 
@@ -220,14 +215,15 @@ class ProjectStore extends EventEmitter{
  		}).then(function(response){
  			strandlistStoreReference.dataAnalysis_Results = ["COMPARE",response.data.data,name];
 			strandlistStoreReference.emit("Update_Results");
-			
-			strandlistStoreReference.backendStatus = false;
-			strandlistStoreReference.emit("Update_Backend_Status");
+
  		});
 	}
 
  	runSequencer(timelimit)
  	{ 
+        let d = new Date();
+        this.sequencerTimeLimit = d.getTime() + timelimit*60*1000; // 60 seconds * 1000 ms/sec
+        
 		this.backendStatus = true;
 		this.emit("Update_Backend_Status");
 
@@ -235,7 +231,9 @@ class ProjectStore extends EventEmitter{
 		this.emit("Update_Results");
 
 		let strandlistStoreReference = this;
- 		return axios.post('/DNASequenceProgram/', {
+
+		console.log("STARTTTT");
+ 		axios.post('/DNASequenceProgram/', {
  			timelimit: timelimit,
  			salt: this.conditions.Salt,
  			concentration: this.conditions.Concentration ,
@@ -262,7 +260,7 @@ class ProjectStore extends EventEmitter{
 				strandlistStoreReference.sequencerPrompt = "success";
 				strandlistStoreReference.emit("Change_Component_Strandlist");
 			}
-			
+			strandlistStoreReference.sequencerTimeLimit = 0;
 			strandlistStoreReference.emit("Update_Sequencer_Prompt");
 
 			strandlistStoreReference.backendStatus = false;
@@ -379,7 +377,6 @@ class ProjectStore extends EventEmitter{
 
 		for (let h = 0 ; h < componentlist.length; h ++)
 		{
-			console.log(componentlist[h]);
 			//account for complements
 			let componentname = componentlist[h];
 			let complement = false;

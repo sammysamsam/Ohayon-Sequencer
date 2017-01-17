@@ -11,8 +11,15 @@ export default class StrandComponentInput extends React.Component {
 	constructor()
 	{
 		super();
-		this.handlename = this.handlename.bind(this);
-		this.handlelength = this.handlelength.bind(this);
+		this.handleName = this.handleName.bind(this);
+		this.handleLength = this.handleLength.bind(this);
+		this.handleMeltingPoint = this.handleMeltingPoint.bind(this);
+		this.tokenprocessor = this.tokenprocessor.bind(this);
+		this.handleMismatchLimit = this.handleMismatchLimit.bind(this);
+		this.handleSelfLimit = this.handleSelfLimit.bind(this);
+		this.handleBlueprint = this.handleBlueprint.bind(this);
+		this.handleComplement = this.handleComplement.bind(this);
+		this._handleKeyPress = this._handleKeyPress.bind(this);
 		this.state = {	name: "", 
 						strandlength: 10, 
 						complement: "true",
@@ -27,12 +34,12 @@ export default class StrandComponentInput extends React.Component {
 	//
 
 
-	handlename(input)
+	handleName(input)
 	{
 		this.setState({name : input.target.value});
 	}
 
-	handlelength(input) // input will always be a number
+	handleLength(input) // input will always be a number
 	{
 		let strandlength = input.target.value;
 		//set max melting pt
@@ -54,29 +61,29 @@ export default class StrandComponentInput extends React.Component {
 		}
 	}
 
-	handlemismatchlimit(input)
+	handleMismatchLimit(input)
 	{
 		if(input.target.value == "")
 			this.setState({mismatchlimit:5});
 		else
 			this.setState({mismatchlimit:input.target.value});
 	}
-	handleselflimit(input)
+	handleSelfLimit(input)
 	{
 		
-		if(e.target.value == "")
+		if(input.target.value == "")
 			this.setState({selflimit:5});
 		else
 			this.setState({selflimit:input.target.value});
 	}		
-	handlemeltingpoint(input)
+	handleMeltingPoint(input)
 	{
-		if(meltingpoint== "")
+		if(input.target.value== "")
 			this.setState({meltingpoint:"n/a"});
-		else
-			this.setState({meltingpoint});	
+		//else
+		//	this.setState({meltingpoint:input.target.value});	
 	}		
-	handleblueprint(input)
+	handleBlueprint(input)
 	{
 		this.setState({blueprint:input.target.value});
 	}
@@ -179,7 +186,7 @@ export default class StrandComponentInput extends React.Component {
 			return(
 				<Button 
 					style = {{width:"150px" , marginTop:"5px"}}
-					onClick = {this.tokenprocessor.bind(this)}> 
+					onClick = {this.tokenprocessor}> 
 					Submit 
 				</Button>
 			);
@@ -188,7 +195,7 @@ export default class StrandComponentInput extends React.Component {
 				<Button 
 					style = {{width:"150px" , marginTop:"5px"}}
 					disabled
-					onClick = {this.tokenprocessor.bind(this)}> 
+					onClick = {this.tokenprocessor}> 
 					Submit 
 				</Button>
 				);
@@ -217,7 +224,7 @@ export default class StrandComponentInput extends React.Component {
 			padding:"4px",
 			overflow:"scroll"
 		}
-					//		<p style = {labelStyle}> Melting Point:		<FormControl type = "text" placeholder = "Default: none" style = {{color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     onKeyPress={this._handleKeyPress.bind(this)} onChange = {this.handlemeltingpoint.bind(this)} /> </p>
+					//		<p style = {labelStyle}> Melting Point:		<FormControl type = "text" placeholder = "Default: none" style = {{color:"black",fontSize:"16px",fontFamily: "'Anaheim', serif ",width:"95px" ,display:"inline"}}     onKeyPress={this._handleKeyPress} onChange = {this.handleMeltingPoint} /> </p>
 
 		return(			
 		<div style = {{color:"white"}}>				
@@ -232,8 +239,8 @@ export default class StrandComponentInput extends React.Component {
 						s = {12}
 						type = "text"
 						className="validate"
-						onKeyPress={this._handleKeyPress.bind(this)} 
-						onChange = {this.handlename.bind(this)} 
+						onKeyPress={this._handleKeyPress} 
+						onChange = {this.handleName} 
 					/>
 					<Input
 						label = "Length"
@@ -241,8 +248,8 @@ export default class StrandComponentInput extends React.Component {
 						min = "1"
 						s = {6}
 						className="validate"
-						onKeyPress={this._handleKeyPress.bind(this)} 
-						onChange = {this.handlelength.bind(this)} 
+						onKeyPress={this._handleKeyPress} 
+						onChange = {this.handleLength} 
 					/>
 					<Input
 						label = "Melting Pt."
@@ -251,8 +258,8 @@ export default class StrandComponentInput extends React.Component {
 						max = {this.state.maxMeltingPt}
 						s = {6}
 						className="validate"
-						onKeyPress={this._handleKeyPress.bind(this)} 
-						onChange = {this.handlemeltingpoint.bind(this)} 
+						onKeyPress={this._handleKeyPress} 
+						onChange = {this.handleMeltingPoint} 
 					/>	
 					<Input 
 						label = "Mismatch Limit"
@@ -260,8 +267,8 @@ export default class StrandComponentInput extends React.Component {
 						s = {6}
 						type = "number"
 						min = "2"
-						onKeyPress={this._handleKeyPress.bind(this)} 
-						onChange = {this.handlemismatchlimit.bind(this)} 
+						onKeyPress={this._handleKeyPress} 
+						onChange = {this.handleMismatchLimit} 
 					/>
 					<Input 
 						s = {6}
@@ -269,8 +276,8 @@ export default class StrandComponentInput extends React.Component {
 						className="validate"
 						type = "number"
 						min = "2"
-						onKeyPress={this._handleKeyPress.bind(this)} 
-						onChange = {this.handleselflimit.bind(this)} 
+						onKeyPress={this._handleKeyPress} 
+						onChange = {this.handleSelfLimit} 
 					/> 
 					<p className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px"}}> Complement Exists: 	</p>
 					<Input 					
@@ -279,14 +286,14 @@ export default class StrandComponentInput extends React.Component {
 						value={"true"}  
 						type="radio"
 						label = "Yes"
-						onClick = {this.handleComplement.bind(this)} 
+						onClick = {this.handleComplement} 
 					/>
 					<Input
 						name="YesNo" 
 						label = "No"
 						value={"false"} 
 						type="radio" 
-						onClick = {this.handleComplement.bind(this)}
+						onClick = {this.handleComplement}
 					/> 
 					</Row>
 				<span className = "col" style = {{color:"#9e9e9e",paddingLeft:"10px",fontSize:"9px"}}> 
@@ -295,9 +302,9 @@ export default class StrandComponentInput extends React.Component {
 
 				<textarea 
 					value = {this.state.blueprint} 
-					onKeyPress={this._handleKeyPress.bind(this)} 
+					onKeyPress={this._handleKeyPress} 
 					style = {textAreaStyle} 
-					onChange = {this.handleblueprint.bind(this)} 
+					onChange = {this.handleBlueprint} 
 				/>
 				{this.renderButton()}
 
