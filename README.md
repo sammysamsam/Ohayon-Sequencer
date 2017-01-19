@@ -2,18 +2,23 @@
 
 A user friendly interface for sequencing DNA along with tools for sequence manipulation and base pairing analysis. 
 
+Features include:
+- Sequencer Reverse/Complement converted
+- Ability to sequence Loop DNA
+- Ability to find strongest base pairing configuration between two strands
+
 
 Frontend: React JS/Flux
 Dependancy Management: Webpack
 Backend:NodeJS/Express/Java
 
+NOTE: Must use Node version 6.9.4 or Node@6 (homebrew) 
+
 ___________________________________________________________
 
 Future Updates will include:
 
- - Time limit for running sequencing algorithm 
  - Desired DNA melting points for strand components
- - Ability to include Loop DNA
 
 
 Testing: 
