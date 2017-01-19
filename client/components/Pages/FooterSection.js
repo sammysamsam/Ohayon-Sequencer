@@ -32,9 +32,9 @@ export default class FooterSection extends React.Component {
 
 				<span style = {{marginLeft:"15px"}}> ©  2016 Copyright</span>
 				<span style = {{float:"right",marginRight:"40px"}}> Terms</span>
-				<span style = {{float:"right",marginRight:"20px"}}> About</span>
+				<span style = {{float:"right",marginRight:"20px"}}> <a style = {{color:"#ff7043"}}href="https://github.com/sammysamsam/Ohayon-Sequencer/blob/master/README.md"> About </a> </span>
 				<span style = {{float:"right",marginRight:"20px"}}> Help</span>
-				<span style = {{float:"right",marginRight:"20px"}}> <i className="material-icons">email</i></span>
+				<span style = {{float:"right",marginRight:"20px"}}> <a style = {{color:"#ff7043"}}href="mailto:sm4478@nyu.edu?subject=Ohayon Sequencer Inquiry"> <i className="material-icons">email</i> </a></span>
 				</div>
 			</div>
 		);

@@ -116,9 +116,9 @@ export default class StrandComponentInput extends React.Component {
 	validatename()
 	{
 		//check name contains requirements
-		if( this.state.name.length > 25 || !/\S/.test(this.state.name) || this.state.name.includes("'") || this.state.name.includes("-"))
+		if( this.state.name.length > 30 || !/\S/.test(this.state.name) || this.state.name.includes("'") || this.state.name.includes("-"))
 		{
-			Materialize.toast("Unfufilled Requirement: Name field must contain 1-25 characters and not include restricted character: semicolon ( ' ) or dash ( - )!",4000);
+			Materialize.toast("Unfufilled Requirement: Name field must contain 1-30 characters and not include restricted character: semicolon ( ' ) or dash ( - )!",4000);
 			return false;
 		}
 		//check repeat name
