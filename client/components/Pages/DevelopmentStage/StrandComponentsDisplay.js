@@ -111,7 +111,7 @@ export default class StrandComponentsDisplay extends React.Component {
 	    			    	<TableHeaderColumn 
 	    			    		dataField="name" 
 	    			    		isKey={true} 
-	    			    		dataSort={true} 
+	    		
 	    			    		width = "200px"
 	    			    		>
 	    			    		Name
@@ -128,7 +128,7 @@ export default class StrandComponentsDisplay extends React.Component {
 	 			    		<TableHeaderColumn dataAlign = 'center'  dataField="complement"> Complement </TableHeaderColumn>
  							
  							<TableHeaderColumn 
-	   			    			dataSort={true} 
+
 	   			    			dataField="blueprint"  
 	   			    			width = "500px"
 	   			    			>

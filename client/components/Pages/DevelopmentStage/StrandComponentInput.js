@@ -1,6 +1,4 @@
 import React from "react";
-import ReactDOM from 'react-dom';
-
 import {Input,Button,Row} from 'react-materialize'
 
 //ACTION
