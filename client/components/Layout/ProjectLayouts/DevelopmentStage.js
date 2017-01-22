@@ -92,7 +92,7 @@ export default class DevelopmentStageLayout extends React.Component {
 			marginLeft:"-153px",
 			height:"244px",
 			border:"solid #ff9e80",
-			borderWidth:"0px 0px 1px 0px"
+			borderWidth:"0px 0px 1px 0px",
 		}
 		let bottomstyle = {
 			marginTop:"2px",
@@ -100,7 +100,6 @@ export default class DevelopmentStageLayout extends React.Component {
 			width:"1045px",
 			height:"693px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
-
 		}
 
 		return(
