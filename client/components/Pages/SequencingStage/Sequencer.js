@@ -107,7 +107,13 @@ export default class Sequencer extends React.Component {
 			display:"inline-block"
 		}
 		let loadprompt = () =>{
-			if(this.props.prompt == "fail")
+            if(this.props.prompt == "success")
+                return(
+                    <div style = {statusStyle} >  
+                        <i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff661a"}}className="material-icons">check_circle</i> 
+                        Success! Go to Results to view sequences.
+                    </div>)
+             else if(this.props.prompt == "fail")
 				return(				
 				<div style = {statusStyle} >  
 					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff661a"}}className="material-icons">offline_pin</i> 

@@ -8,7 +8,7 @@ export default class HomeLayout extends React.Component {
 	render(){		
 
 		let yoel = {
-			minHeight:"615px",height:"80vh",
+			minHeight:"615px",height:"90vh",
 			width:"400px",
 			float:"left"
 		}
@@ -32,15 +32,15 @@ export default class HomeLayout extends React.Component {
 						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
 							account_circle
 						</i>
-						Optimizing Hybridization AnalYsis Of Nucleotides Program 
+						Optimizing Hybridization AnalYsis Of Nucleotides Program
 				</div>
 
-				<div style = {{backgroundColor:"#155151",minHeight:"615px",height:"80vh",width:"100%"}}> 
+				<div style = {{backgroundColor:"#155151",minHeight:"615px",height:"90vh",width:"100%"}}> 
 					<img style = {yoel} src={'http://bestanimations.com/Science/Biology/DNA/dna/dna-rna-chromosomes-double-helix-rotating-animated-gif-8.gif'} alt="YOEL" className="img-responsive"/>
 					
 					<div style = {{paddingTop:"100px",paddingBottom:"100px",textAlign:"center"}} className= "animated fadeInUp" >
 						<h1 style = {{color:"#ff7043"}}> 
-							OHAYON PROGRAM 
+							OHAYON
 						</h1>
 						<p style = {{color:"#ff7043",paddingTop:"8px"}}> 
 							A user-friendly interface for building/sequence strands and analyzing existing sequences.  
