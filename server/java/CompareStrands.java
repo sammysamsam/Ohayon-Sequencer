@@ -33,12 +33,13 @@ public class CompareStrands {
 		{
 			for(int y = x; y < componentList.size(); y++)
 			{
-				componentResult[index] = componentList.get(x).name + " vs " + componentList.get(y).name + "\n\n";
+                componentResult[index] = componentList.get(x).name + " vs " + componentList.get(y).name + "\n\n";
+                System.out.println(componentResult[index]);
 				componentResult[index] = componentResult[index] + this.mismatchPrint(componentList.get(x) , componentList.get(y) , 3);
 				index++;
 			}		
 		}
-
+        
 		//full strand vs full strand
 		size = fullStrandList.size();
 		size = (size*size + size)/2;

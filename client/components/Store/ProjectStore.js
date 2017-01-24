@@ -13,6 +13,8 @@ class ProjectStore extends EventEmitter{
 		this.workspaceDisplay = "1";
 		this.dataAnalysis_Results = ["",""];
 
+
+
 		this.backendStatus = false;  // false = backend is not running any calculations, endtime
 		this.sequencerPrompt = "ready";	
 		this.sequencerTimeLimit = 0;
@@ -129,12 +131,14 @@ class ProjectStore extends EventEmitter{
 			this.update_Full_StrandList(updatedfulllist);
 			this.emit("Change_Full_Strandlist");	
 		}
+		this.sequencerPrompt = "ready";	
 	}
 
 	add_Component_StrandList(NewStrand)
 	{
 		NewStrand.sequence = this.random_Sequence_Generator(NewStrand.length,NewStrand.blueprint);
 		this.component_StrandList.push(NewStrand);
+		this.sequencerPrompt = "ready";	
 	}	
 
 
@@ -144,11 +148,13 @@ class ProjectStore extends EventEmitter{
 	update_Full_StrandList(StrandlistUpdate2)
 	{
 		this.full_StrandList = StrandlistUpdate2;
+		this.sequencerPrompt = "ready";	
 	}
 
 	add_Full_StrandList(NewStrand)
 	{
 		this.full_StrandList.push(NewStrand);
+		this.sequencerPrompt = "ready";	
 	}
 
 	print_Full_StrandList()
@@ -183,6 +189,8 @@ class ProjectStore extends EventEmitter{
  
  	fullAnalysis()
  	{
+		this.backendStatus = true;
+		this.emit("Update_Backend_Status");
 		try
 		{
 			let strandlistStoreReference = this;
@@ -190,15 +198,24 @@ class ProjectStore extends EventEmitter{
 	 			componentlist: this.component_StrandList,
 	 			fullstrandlist: this.full_StrandList
 	 		}).then(function(response){
+	 			strandlistStoreReference.backendStatus = false;
+				strandlistStoreReference.emit("Update_Backend_Status");
+
 				strandlistStoreReference.dataAnalysis_Results = ["FULLANALYSIS",response.data.result1,response.data.result2];
 				strandlistStoreReference.emit("Update_Results");	
+
 	 		}).catch(function (error){
+	 			strandlistStoreReference.backendStatus = false;
+				strandlistStoreReference.emit("Update_Backend_Status");
 	 			console.log(error);
 	 		});
 		}catch(e)
 		{
+			strandlistStoreReference.backendStatus = false;
+			strandlistStoreReference.emit("Update_Backend_Status");
 			console.log(e);
 		}
+		console.log("end" + this.backendStatus);
  	}
 
 	compareStrands(strandsToCompare)
@@ -233,7 +250,6 @@ class ProjectStore extends EventEmitter{
 	 		}).then(function(response){
 	 			strandlistStoreReference.dataAnalysis_Results = ["COMPARE",response.data.data,name];
 				strandlistStoreReference.emit("Update_Results");
-
 	 		}).catch(function (error){
 	 			console.log(error);
 	 		});
@@ -252,6 +268,7 @@ class ProjectStore extends EventEmitter{
 	       
 			this.backendStatus = true;
 			this.emit("Update_Backend_Status");
+
 			this.clearResults();
 			this.emit("Update_Results");
 			let strandlistStoreReference = this;
@@ -264,31 +281,38 @@ class ProjectStore extends EventEmitter{
 	 			fullstrandlist: this.full_StrandList,
 
 	 		}).then(function(response){
-				if(response.data.updatedComponentList[0] == "" )
+	 			let updatedComponentList = response.data.updatedComponentList;
+				for(var a = 1; a < updatedComponentList.length; a++)
+				{
+					for(var b = 0; b < strandlistStoreReference.component_StrandList.length; b++)
+					{
+						if(updatedComponentList[a].split(":")[0] == strandlistStoreReference.component_StrandList[b].name)
+						{
+							strandlistStoreReference.component_StrandList[b].sequence = updatedComponentList[a].split(":")[1];
+							break;
+						}
+					}
+				} 	
+				if(response.data.updatedComponentList[0] == "fail" )
+				{
 					strandlistStoreReference.sequencerPrompt = "fail";
+					strandlistStoreReference.emit("Change_Component_Strandlist");
+				}
 				else
 				{
-					let updatedComponentList = response.data.updatedComponentList;
-					for(var a = 0;a < strandlistStoreReference.component_StrandList.length;a++)
-					{
-						for(var b = 0; b < strandlistStoreReference.component_StrandList.length; b++)
-						{
-							if(updatedComponentList[a].split(":")[0] == strandlistStoreReference.component_StrandList[b].name)
-							{
-								strandlistStoreReference.component_StrandList[b].sequence = updatedComponentList[a].split(":")[1];
-								break;
-							}
-						}
-					} 	
 					strandlistStoreReference.sequencerPrompt = "success";
 					strandlistStoreReference.emit("Change_Component_Strandlist");
 				}
+
 				strandlistStoreReference.sequencerTimeLimit = 0;
 				strandlistStoreReference.emit("Update_Sequencer_Prompt");
 
 				strandlistStoreReference.backendStatus = false;
 				strandlistStoreReference.emit("Update_Backend_Status");
+
 	 		}).catch(function (error){
+	 			strandlistStoreReference.backendStatus = false;
+				strandlistStoreReference.emit("Update_Backend_Status");
 	 			console.log(error);
 	 		});
 		}catch(e)

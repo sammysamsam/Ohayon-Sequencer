@@ -21,7 +21,7 @@ export default class ResultStateLayout extends React.Component {
 				Concentration: ProjectStore.getConditions().Concentration,
 				Component_List: ProjectStore.getStrandComponents(),
 				Full_List: ProjectStore.getFullStrands(),
-				programstatus:  ProjectStore.getBackendStatus()
+				Backend_Status:  ProjectStore.getBackendStatus()
 			}
 	};
 
@@ -50,7 +50,7 @@ export default class ResultStateLayout extends React.Component {
 		this.setState( {Full_List: ProjectStore.getFullStrands() })
 	}
 	updateBackendStatus(){
-		this.setState( {sequencerstatus: ProjectStore.getBackendStatus()})
+		this.setState( {Backend_Status: ProjectStore.getBackendStatus()})
 	}
 	updateresults(){
 		this.setState({	Results:ProjectStore.getDataAnalysisResults() });
@@ -64,7 +64,6 @@ export default class ResultStateLayout extends React.Component {
 			margin:"0px 0px 3px -153px",
 			height:"243px",
 		}
-
 		return(
 		<div >
 			<div style = {topstyle}>
@@ -77,12 +76,12 @@ export default class ResultStateLayout extends React.Component {
 				<p style = {{paddingTop:"35px",color:"#ffccbc",height:"70px",margin:"0"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
 				
 				<div style = {{height:"60px",paddingTop:"5px",margin:"0"}}>
-					<ResultStageButtons status = {this.state.programstatus}/>
+					<ResultStageButtons status = {this.state.Backend_Status}/>
 				</div>
 			</div>
 
 			<div className= "animated fadeIn">
-				<StrandComparison fulllist = {this.state.Full_List} componentlist = {this.state.Component_List} results = {this.state.Results} status = {this.state.programstatus}/>
+				<StrandComparison fulllist = {this.state.Full_List} componentlist = {this.state.Component_List} results = {this.state.Results} status = {this.state.Backend_Status}/>
 			</div>
 		</div>
 		);

@@ -1,7 +1,18 @@
 import React from "react";
-import {Table} from 'react-materialize';
+import {Row,Input,Table} from 'react-materialize';
 export default class ResultScreen extends React.Component {
-	
+	constructor()
+	{
+		super();
+		this.handleDisplayUpdate = this.handleDisplayUpdate.bind(this);
+		this.state = {
+			fullAnalysisDisplay:0
+		}
+	}
+
+	//
+
+
 	loadprintscreen(){
 		let printedStrandsContainerStyle = {
 			fontFamily:"'Anaheim',serif",
@@ -39,6 +50,10 @@ export default class ResultScreen extends React.Component {
 			</div>
 			)
 	}
+
+	//
+
+
 	loadcomparescreen()
 	{
 		let resultsContainer = {
@@ -102,52 +117,67 @@ export default class ResultScreen extends React.Component {
 		)
 	}
 
+
+	//
+
+	handleDisplayUpdate(e)
+	{
+		this.setState({fullAnalysisDisplay:e.target.value});
+	}
+
 	loadfullanalysis()
 	{
 		let resultsContainer = {
       		fontFamily:"'Share Tech Mono',serif", 
       		whiteSpace:"pre",
       		marginTop:"-1px",
-	      	overflow:"scroll",
       		height:"600px",
       		paddingBottom:"40px",
-      		paddingTop:"20px"
+      		paddingTop:"40px"
     	}
     	let bodyStyle = {
+     		overflow:"scroll",
      		padding:"10px",
-    		
+     		height:"595px"
     	}
-    	let resultscomponents = [];
-    	if(this.props.results[1].length > 0)
-    		resultscomponents = this.props.results[1];
-    	let resultsfullstrands = [];
-    	if(this.props.results[2].length > 0)
-    		resultsfullstrands = this.props.results[2];
+    	let results = [];
+    	let title = "";
+    	if(this.props.results[1].length > 0 && this.state.fullAnalysisDisplay == 0) //components
+    	{
+    		title = "Components Analysis/Comparison";
+    		results = this.props.results[1];
+    	}
+
+    	if(this.props.results[2].length > 0 && this.state.fullAnalysisDisplay == 1) //fullstrand
+    	{
+    		title = "Full Strands Analysis/Comparison";
+    		results = this.props.results[2];
+    	}
 
 
 		return  (
 			<div style = {resultsContainer}> 
-	 			<div style = {bodyStyle }>
-					<Table responsive = {true} 
-							stripped = {true} 
-							bordered = {true}
-							hoverable = {true}>
-					<thead>
-			          <tr>
-			              <th data-field="id">Components Analysis/Comparison</th>
-			          </tr>
-			        </thead>
-					    <tbody>
-							{resultscomponents.map(function(listValue,index){	
-									return (<tr key = {index} >
-										      <td>{listValue} </td>
-										    </tr>
-									)
-							})}
-			        	</tbody>
-			      	</Table>
+				<div style = {{paddingLeft:"320px"}}>
+					<Row >
+						<Input 		
+							name="display" 
+							value = {0} 
+							defaultChecked={true}
+							label = "Components Analysis" 
+							type="radio"  
+							onClick = {this.handleDisplayUpdate}
+							 className='with-gap'
+							/>   
+						<Input 
+							name="display" 
+							value = {1} 
+							label = "Full Strands Analysis" 
+							type="radio"  
+							 className='with-gap'
+							onClick = {this.handleDisplayUpdate} 
+						/>  
+					</Row>
 				</div>
-
 	 
 	 			<div style = {bodyStyle }>
 					<Table responsive = {true} 
@@ -156,11 +186,11 @@ export default class ResultScreen extends React.Component {
 							hoverable = {true}>
 					<thead>
 			          <tr>
-			              <th data-field="id">Full Strands Analysis/Comparison</th>
+			              <th data-field="id">{title}</th>
 			          </tr>
 			        </thead>
 					    <tbody style = {{fontSize:"15px"}}>
-							{resultsfullstrands.map(function(listValue,index){	
+							{results.map(function(listValue,index){	
 									return (<tr key = {index} >
 										      <td>{listValue} </td>
 										    </tr>
@@ -178,6 +208,7 @@ export default class ResultScreen extends React.Component {
 
 	loadresults()
 	{		
+
 		if(this.props.results[0] == "PRINT")
 		{
 			return this.loadprintscreen();

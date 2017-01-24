@@ -114,7 +114,6 @@ STRAND SEQUENCING METHOD:
     {
         long start = System.currentTimeMillis();
         long end = start - 2000 + timeLimit*60*1000; // 60 seconds * 1000 ms/sec
-
         //componentOverview();
         //this.printFullStrand();
 
@@ -143,8 +142,7 @@ STRAND SEQUENCING METHOD:
             this.componentList.add(comp); //step 1 and 2
             this.strandRandomizer(comp.length, i);
             
-            //System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");  
-     
+            //System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");    
             while(true)
             {
                     if (System.currentTimeMillis() > end)
@@ -168,23 +166,25 @@ STRAND SEQUENCING METHOD:
 
                     this.strandRandomizer(comp.length/8, i);   //step 2
 
-                    while(baseFixingAlgorithm(1, i))     //step 3
+                    while(baseFixingAlgorithm(1, i, end))     //step 3
                     {
                     }
 
+                    if (System.currentTimeMillis() > end)
+                        return false;
                    if(!checkpoint1(i))  
                    {
                         numTries --;
                         continue;
                    }
 
-                    while(baseFixingAlgorithm(2, i))     //step 4
+                    while(baseFixingAlgorithm(2, i, end))     //step 4
                     {
                     } 
-                    
                     //System.out.print("( "+this.totalConsecutiveMatches(i) +" )");
 
-
+                    if (System.currentTimeMillis() > end)
+                        return false;
                     if(!sequencingStageCheckpoint(2))
                         continue;
 
@@ -405,7 +405,7 @@ COMPONENT ALGORITHM METHODS:
 
 ** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-   public boolean baseFixingAlgorithm(int phase, int strandPosition)
+   public boolean baseFixingAlgorithm(int phase, int strandPosition,long expiredTimer)
    {
         Strand currStrand = this.componentList.get(strandPosition);
         int[] basePositions = shuffleBaseArray(currStrand);
@@ -424,6 +424,8 @@ COMPONENT ALGORITHM METHODS:
                 char originalbase = baseArray[basePosition];
                 for (char testBase: bases)
                 {
+                    if(System.currentTimeMillis() > expiredTimer)
+                    	return false;
                     if (!(originalbase == testBase))
                     {
                         if ( (phase == 1 && baseFixingTestSelf(strandPosition, testBase, baseArray, basePosition, originalbase) == true )

@@ -38,7 +38,6 @@ export default class Timer extends React.Component {
 			case true:{ 
 				return 	 (
 					<div style = {containerStyle }>
-						lol
 					</div>
 				)
 			}

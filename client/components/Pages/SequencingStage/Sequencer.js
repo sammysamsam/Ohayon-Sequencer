@@ -161,17 +161,6 @@ export default class Sequencer extends React.Component {
 
 	renderSequencerRunning()
 	{
-		let statusStyle = {
-			width:"235px",
-			marginLeft:"-70px",
-			marginTop:"20px",
-			paddingTop:"5px",
-			paddingLeft:"35px",
-			color:"#ffccbc",
-			background:"rgba(139, 179, 218,0.1)",
-			height:"35px",
-			borderRadius:"4px"
-		}
 		let d = new Date();
 		let timeLeft = this.props.time - d.getTime(); 
 		return (
@@ -185,7 +174,6 @@ export default class Sequencer extends React.Component {
 				</div>	
 				<div style = {{	height:"50px", marginLeft:"450px"}}>
 					<Spinner spinnerName='cube-grid' noFadeIn />
-					<div style = {statusStyle}> Optimizing Sequences...</div>
 				</div>
 			
 			</div>

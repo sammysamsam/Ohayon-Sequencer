@@ -50,7 +50,7 @@ public class OhayonMiddleware{
 		{
 			Strand temp = this.componentList.get(i);
 			String sequence = temp.sequence;
-			parsedComponentData[i] = temp.name+":"+sequence;
+			parsedComponentData[i+1] = temp.name+":"+sequence;
 		}
 		return parsedComponentData;
 	}
@@ -67,21 +67,23 @@ public class OhayonMiddleware{
         this.setAllProperties(salt,concentration,unparsedComponentsList,unparsedFullStrandList);
 		
 		//****
-		Sequencer OHAYON = new Sequencer(this.componentList , this.thermoCalc,this.fullStrandList);		
+		Sequencer OHAYON = new Sequencer(this.componentList, this.thermoCalc, this.fullStrandList);		
 		//**** 
 
 		boolean success = OHAYON.minimizeInteractions(timelimit);
-
-		String[] results = {""};
 		if(!success)
 		{
 			System.out.println("Unsuccessful due to Timeout!");		
+			String[] results = this.getParsedData();
+			results[0] = "fail";
 			return results;
 		}
 		else 
 		{
 			System.out.println("Success!");
-			return this.getParsedData();
+			String[] results = this.getParsedData();
+			results[0] = "success";
+			return results;
 		}
 	}
 

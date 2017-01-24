@@ -1,7 +1,9 @@
 import React from "react";
 import ResultScreen from "./ResultScreen";
 import Select from 'react-select';
-import {Button} from 'react-materialize'
+import {Button} from 'react-materialize';
+import Spinner from 'react-spinkit';
+
 //ACTION
 import * as StrandAction from "../../Actions/StrandAction";
 
@@ -228,6 +230,13 @@ export default class StrandComparison extends React.Component {
 			marginTop:"4px",
 			background:"rgba(255,255,255,.7)",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
+		}
+		if(this.props.status)
+		{
+			return (
+				<div style = {resultSectionStyle}> 
+				</div>
+			)
 		}
 		if(this.props.results[0] == "COMPARE")
 			return this.renderCompareWorkspace();
