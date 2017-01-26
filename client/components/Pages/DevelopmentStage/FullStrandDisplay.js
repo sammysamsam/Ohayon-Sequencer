@@ -22,7 +22,6 @@ export default class FullStrandDisplay extends React.Component {
 	updateDisplay(e)
 	{
 		let value = e.target.value;
-		console.log(value);
 		this.setState({activedisplay:value});
 	}
 	updateStoreFullStrandlist(input)
@@ -130,10 +129,6 @@ export default class FullStrandDisplay extends React.Component {
 
 	render(){
 
-
-		//
-
-
 		return(
 			<div>
 				<Row >
@@ -141,7 +136,7 @@ export default class FullStrandDisplay extends React.Component {
 					name="fullstranddisplay" 
 					value = {1} 
 					defaultChecked={true}
-					label = "Input" 
+					label = "Full Strand Input" 
 					type="radio"  
 					onClick = {this.updateDisplay}
 					 className='with-gap'
@@ -149,7 +144,7 @@ export default class FullStrandDisplay extends React.Component {
 				<Input 
 					name="fullstranddisplay" 
 					value = {2} 
-					label = "Table" 
+					label = "Full Strand Table" 
 					type="radio"  
 					 className='with-gap'
 					onClick = {this.updateDisplay} 

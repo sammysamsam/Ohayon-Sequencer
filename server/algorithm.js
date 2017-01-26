@@ -11,7 +11,7 @@ AlgorithmRouter.post('/',(req,res)=>{
 	//instanciate node-java and get Middleware
 
 	var timeLimit = req.body.timelimit;
-    res.setTimeout(60000*(timeLimit+1), function(){
+    res.setTimeout(60000*(timeLimit+5), function(){
     console.log('Request has timed out.');
         res.send(408);
     });
@@ -28,19 +28,20 @@ AlgorithmRouter.post('/',(req,res)=>{
 
 
 	java.callMethod(middleware,"sequenceStrands",parseInt(timeLimit),salt,concentration,components, fullstrands,function(err, data) {
-		console.log("\n\n\nresponse started\n\n");
+		console.log(data);
 		res.json({updatedComponentList:data});
 		res.end();	
 		if(err) { 
 			res.send('Error During Sequencing!');
 			res.end();
 		}
-		console.log("response sent?\n\n");
+		console.log("response sent\n\n");
 	});
 });
 
 AlgorithmRouter.post('/Compare',(req,res)=>{
 	
+	console.log("Comparison");
 	//instanciate node-java and get Middleware
 
 	java.classpath.push(path.resolve(__dirname, './java'));
@@ -70,6 +71,11 @@ AlgorithmRouter.post('/Compare',(req,res)=>{
 });
 
 AlgorithmRouter.post('/CompareAll',(req,res)=>{
+	console.log("Full Analysis");
+	res.setTimeout(60000*(10), function(){
+    	console.log('Request has timed out.');
+        res.send(408);
+    });
 	//instanciate node-java and get Middleware
 
 	java.classpath.push(path.resolve(__dirname, './java'));

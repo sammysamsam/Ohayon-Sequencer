@@ -129,12 +129,14 @@ class ProjectStore extends EventEmitter{
 			this.update_Full_StrandList(updatedfulllist);
 			this.emit("Change_Full_Strandlist");	
 		}
+		this.sequencerPrompt = "ready";	
 	}
 
 	add_Component_StrandList(NewStrand)
 	{
 		NewStrand.sequence = this.random_Sequence_Generator(NewStrand.length,NewStrand.blueprint);
 		this.component_StrandList.push(NewStrand);
+		this.sequencerPrompt = "ready";	
 	}	
 
 
@@ -144,11 +146,13 @@ class ProjectStore extends EventEmitter{
 	update_Full_StrandList(StrandlistUpdate2)
 	{
 		this.full_StrandList = StrandlistUpdate2;
+		this.sequencerPrompt = "ready";	
 	}
 
 	add_Full_StrandList(NewStrand)
 	{
 		this.full_StrandList.push(NewStrand);
+		this.sequencerPrompt = "ready";	
 	}
 
 	print_Full_StrandList()
@@ -183,6 +187,10 @@ class ProjectStore extends EventEmitter{
  
  	fullAnalysis()
  	{
+
+		this.backendStatus = true;
+		this.emit("Update_Backend_Status");
+
 		try
 		{
 			let strandlistStoreReference = this;
@@ -190,13 +198,21 @@ class ProjectStore extends EventEmitter{
 	 			componentlist: this.component_StrandList,
 	 			fullstrandlist: this.full_StrandList
 	 		}).then(function(response){
+	 			strandlistStoreReference.backendStatus = false;
+				strandlistStoreReference.emit("Update_Backend_Status");
+
 				strandlistStoreReference.dataAnalysis_Results = ["FULLANALYSIS",response.data.result1,response.data.result2];
 				strandlistStoreReference.emit("Update_Results");	
+
 	 		}).catch(function (error){
+	 			strandlistStoreReference.backendStatus = false;
+				strandlistStoreReference.emit("Update_Backend_Status");
 	 			console.log(error);
 	 		});
 		}catch(e)
 		{
+			strandlistStoreReference.backendStatus = false;
+			strandlistStoreReference.emit("Update_Backend_Status");
 			console.log(e);
 		}
  	}
@@ -254,6 +270,7 @@ class ProjectStore extends EventEmitter{
 			this.emit("Update_Backend_Status");
 			this.clearResults();
 			this.emit("Update_Results");
+
 			let strandlistStoreReference = this;
 
 	 		axios.post('/DNASequenceProgram/', {
@@ -267,6 +284,9 @@ class ProjectStore extends EventEmitter{
 				if(response.data.updatedComponentList[0] == "" )
 					strandlistStoreReference.sequencerPrompt = "fail";
 				else
+					strandlistStoreReference.sequencerPrompt = "success";
+	 			let updatedComponentList = response.data.updatedComponentList;
+				for(var a = 1; a < updatedComponentList.length; a++)
 				{
 					let updatedComponentList = response.data.updatedComponentList;
 					for(var a = 0;a < strandlistStoreReference.component_StrandList.length;a++)
@@ -280,15 +300,18 @@ class ProjectStore extends EventEmitter{
 							}
 						}
 					} 	
-					strandlistStoreReference.sequencerPrompt = "success";
+
 					strandlistStoreReference.emit("Change_Component_Strandlist");
 				}
+
 				strandlistStoreReference.sequencerTimeLimit = 0;
 				strandlistStoreReference.emit("Update_Sequencer_Prompt");
 
 				strandlistStoreReference.backendStatus = false;
 				strandlistStoreReference.emit("Update_Backend_Status");
 	 		}).catch(function (error){
+	 			strandlistStoreReference.backendStatus = false;
+				strandlistStoreReference.emit("Update_Backend_Status");
 	 			console.log(error);
 	 		});
 		}catch(e)

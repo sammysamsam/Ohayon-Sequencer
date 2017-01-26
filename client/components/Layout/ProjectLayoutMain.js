@@ -16,10 +16,19 @@ export default class ProjectLayoutMain extends React.Component {
 			marginLeft:"2px",
 			marginBottom:"40px"
 		}
+		let headerStyle = {
+			textDecoration:"none",
+			backgroundColor:"#292B2D",
+			height:"40px",
+			padding:"2.5px 0px 0px 75px",
+			margin:"0px",
+			fontSize:"13px",
+			width:"100%",
+		}
 
 		return(
-		<div style = {{overflow:"hidden"}}>
-			<div style = {{textDecoration:"none",backgroundColor:"#292B2D",height:"40px",padding:"2.5px 0px 0px 75px",margin:"0px",fontSize:"13px",width:"100%"}}> 
+		<div style = {{overflow:"hidden",backgroundImage: 'url('+backgroundImage+')',backgroundSize:"1700px 1700px"}}>
+			<div style = {headerStyle}> 
 					<Link to="/"className = "hvr-grow" style = {{color:"#ff7043",display:"inline-block",cursor:"pointer"}}>
 						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
 							home
@@ -30,7 +39,7 @@ export default class ProjectLayoutMain extends React.Component {
 					<LoadSave/>
 			</div>
 
-			<div style = {{backgroundImage: 'url('+backgroundImage+')',backgroundSize:"1700px 1700px"}}>
+			<div>
 				<div style = {{background:"rgba(255,255,255,.5)"}}>
 					<div style = {{padding:"30px 0px 75px 0px", margin:"auto",display:"block",width:"1200px"}}>
 

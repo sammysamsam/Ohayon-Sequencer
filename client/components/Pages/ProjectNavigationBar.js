@@ -22,8 +22,6 @@ export default class ProjectNagivationBar extends React.Component {
 			height:"692px",
 			width:"150px",
 			marginTop:"246px",
-			border:"solid #ff9e80",
-			borderWidth:"0px 2px 0px 0px"
 		}
 		const liStyle = {
 			padding:"75px 0px 0px 0px", 

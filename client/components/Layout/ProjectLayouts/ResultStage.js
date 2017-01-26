@@ -21,7 +21,7 @@ export default class ResultStateLayout extends React.Component {
 				Concentration: ProjectStore.getConditions().Concentration,
 				Component_List: ProjectStore.getStrandComponents(),
 				Full_List: ProjectStore.getFullStrands(),
-				programstatus:  ProjectStore.getBackendStatus()
+				Backend_Status:  ProjectStore.getBackendStatus()
 			}
 	};
 
@@ -50,7 +50,7 @@ export default class ResultStateLayout extends React.Component {
 		this.setState( {Full_List: ProjectStore.getFullStrands() })
 	}
 	updateBackendStatus(){
-		this.setState( {sequencerstatus: ProjectStore.getBackendStatus()})
+		this.setState( {Backend_Status: ProjectStore.getBackendStatus()})
 	}
 	updateresults(){
 		this.setState({	Results:ProjectStore.getDataAnalysisResults() });
@@ -58,31 +58,40 @@ export default class ResultStateLayout extends React.Component {
 	render(){
 		let topstyle = {
 			paddingTop:"35px",
-			background:"rgba(28, 50, 74,.8)",     
+			background:"rgba(28, 50, 74,.65)",  
 			width:"1198px", 
-			textAlign:"center",
 			margin:"0px 0px 3px -153px",
 			height:"243px",
 		}
-
+		let bottomstyle = {
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
+			background:"rgba(230, 230, 230,.9)",
+			display:"block",
+			marginTop:"4px",
+			height:"688px",
+			width:"1045px",
+			borderWidth:"7px 0px 0px 0px"
+		}
 		return(
 		<div >
 			<div style = {topstyle}>
-				<h2 style = {{color:"#ffccbc",height:"80px",margin:"0",paddingTop:"20px"}}> 
+				<h2 style = {{textAlign:"right",color:"#f2f2f2",height:"80px",margin:"0",padding:"20px 100px 0px 50px"}}> 
 				
 					DATA ANALYSIS 
 
 				</h2>
 				
-				<p style = {{paddingTop:"35px",color:"#ffccbc",height:"70px",margin:"0"}}>Select one or two strands to see a full comparison between either the strand vs itself or the strand and its complement vs another strand. </p>
+				<p style = {{textAlign:"right", padding:"20px 100px 0px 50px", color:"#f2f2f2", height:"70px", margin:"0"}}>
+					Main features include calculating base-pair matching or melting point between two strands or all strands (components vs components / full strand vs full strand) and printing out your strands.  
+				</p>
 				
-				<div style = {{height:"60px",paddingTop:"5px",margin:"0"}}>
-					<ResultStageButtons status = {this.state.programstatus}/>
+				<div style = {{marginTop:"10px"}}>
+					<ResultStageButtons status = {this.state.Backend_Status}/>
 				</div>
 			</div>
 
-			<div className= "animated fadeIn">
-				<StrandComparison fulllist = {this.state.Full_List} componentlist = {this.state.Component_List} results = {this.state.Results} status = {this.state.programstatus}/>
+			<div style = {bottomstyle} className= "animated fadeIn">
+				<StrandComparison fulllist = {this.state.Full_List} componentlist = {this.state.Component_List} results = {this.state.Results} status = {this.state.Backend_Status}/>
 			</div>
 		</div>
 		);

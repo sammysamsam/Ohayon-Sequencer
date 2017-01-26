@@ -35,18 +35,18 @@ export default class Sequencer extends React.Component {
 			display:"inline-block"
 		}
 		let containerStyle = {
-			background:"rgba(0, 0, 0,0.1)",
+			background:"rgba(0,0,0,0.1)",
 			margin:"30px 75px 0px 75px",
 			padding:"50px 0px 50px 100px"
 		}
 		let statusStyle = { 
 			margin:"-10px 75px 0px 75px",
 			padding:"22px",
-			background:"rgba(0, 0, 0,0.1)",
+			background:"rgba(0,0,0,0.2)",
 			color:"#e6e6e6",
 			textAlign:"center",
 			fontWeight:"bold",
-			fontSize:"14px",
+			fontSize:"15px",
 		}
 		return(
 			<div>
@@ -89,14 +89,14 @@ export default class Sequencer extends React.Component {
 		let statusStyle = { 
 			margin:"0px 75px 0px 75px",
 			padding:"22px",
-			background:"rgba(139, 179, 218,0.1)",
+			background:"rgba(0, 0, 0,0.2)",
 			color:"white",
 			textAlign:"center",
 			fontWeight:"bold",
 			fontSize:"14px",
 		}
 		let containerStyle = {
-			background:"rgba(139, 179, 218,0.15)",
+			background:"rgba(0, 0, 0,0.1)",
 			margin:"50px 75px 0px 75px",
 			padding:"50px 0px 50px 100px"
 		}
@@ -107,7 +107,13 @@ export default class Sequencer extends React.Component {
 			display:"inline-block"
 		}
 		let loadprompt = () =>{
-			if(this.props.prompt == "fail")
+            if(this.props.prompt == "success")
+                return(
+                    <div style = {statusStyle} >  
+                        <i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff661a"}}className="material-icons">check_circle</i> 
+                        Success! Go to Results to view sequences.
+                    </div>)
+             else if(this.props.prompt == "fail")
 				return(				
 				<div style = {statusStyle} >  
 					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff661a"}}className="material-icons">offline_pin</i> 
@@ -155,17 +161,6 @@ export default class Sequencer extends React.Component {
 
 	renderSequencerRunning()
 	{
-		let statusStyle = {
-			width:"235px",
-			marginLeft:"-70px",
-			marginTop:"20px",
-			paddingTop:"5px",
-			paddingLeft:"35px",
-			color:"#ffccbc",
-			background:"rgba(139, 179, 218,0.1)",
-			height:"35px",
-			borderRadius:"4px"
-		}
 		let d = new Date();
 		let timeLeft = this.props.time - d.getTime(); 
 		return (
@@ -179,7 +174,6 @@ export default class Sequencer extends React.Component {
 				</div>	
 				<div style = {{	height:"50px", marginLeft:"450px"}}>
 					<Spinner spinnerName='cube-grid' noFadeIn />
-					<div style = {statusStyle}> Optimizing Sequences...</div>
 				</div>
 			
 			</div>

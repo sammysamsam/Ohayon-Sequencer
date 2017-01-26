@@ -24,28 +24,26 @@ export default class WorkspaceNav extends React.Component {
 	rendertabs()
 	{
 			let backgroundstyle = {
-				height:"52px",
-				fontSize:"15px", 	
-				fontFamily: "'Dosis', serif " ,
-				color:"white",
-				width:"1045px",
+				height:"45px",
+				fontSize:"14px", 	
+				fontFamily:"'Roboto',serif",
+				color:"#4e4e4f",
 				display:"block",
-				marginBottom:"20px",
 			}
 			let itemstyle = {    
-				background:"rgba(0, 34, 51,.5)", 
+				background:"rgba(255,255,255,.7)",
 				display:"inline-block",
-				width:"348px", 
-				padding:"15px 0px 15px 0px",
+				width:"200px", 
+				padding:"12px 0px 12px 0px",
 				textAlign:"center", 
 				verticalAlign:"top",
 				cursor:"pointer",
 			}
 			let highlightstyle = {
-				background:"rgba(0, 34, 51,.8)", 
+				background:"rgba(255,255,255,.9)",
 				display:"inline-block", 
-				width:"349px",
-				padding:"15px 0px 15px 0px",
+				width:"200px",
+				padding:"12px 0px 12px 0px",
 				textAlign:"center", 
 				verticalAlign:"top",
 				fontWeight:"bold",
@@ -87,8 +85,12 @@ export default class WorkspaceNav extends React.Component {
 		
 	render()
 	{
+		let position = {
+			marginTop:"25px",
+			float:"right",
+		}
 		return(		
-		<div> 
+		<div style = {position}> 
 			{this.rendertabs()} 
 		</div>
 		);

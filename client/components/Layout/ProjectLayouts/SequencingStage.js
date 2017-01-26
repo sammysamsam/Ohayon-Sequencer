@@ -59,32 +59,32 @@ export default class SequencingStageLayout extends React.Component {
 	render(){
 
 		let topstyle = {
-			padding:"35px",
-			background:"rgba(28, 50, 74,.8)",     
+			padding:"35px 100px 0px 100px",
+			background:"rgba(28, 50, 74,.65)",      
 			width:"1197px",
 			marginLeft:"-153px",
 			height:"244px",
-			border:"solid #ff9e80",
-			borderWidth:"0px 0px 2px 0px"
 		}
 
 		let bottomstyle = {
 			marginTop:"2px",
 			padding:"150px 0px 0px 0px",
-			background:"rgba(28, 50, 74,.85)", 
+			background:"rgba(19, 29, 45,.75)",
 			width:"1044px",
 			height:"692px",
-			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)"
+			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
+			border:"solid rgba(255,255,255,.9)",
+			borderWidth:"7px 0px 0px 0px"
 		}
 
 		return(
 		<div >		
 			<div style = {topstyle}>
-					<h2 style = {{textAlign:"center",color:"#ffccbc"}}> 
+					<h2 style = {{textAlign:"center",color:"#f2f2f2"}}> 
 						SEQUENCING ALGORITHM 
 					</h2>
 					
-					<h6 style = {{textAlign:"center",color:"#ffccbc",paddingTop:"30px"}}> 
+					<h6 style = {{textAlign:"center",color:"#f2f2f2",paddingTop:"30px"}}> 
 						Start the running sequencing algorithm when strand components are properly inputted, full strands are properly built and time allocated for sequencing set (range: 1- 6 hours).  
 					</h6>
 			</div>
