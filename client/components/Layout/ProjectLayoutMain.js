@@ -29,7 +29,7 @@ export default class ProjectLayoutMain extends React.Component {
 		return(
 		<div style = {{overflow:"hidden",backgroundImage: 'url('+backgroundImage+')',backgroundSize:"1700px 1700px"}}>
 			<div style = {headerStyle}> 
-					<Link to="/"className = "hvr-grow" style = {{color:"#ff7043",display:"inline-block",cursor:"pointer"}}>
+					<Link to="/"className = "hvr-grow" style = {{color:"#ff8a65  ",display:"inline-block",cursor:"pointer"}}>
 						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
 							home
 						</i>

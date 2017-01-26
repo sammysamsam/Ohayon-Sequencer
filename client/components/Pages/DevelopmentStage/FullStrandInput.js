@@ -194,7 +194,7 @@ export default class StrandComponentInput extends React.Component {
 			height:"50px",
 			padding:"10px 10px 5px 40px",
 			color:"white",
-			background:"rgba(139, 179, 218,0.7)",
+			 background:"rgba(139, 179, 218,0.5)",
 			fontSize:"16px",
 			margin:"1px"
 		}
@@ -202,7 +202,7 @@ export default class StrandComponentInput extends React.Component {
 			width:"1015px",
 			height:"450px",
 			margin:"0px 0px 15px 1px",
-			background:"rgba(100, 153, 206,0.5)",
+			background:"rgba(100, 153, 206,0.25)",
 			color:"white",
 			padding:"12px 12px 0px 12px"
 		}

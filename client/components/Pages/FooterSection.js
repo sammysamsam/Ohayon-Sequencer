@@ -5,7 +5,7 @@ export default class FooterSection extends React.Component {
 
 	render(){
 		let FooterStyle = {
-			color:"#ff7043",
+			color:"#ff8a65",
 			backgroundColor:"#292B2D",
 			height:"10vh",
 			paddingLeft:"10px",

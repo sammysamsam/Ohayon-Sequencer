@@ -57,20 +57,23 @@ export default class ResultStateLayout extends React.Component {
 	}
 	render(){
 		let topstyle = {
-			paddingTop:"35px",
-			background:"rgba(28, 50, 74,.65)",  
+			paddingTop:"21px",
+			background:"rgba(19, 29, 45,.68)",
 			width:"1198px", 
 			margin:"0px 0px 3px -153px",
 			height:"243px",
+			boxShadow:" 9px 0px 12px -4px rgba(0,0,0,0.56)",
+			zIndex:"10"
 		}
 		let bottomstyle = {
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
 			background:"rgba(230, 230, 230,.9)",
 			display:"block",
-			marginTop:"4px",
+			marginTop:"2px",
 			height:"688px",
 			width:"1045px",
-			borderWidth:"7px 0px 0px 0px"
+			borderWidth:"7px 0px 0px 0px",
+			zIndex:"10"
 		}
 		return(
 		<div >
@@ -81,7 +84,7 @@ export default class ResultStateLayout extends React.Component {
 
 				</h2>
 				
-				<p style = {{textAlign:"right", padding:"20px 100px 0px 50px", color:"#f2f2f2", height:"70px", margin:"0"}}>
+				<p style = {{textAlign:"right", padding:"30px 100px 17px 50px", color:"#f2f2f2", margin:"0"}}>
 					Main features include calculating base-pair matching or melting point between two strands or all strands (components vs components / full strand vs full strand) and printing out your strands.  
 				</p>
 				

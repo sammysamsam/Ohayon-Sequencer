@@ -202,13 +202,13 @@ export default class StrandComponentInput extends React.Component {
 	{
 		let bodyStyle = {
 			width:"300px",
-			background:"rgba(100, 153, 206,0.4)",
+			background:"rgba(100, 153, 206,0.25)",
 			padding:"10px 15px 10px 15px ",
 			marginTop:"1px",
 			height:"557px"
 		}
 		let headerStyle = {
-			background:"rgba(139, 179, 218,0.7)",
+			 background:"rgba(139, 179, 218,0.5)",
 			width:"300px",
 			height:"50px",
 			padding:"9px 0px 0px 20px",

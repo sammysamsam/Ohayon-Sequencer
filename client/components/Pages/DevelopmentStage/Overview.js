@@ -93,13 +93,13 @@ export default class Overview extends React.Component {
 	{
 
 		const bodyStyle = {
-			background:"rgba(100, 153, 206,0.3)",
+			background:"rgba(100, 153, 206,0.25)",
 			padding:"2px 0px 15px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
 		const headerStyle = {
-			background:"rgba(139, 179, 218,0.7)",
+			 background:"rgba(139, 179, 218,0.5)",
 			padding:"10px 0px 0px 30px",
 			width:"500px",
 			height:"53px",
@@ -107,13 +107,13 @@ export default class Overview extends React.Component {
 			fontSize:"16px"
 		}
 		const bodyStyle2 = {
-			background:"rgba(100, 153, 206,0.3)",
+			background:"rgba(100, 153, 206,0.25)",
 			padding:"15px 30px 2px 30px",
 			width:"500px",
 			margin:"1.5px",
 		}
 		const header2Style= {
-			background:"rgba(139, 179, 218,0.7)",
+			 background:"rgba(139, 179, 218,0.5)",
 			padding:"10px 0px 0px 30px",
 			height:"53px",
 			width:"500px",

@@ -85,32 +85,33 @@ export default class DevelopmentStageLayout extends React.Component {
 	render(){
 		let topstyle = {
 			padding:"30px 0px 0px 75px",
-			background:"rgba(28, 50, 74,.65)",     
+			background:"rgba(19, 29, 45,.68)",
 			width:"1198px",
-			boxShadow:" 0px 0px 0px -4px rgba(0,0,0,0.56)", 
+			boxShadow:" 9px 0px 12px -4px rgba(0,0,0,0.56)",
 			textAlign:"left",
 			marginLeft:"-153px",
 			height:"244px",
+			zIndex:"10"
 		}	
 		let bottomstyle = {
-			marginTop:"2px",
 			background:"rgba(19, 29, 45,.75)",
 			width:"1045px",
 			height:"693px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
-			paddingTop:"40px",
+			paddingTop:"60px",
 			border:"solid rgba(255,255,255,.9)",
-			borderWidth:"7px 0px 0px 0px"
+			borderWidth:"5px 0px 0px 0px",
+			zIndex:"10"
 		}
 
-		return(
+		return(		
 		<div>
 			<div style = {topstyle} >
-				<div style = {{color:"#f2f2f2",fontSize:"55px",padding:"25px 0px 0px 0px"}}> 
+				<div style = {{color:"#f2f2f2",fontSize:"47px",padding:"25px 0px 0px 0px"}}> 
 					PROJECT WORKSPACE 
 				</div>
 
-				<div style = {{color:"#f2f2f2",paddingTop:"15px",fontSize:"16px",height:"45px"}}>Use this space to adjust experimental solution conditions and input your desired strands components and put those components together to create your desired strands. </div>
+				<div style = {{color:"#f2f2f2",paddingTop:"15px",fontSize:"16px",height:"56px"}}>Use this space to adjust experimental solution conditions and input your desired strands components and put those components together to create your desired strands. </div>
 		
 				<WorkspaceNav activeDisplay = {this.state.activedisplay}/>
 			</div>

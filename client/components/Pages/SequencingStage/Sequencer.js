@@ -36,11 +36,11 @@ export default class Sequencer extends React.Component {
 		}
 		let containerStyle = {
 			background:"rgba(0,0,0,0.1)",
-			margin:"30px 75px 0px 75px",
+			margin:"40px 75px 0px 75px",
 			padding:"50px 0px 50px 100px"
 		}
 		let statusStyle = { 
-			margin:"-10px 75px 0px 75px",
+			margin:"-20px 75px 0px 75px",
 			padding:"22px",
 			background:"rgba(0,0,0,0.2)",
 			color:"#e6e6e6",
@@ -51,7 +51,7 @@ export default class Sequencer extends React.Component {
 		return(
 			<div>
 				<div style = {statusStyle} >  
-					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff4d4d"}}className="material-icons">error</i> 
+					<i style = {{position:"relative",marginRight:"15px",color:"#ff4d4d"}}className="material-icons">error</i> 
 					Unfufilled Requirement: project must contain at least one strand component
 				</div>				
 				<div style = {containerStyle}>

@@ -60,10 +60,11 @@ export default class SequencingStageLayout extends React.Component {
 
 		let topstyle = {
 			padding:"35px 100px 0px 100px",
-			background:"rgba(28, 50, 74,.65)",      
+			background:"rgba(19, 29, 45,.68)", 
 			width:"1197px",
 			marginLeft:"-153px",
 			height:"244px",
+			boxShadow:" 9px 0px 12px -4px rgba(0,0,0,0.56)",
 		}
 
 		let bottomstyle = {
@@ -74,7 +75,7 @@ export default class SequencingStageLayout extends React.Component {
 			height:"692px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",
 			border:"solid rgba(255,255,255,.9)",
-			borderWidth:"7px 0px 0px 0px"
+			borderWidth:"3px 0px 0px 0px"
 		}
 
 		return(

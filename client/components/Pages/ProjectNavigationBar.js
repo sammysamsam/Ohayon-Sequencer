@@ -17,17 +17,19 @@ export default class ProjectNagivationBar extends React.Component {
 		const ulStyle = {
 			boxShadow:" 6px 9px 12px -4px rgba(0,0,0,0.56)",
 			listStyleType:"none",
-			background:"rgba(19, 29, 45,.85)",
+			background:"rgba(19, 29, 45,.80)",
 			display:"inline-block",
 			height:"692px",
 			width:"150px",
 			marginTop:"246px",
+			zIndex:"11"
+
 		}
 		const liStyle = {
 			padding:"75px 0px 0px 0px", 
 			width:"150px",
 			height:"200px",
-			textAlign:"center"
+			textAlign:"center",
 		}
 		const linkstyle = {
 			fontFamily: "'Raleway', serif " , 

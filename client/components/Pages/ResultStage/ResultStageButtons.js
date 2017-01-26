@@ -43,9 +43,9 @@ export default class ResultStageButtons extends React.Component {
 			fontFamily:"'Roboto',serif",
 			marginLeft:"60px",
 			cursor:"pointer",
-			height:"50px",
+			height:"47px",
 			width:"175px", 
-			paddingTop:"10px",
+			paddingTop:"7px",
 			textAlign:"center",
 			color:"#4e4e4f",
 			fontSize:"14px"
@@ -53,9 +53,9 @@ export default class ResultStageButtons extends React.Component {
 		let analysisButtonOffStyle = {
 			fontFamily:"'Roboto',serif",
 			marginLeft:"60px",
-			height:"50px",
+			height:"47px",
 			width:"175px", 
-			paddingTop:"10px",
+			paddingTop:"7px",
 			textAlign:"center",
 			color:"#c6c6c6",
 			fontSize:"14px"

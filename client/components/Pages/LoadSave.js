@@ -94,7 +94,7 @@ export default class LoadSave extends React.Component {
 			display:"inline-block",
 			height:"35px",
 			width:"100px",
-			color:"#ff6600",
+			color:"#ff8a65",
 			marginRight:"5px",
 			cursor:"pointer",
 			fontSize:"11px"

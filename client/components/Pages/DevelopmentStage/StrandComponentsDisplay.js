@@ -52,13 +52,13 @@ export default class StrandComponentsDisplay extends React.Component {
 			 height:"50px",
 			 padding:"10px 10px 5px 40px",
 			 color:"white",
-			 background:"rgba(139, 179, 218,0.7)",
+			 background:"rgba(139, 179, 218,0.5)",
 			 marginBottom:"1px",
 			 fontSize:"16px"
 		}
 
 		let tableBodyStyle ={
-			background:"rgba(100, 153, 206,0.5)",
+			background:"rgba(100, 153, 206,0.25)",
 			width:"713px",
 			height:"557px"
 		}

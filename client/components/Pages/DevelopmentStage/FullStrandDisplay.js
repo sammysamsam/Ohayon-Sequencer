@@ -56,7 +56,7 @@ export default class FullStrandDisplay extends React.Component {
 		}
 
 		let tableStyle ={
-			background:"rgba(100, 153, 206,0.5)",
+			background:"rgba(100, 153, 206,0.25)",
 			height:"500px",
 			margin:"0px 1px 1px 1px",
 			paddingTop:"10px"
@@ -67,7 +67,7 @@ export default class FullStrandDisplay extends React.Component {
 			 height:"50px",
 			 padding:"10px 10px 5px 40px",
 			 color:"white",
-			 background:"rgba(139, 179, 218,0.7)",
+			 background:"rgba(139, 179, 218,0.5)",
 			 margin:"1px",
 			 fontSize:"16px"
 		}

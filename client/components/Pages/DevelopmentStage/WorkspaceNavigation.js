@@ -47,7 +47,6 @@ export default class WorkspaceNav extends React.Component {
 				textAlign:"center", 
 				verticalAlign:"top",
 				fontWeight:"bold",
-				textDecoration:"underline",
 			}
 
 
