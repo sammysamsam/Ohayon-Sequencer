@@ -42,7 +42,7 @@ export default class Sequencer extends React.Component {
 		let statusStyle = { 
 			margin:"-20px 75px 0px 75px",
 			padding:"22px",
-			background:"rgba(0,0,0,0.2)",
+			background:"rgba(0,0,0,0.15)",
 			color:"#e6e6e6",
 			textAlign:"center",
 			fontWeight:"bold",
@@ -51,7 +51,7 @@ export default class Sequencer extends React.Component {
 		return(
 			<div>
 				<div style = {statusStyle} >  
-					<i style = {{position:"relative",marginRight:"15px",color:"#ff4d4d"}}className="material-icons">error</i> 
+					<i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff4d4d"}}className="material-icons">error</i> 
 					Unfufilled Requirement: project must contain at least one strand component
 				</div>				
 				<div style = {containerStyle}>
@@ -89,7 +89,7 @@ export default class Sequencer extends React.Component {
 		let statusStyle = { 
 			margin:"0px 75px 0px 75px",
 			padding:"22px",
-			background:"rgba(0, 0, 0,0.2)",
+			background:"rgba(0, 0, 0,0.15)",
 			color:"white",
 			textAlign:"center",
 			fontWeight:"bold",
@@ -110,7 +110,7 @@ export default class Sequencer extends React.Component {
             if(this.props.prompt == "success")
                 return(
                     <div style = {statusStyle} >  
-                        <i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#ff661a"}}className="material-icons">check_circle</i> 
+                        <i style = {{position:"relative",top:"6px",marginRight:"15px",color:"#42f448"}}className="material-icons">check_circle</i> 
                         Success! Go to Results to view sequences.
                     </div>)
              else if(this.props.prompt == "fail")

@@ -1,4 +1,4 @@
-    import java.util.Arrays;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.*;
@@ -35,8 +35,6 @@ STATUS OF STRANDLIST METHODS
         System.out.println("\n=========================================\n\n\n");        
         for(int i = 0; i < this.componentList.size(); i++)
         {
-
-
             Strand current = this.componentList.get(i);
             
             System.out.println("Sequence of Strand:"
@@ -114,13 +112,10 @@ STRAND SEQUENCING METHOD:
     {
         long start = System.currentTimeMillis();
         long end = start - 2000 + timeLimit*60*1000; // 60 seconds * 1000 ms/sec
-        //componentOverview();
-        //this.printFullStrand();
-
+        
         System.out.println("\nRunning Sequencing Algorithm");
 
         CompareStrands comparer = new CompareStrands(thermoCalc);
-
         ArrayList<Strand> fullComponentList = this.componentList;
         ArrayList<FullStrand> fullStrandList = this.fullStrandList;
         this.componentList = new ArrayList<Strand>();
@@ -138,25 +133,22 @@ STRAND SEQUENCING METHOD:
         for(int i = 0; i < fullComponentList.size(); i++)
         {
             int numTries = 0;
-            Strand comp = fullComponentList.get(i);
-            this.componentList.add(comp); //step 1 and 2
-            this.strandRandomizer(comp.length, i);
+            Strand component = fullComponentList.get(i);
+            this.componentList.add(component); //step 1 and 2
+            this.strandRandomizer(component.length, i);
             
-            //System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");    
+            System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");    
             while(true)
             {
-                    if (System.currentTimeMillis() > end)
-                        return false;
-
+                  //  if (System.currentTimeMillis() > end)
+                  //      return false;
                     numTries++;
 
-                    if(numTries > (10*i))
+                    if(numTries > (10))
                     {
                         if(i > 0)                 
                         { 
-                            //this.fullStrandOverview(comparer);
-                            //System.out.println("back, list size now:" + this.componentList.size());
-     
+                            System.out.println("back, list size now:" + this.componentList.size());
                             this.componentList.remove(i);
                             i = i - 2;          
                             this.componentList.remove(i + 1);
@@ -170,8 +162,9 @@ STRAND SEQUENCING METHOD:
                     {
                     }
 
-                    if (System.currentTimeMillis() > end)
-                        return false;
+                   // if (System.currentTimeMillis() > end)
+                    //    return false;
+
                    if(!checkpoint1(i))  
                    {
                         numTries --;
@@ -181,25 +174,21 @@ STRAND SEQUENCING METHOD:
                     while(baseFixingAlgorithm(2, i, end))     //step 4
                     {
                     } 
-                    //System.out.print("( "+this.totalConsecutiveMatches(i) +" )");
+                    System.out.print("( "+this.totalConsecutiveMatches(i) +" )");
 
-                    if (System.currentTimeMillis() > end)
-                        return false;
+                    //if (System.currentTimeMillis() > end)
+                    //   return false;
                     if(!sequencingStageCheckpoint(2))
                         continue;
 
                     this.minimizeEdges(i);           //step 5
-
-                    //System.out.print("[ "+sumFullStrand()+" ]");   
+                    System.out.print("[ "+sumFullStrand()+" ]");   
 
                     if(sequencingStageCheckpoint(3))
                         break;
-                    //else
-                    //    System.out.println("\n___________\nunsuccessful\n____________");
             }
         }
         componentOverview();
-        //this.printFullStrand();
         return true;
 }
 
@@ -425,7 +414,7 @@ COMPONENT ALGORITHM METHODS:
                 for (char testBase: bases)
                 {
                     if(System.currentTimeMillis() > expiredTimer)
-                    	return false;
+                        return false;
                     if (!(originalbase == testBase))
                     {
                         if ( (phase == 1 && baseFixingTestSelf(strandPosition, testBase, baseArray, basePosition, originalbase) == true )

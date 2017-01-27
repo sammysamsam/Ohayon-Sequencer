@@ -29,7 +29,7 @@ export default class ResultScreen extends React.Component {
 					Strand Order [5' to 3']
 				</h6>
 				<div style = {{	overflowY:"scroll",overflowWrap: "break-word",height:"630px"}}>
-					<Table className = "responsive-table striped">
+					<Table className = "responsive-table">
 				        <thead>
 				          <tr>
 				              <th data-field="id">Name</th>
@@ -157,7 +157,7 @@ export default class ResultScreen extends React.Component {
 
 		return  (
 			<div style = {resultsContainer}> 
-				<div style = {{paddingLeft:"320px"}}>
+				<div style = {{paddingLeft:"520px"}}>
 					<Row >
 						<Input 		
 							name="display" 

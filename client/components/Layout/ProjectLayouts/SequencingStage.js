@@ -70,7 +70,7 @@ export default class SequencingStageLayout extends React.Component {
 		let bottomstyle = {
 			marginTop:"2px",
 			padding:"150px 0px 0px 0px",
-			background:"rgba(19, 29, 45,.75)",
+			background:"rgba(19, 29, 45,.53)",
 			width:"1044px",
 			height:"692px",
 			boxShadow:" 9px 9px 12px -4px rgba(0,0,0,0.56)",

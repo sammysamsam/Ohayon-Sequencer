@@ -44,21 +44,23 @@ export default class ResultStageButtons extends React.Component {
 			marginLeft:"60px",
 			cursor:"pointer",
 			height:"47px",
-			width:"175px", 
+			width:"170px", 
 			paddingTop:"7px",
 			textAlign:"center",
 			color:"#4e4e4f",
-			fontSize:"14px"
+			fontSize:"14px",
+			display:"inline-block"
 		}
 		let analysisButtonOffStyle = {
 			fontFamily:"'Roboto',serif",
 			marginLeft:"60px",
 			height:"47px",
-			width:"175px", 
+			width:"170px", 
 			paddingTop:"7px",
 			textAlign:"center",
 			color:"#c6c6c6",
-			fontSize:"14px"
+			fontSize:"14px",
+			display:"inline-block"
 		}
 		let iconStyle = {
 			position:"relative",
