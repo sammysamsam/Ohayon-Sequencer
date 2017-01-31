@@ -288,7 +288,7 @@ STRAND PROPERTIES/GETTER METHODS
 	
 	private Base[][] baseArrayMaker(Strand b, int shiftlength)
     {
-		Base[] shift1 = new Base[this.length+b.length*2];   // 3 b sequence ->  oooooooo  oooooooooooooo 5
+		Base[] shift1 = new Base[this.length+b.length*2];   // 3 b sequence ->  oooooooooo  oooooooooooooo 5
         Base[] shift2 = new Base[this.length+b.length*2];   // 5 oooooooooo    this.sequence  oooooooooo 3
        
         for (int w = 0; w < this.length+b.length*2 ; w++)
@@ -321,8 +321,8 @@ STRAND PROPERTIES/GETTER METHODS
 	private Base[][] lowestEnergyOrientation(Strand b,ThermodynamicsCalculator z, int conseclimit)
 	{
 	
-		Base[] shiftedB = new Base[this.length+b.length*2];        // 3 b sequence ->  oooooooo  oooooooooooooo 5
-		Base[] shiftedThis = new Base[this.length+b.length*2];	   // 5 oooooooooo    this.sequence  oooooooooo 3
+		Base[] shiftedB = new Base[this.length+b.length*2];       // 3 b sequence ->  oooooooo  oooooooooooooo 5
+		Base[] shiftedThis = new Base[this.length+b.length*2];	  // 5 oooooooooo    this.sequence  oooooooooo 3
 		double lowestFreeEnergy=1000;
 
 		for(int i = 1; i < b.length+this.length; i ++)
@@ -487,7 +487,7 @@ STRAND PROPERTIES/GETTER METHODS
                     {
 						if(singleMismatch)
 						{
-							hitScore = hitScore/2 + 1;
+							consecCounter = consecCounter/2 + 1;
 							singleMismatch = false;
 						}
 						if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
@@ -501,7 +501,7 @@ STRAND PROPERTIES/GETTER METHODS
 
 			if(singleMismatch)
 			{
-				hitScore = hitScore/2 + 1;
+				consecCounter = consecCounter/2 + 1;
 				singleMismatch = false;
 			}
 			//this accounts for if there are consec hits in the very end (dont delete this)
@@ -559,7 +559,7 @@ STRAND PROPERTIES/GETTER METHODS
 					else
 	                {
 						//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-						if( 	singleMismatch = false &&
+						if( 	singleMismatch == false &&
 								k+2 < shiftedB.length && k -2 >= 0 && 
 								shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
 	                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
@@ -573,7 +573,7 @@ STRAND PROPERTIES/GETTER METHODS
 	                    {
 							if(singleMismatch)
 							{
-								hitScore = hitScore/2 + 1;
+								consecCounter = consecCounter/2 + 1;
 								singleMismatch = false;
 							}
 							if(consecCounter >= maxhitlimit) 
@@ -590,7 +590,7 @@ STRAND PROPERTIES/GETTER METHODS
 				*/
 				if(singleMismatch)
 				{
-					hitScore = hitScore/2 + 1;
+					consecCounter = consecCounter/2 + 1;
 					singleMismatch = false;
 				}
 				if(consecCounter >= maxhitlimit)
@@ -661,7 +661,7 @@ STRAND PROPERTIES/GETTER METHODS
                 {
 					//*
 					//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-					if( 	singleMismatch = false &&
+					if( 	singleMismatch == false &&
 								k+2 < shiftedB.length && k -2 >= 0 && 
 								shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
 	                            shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
@@ -677,7 +677,7 @@ STRAND PROPERTIES/GETTER METHODS
                     {
 						if(singleMismatch)
 						{
-							hitScore = hitScore/2 + 1;
+							consecCounter = consecCounter/2 + 1;
 							singleMismatch = false;
 						}
 						if(consecCounter >= maxhitlimit)
@@ -697,7 +697,7 @@ STRAND PROPERTIES/GETTER METHODS
 			//this accounts for if there are consec hits in the very end (dont delete this)
 			if(singleMismatch)
 			{
-				hitScore = hitScore/2 + 1;
+				consecCounter = consecCounter/2 + 1;
 				singleMismatch = false;
 			}
 			if(consecCounter >= maxhitlimit)

@@ -165,9 +165,6 @@ public class CompareStrands {
 		if(b.isFivePrime)		  
 			b = b.reverse(); 	//  3  ooooooooooooo   strand b ooooooo 5  = shiftA
 
-
-
-
 		Base[] shiftA_best = new Base[a.length + b.length*2];
 		Base[] shiftB = new Base[a.length + b.length*2];        
 
@@ -194,7 +191,7 @@ public class CompareStrands {
 					//Case: If the non - match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
 					
 
-					if( 	singleMismatch = false &&
+					if( 	singleMismatch == false &&
 							k+2 < shiftB.length && k -2 >= 0 && 
 							shiftB[k - 2].canPair(shiftA[k - 2]) && 
                             shiftB[k + 2].canPair(shiftA[k + 2]) && 
@@ -208,7 +205,7 @@ public class CompareStrands {
                     {
 						if(singleMismatch)
 						{
-							hitScore = hitScore/2 + 1;
+							consecCounter = consecCounter/2 + 1;
 							singleMismatch = false;
 						}
 						if(consecCounter >= maxhitlimit)
@@ -221,7 +218,7 @@ public class CompareStrands {
 			}
 			if(singleMismatch)
 			{
-				hitScore = hitScore/2 + 1;
+				consecCounter = consecCounter/2 + 1;
 				singleMismatch = false;
 			}
 			//this accounts for if there are consec hits in the very end (dont delete this)
@@ -284,7 +281,7 @@ public class CompareStrands {
 					else
 	                {
 						//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-						if( singleMismatch = false &&
+						if( singleMismatch == false &&
 							k + 2 < shiftB.length && k - 2 >= 0 && 
 							shiftB[k - 2].canPair(shiftA[k - 2]) && 
                             shiftB[k + 2].canPair(shiftA[k + 2]) && 
@@ -298,7 +295,7 @@ public class CompareStrands {
 	                    {
 							if(singleMismatch)
 							{
-								hitScore = hitScore/2 + 1;
+								consecCounter = consecCounter/2 + 1;
 								singleMismatch = false;
 							}
 							if(consecCounter >= maxhitlimit)

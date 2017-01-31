@@ -7,9 +7,9 @@ public class Tester
     {
 		//testConsecPossible();
 		//testSelfChecker();
-		testThermoMismatch();
+		//testThermoMismatch();
 		//testFullAlgorithm();
-		//testCompAlgorithm();
+		testCompAlgorithm();
 		//testCompleteAlgorithm();
 		//testBaseArrayMismatch();
 		//testCompareStrands();
@@ -20,7 +20,7 @@ public class Tester
 		ThermodynamicsCalculator x = new ThermodynamicsCalculator();
 		Sequencer g = sequencer2Generator();
 
-		g.minimizeInteractions(1000);
+		g.minimizeInteractions(10000);
 		CompareStrands comparer = new CompareStrands(x);
 		g.fullStrandOverview(comparer);	
 	}
@@ -29,7 +29,7 @@ public class Tester
 		ThermodynamicsCalculator x = new ThermodynamicsCalculator();
 		Sequencer g = sequencerGenerator();
 
-		g.minimizeInteractions(1000);
+		g.minimizeInteractions(10000);
 		CompareStrands comparer = new CompareStrands(x);
 		g.fullStrandOverview(comparer);
 
@@ -68,7 +68,7 @@ public class Tester
 		CompareStrands comparer = new CompareStrands(calc);			
 		Sequencer alg = new Sequencer(list, calc,fulllist);
 
-		alg.minimizeInteractions(3);
+		alg.minimizeInteractions(30);
 		//System.out.println(alg.fullStrandOverview(comparer));	
 	}
 

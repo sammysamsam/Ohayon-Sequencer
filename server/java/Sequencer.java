@@ -54,8 +54,7 @@ STATUS OF STRANDLIST METHODS
         Strand strandCurrent = this.componentList.get(i);
         for(int x = i; x < this.componentList.size(); x++)
         {
-                if(x != i)
-                    c.bestArrangement(strandCurrent,this.componentList.get(x));
+                c.bestArrangement(strandCurrent,this.componentList.get(x));
         }
     }
 
@@ -140,8 +139,8 @@ STRAND SEQUENCING METHOD:
             System.out.println("\n~~~~~\nadd " + fullComponentList.get(i).name+"\n~~~~~");    
             while(true)
             {
-                  //  if (System.currentTimeMillis() > end)
-                  //      return false;
+                        //  if (System.currentTimeMillis() > end)
+                        //      return false;
                     numTries++;
 
                     if(numTries > (10))
@@ -152,19 +151,18 @@ STRAND SEQUENCING METHOD:
                             this.componentList.remove(i);
                             i = i - 2;          
                             this.componentList.remove(i + 1);
-                           break;
+                            break;
                         }
                     }
 
-                    this.strandRandomizer(component.length/8, i);   //step 2
-
+                    this.strandRandomizer(component.length/2, i);   //step 2
+                    System.out.print(".");
                     while(baseFixingAlgorithm(1, i, end))     //step 3
                     {
                     }
-
-                   // if (System.currentTimeMillis() > end)
-                    //    return false;
-
+                        // if (System.currentTimeMillis() > end)
+                        //    return false;
+                    System.out.println(restrictedSequences(component));
                    if(!checkpoint1(i))  
                    {
                         numTries --;
@@ -414,7 +412,9 @@ COMPONENT ALGORITHM METHODS:
                 for (char testBase: bases)
                 {
                     if(System.currentTimeMillis() > expiredTimer)
+                    {
                         return false;
+                    }
                     if (!(originalbase == testBase))
                     {
                         if ( (phase == 1 && baseFixingTestSelf(strandPosition, testBase, baseArray, basePosition, originalbase) == true )
@@ -434,6 +434,7 @@ COMPONENT ALGORITHM METHODS:
               ||(phase == 2 && checkpoint2(strandPosition) == true)
             )
             changes = false;
+
         //return true if one or more changes have been made to strand
         return changes;
     }
@@ -493,10 +494,11 @@ COMPONENT ALGORITHM METHODS:
         {
             return true;
         }
+
         //if base balance improves  and restricted score condition remains the satisfied
         if(initialBaseBalance > newBaseBalance
                     && initialBaseBalance > 10
-                    && newRestrictedScore >= 0)
+                    && newRestrictedScore == 0)
         {
             return true;
         }
