@@ -156,7 +156,7 @@ STRAND SEQUENCING METHOD:
                         }
                     }
 
-                    this.strandRandomizer(comp.length/8, i);   //step 2
+                    this.strandRandomizer(component.length/8, i);   //step 2
 
                     while(baseFixingAlgorithm(1, i, end))     //step 3
                     {

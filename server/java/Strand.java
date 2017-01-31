@@ -333,11 +333,12 @@ STRAND PROPERTIES/GETTER METHODS
 			//Counter-limit disregards consecutive hits smaller than the mismatch threshold
 			z.consecutiveLimit = conseclimit-1;
 			
-			//Find the free energy of this arrangement of strand this and strand b
+			//Find the free energy of this arrangement of strand this [0] and strand b [1]
 			double freeEnergy = z.nearestNeighbor(shiftedBaseArray[0] , shiftedBaseArray[1] , b.length , this.length);		
-			//System.out.println(bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
-			//System.out.println(freeEnergy);
-
+			
+			System.out.println(bestHitStringMaker(b,shiftedBaseArray[1],shiftedBaseArray[0]));
+			
+			System.out.println(freeEnergy);
 			// Save Score and Shifted Arrays of Strands (if its lower than current lowest energy score)
 			if(lowestFreeEnergy > freeEnergy)
             {
@@ -432,7 +433,7 @@ STRAND PROPERTIES/GETTER METHODS
             }
         }
 
-        	//this accounts for if there are consec hits in the very end (dont delete this)
+        //this accounts for if there are consec hits in the very end (dont delete this)
 		if(consecCounter >= maxhitlimit) 
 			hitScore++;
 		if(consecCounter > maxhitlimit)

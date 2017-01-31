@@ -163,15 +163,16 @@ public class ThermodynamicsCalculator
 
 	** * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-	protected double nearestNeighbor(Base[] shift3to5,Base[] shift5to3,  int blength, int thislength){	
-// 3 b sequence ->  oooooooo  oooooooooooooo 5
-// 5 oooooooooo    this.sequence  oooooooooo 3
+
+	// 3 b sequence(shiftB) ->  oooooooo  oooooooooooooo 5
+	// 5 oooooooooo    this.sequence(shiftA)  oooooooooo 3
+
+	protected double nearestNeighbor(Base[] shiftA,Base[] shiftB,  int blength, int thislength){	
 
 			// Trim and put sequence of bases into an ArrayList for nearest neighbor calculations
 			int starter = blength - 1;
 			int end = thislength + blength + 1;
 			
-			//System.out.println("\n"+a+"\n"+b);
 			boolean firstinitiation = false;
 			int secondinitiation = 0;		
 			double totalenergy = 0;
@@ -180,17 +181,17 @@ public class ThermodynamicsCalculator
 			int counter =0;
 			for(int l = blength-1; l < thislength+blength+2; l++)
             {	
-				String x = Character.toString(shift5to3[l].base);
-				double value = freeEnergyValue(l, shift5to3, shift3to5);//Nearest Neighbor Value 
+				String x = Character.toString(shiftB[l].base);
+				double value = freeEnergyValue(l, shiftB, shiftA);//Nearest Neighbor Value 
 				
 				sum = sum + value;
 				if(value != 0)
 					counter++;
 				
-				if(value == 0 || l == shift5to3.length - 1)
+				if(value == 0 || l == shiftB.length - 1)
                 {
 					// Case: previous was internal mismatch, than move to next base to test for nearest neighbor match
-					if(freeEnergyMismatch(l - 1, shift5to3, shift3to5) != 0)
+					if(freeEnergyMismatch(l - 1, shiftB, shiftA) != 0)
 						continue;
 					
 					//Case: consecutive hits (and internal mismatches) is larger can consecutive limit
@@ -200,7 +201,7 @@ public class ThermodynamicsCalculator
 						if (firstinitiation == false)
                         {		 
 							firstinitiation = true;
-							totalenergy = totalenergy + initiation(l - 1, shift5to3, shift3to5, 1);
+							totalenergy = totalenergy + initiation(l - 1, shiftB, shiftA, 1);
 						}
 						totalenergy = totalenergy + sum;
 						secondinitiation = l;
@@ -213,69 +214,63 @@ public class ThermodynamicsCalculator
 			}
 
 			//initiation2 value
-			totalenergy = totalenergy + initiation(secondinitiation, shift5to3, shift3to5, 2);
+			totalenergy = totalenergy + initiation(secondinitiation, shiftB, shiftA, 2);
 			if (totalenergy == 0)
 				totalenergy = 100;
 			return totalenergy;
 		}
 
-	private double initiation(int l, Base[] seq5to3, Base[] seq3to5, int phase)
+	private double initiation(int l, Base[] seqB, Base[] seqA, int phase)
     {
 		if(l != 0)
         {
 			int position = l;
 			
-			if(phase == 1 && !seq3to5[l].canPair(seq5to3[l]) && seq3to5[l - 1].canPair(seq5to3[l - 1]))
+			if(phase == 1 && !seqB[l].canPair(seqA[l]) && seqB[l - 1].canPair(seqA[l - 1]))
 				position = l - 1;
-			if(phase == 2  && l + 1 < seq5to3.length && !seq3to5[l].canPair(seq5to3[l])&& seq3to5[l + 1].canPair(seq5to3[l + 1]))
+			if(phase == 2  && l + 1 < seqA.length && !seqA[l].canPair(seqB[l])&& seqA[l + 1].canPair(seqB[l + 1]))
 				position = l + 1;
-			else if(phase == 2 && !seq3to5[l].canPair(seq5to3[l]) && seq3to5[l - 1].canPair(seq5to3[l - 1]))
+			else if(phase == 2 && !seqA[l].canPair(seqB[l]) && seqA[l - 1].canPair(seqB[l - 1]))
 				position = l - 1;
 			
-			String w = Character.toString(seq3to5[position].base); 
-			String y = Character.toString(seq5to3[position].base);		
+			String w = Character.toString(seqA[position].base); 
+			String y = Character.toString(seqB[position].base);		
 			
 			String finaltemp = y + "/" + w;
-			if (hmap.get(finaltemp) == null){
+			if (hmap.get(finaltemp) == null)
 				finaltemp = w + "/" + y;
-			}
-			if (hmap.get(finaltemp) != null){
+			if (hmap.get(finaltemp) != null)
 				return hmap.get(finaltemp).DeltaG;
-			}
 		}
 		return 0;
 	}
 	
-	private void danglingEnds(int l,Base[] seqone,Base[] seqtwo,boolean end)
+	private void danglingEnds(int l,Base[] seqA,Base[] seqB,boolean end)
     {
 	
 	}
 
-	private double freeEnergyValue(int l, Base[] seqone,Base[] seqtwo)
+	private double freeEnergyValue(int l, Base[] seqA,Base[] seqB)
     {
-		double matchvalue = freeEnergyMatch(l,seqone,seqtwo);
+		double matchvalue = freeEnergyMatch(l,seqA,seqB);
 	
 		if(matchvalue !=1000)
-        {
 			return matchvalue;
-		}
 	
-		if((l+2 < seqone.length) && (freeEnergyMatch(l+2,seqone,seqtwo)!=1000)&&(freeEnergyMatch(l-1,seqone,seqtwo)!=1000))
-        {
-			return freeEnergyMismatch(l,seqone,seqtwo);
-		}
+		if((l+2 < seqA.length) && (freeEnergyMatch(l+2,seqA,seqB)!=1000)&&(freeEnergyMatch(l-1,seqA,seqB)!=1000))
+			return freeEnergyMismatch(l,seqA,seqB);
 		return 0;
 	}
 	
-    private double freeEnergyMatch(int l, Base[] seqone, Base[] seqtwo)
+    private double freeEnergyMatch(int l, Base[] seqA, Base[] seqB)
     {
-		String w = Character.toString(seqone[l - 1].base); 
-		String x = Character.toString(seqone[l].base);
-		String y = Character.toString(seqtwo[l - 1].base);
-		String z = Character.toString(seqtwo[l].base);
+		String w = Character.toString(seqA[l - 1].base); 
+		String x = Character.toString(seqA[l].base);
+		String y = Character.toString(seqB[l - 1].base);
+		String z = Character.toString(seqB[l].base);
 
 		//		A  T   /  T  A
-		if(seqone[l].canPair(seqtwo[l]) && seqone[l-1].canPair(seqtwo[l-1]))
+		if(seqA[l].canPair(seqB[l]) && seqA[l-1].canPair(seqB[l-1]))
         {
 			String finaltemp = w+x+"/"+y+z;
 			
@@ -290,17 +285,17 @@ public class ThermodynamicsCalculator
 		}
 	    return 1000;
 	}
-	private double freeEnergyMismatch(int l, Base[] seqone, Base[] seqtwo)
+	private double freeEnergyMismatch(int l, Base[] seqA, Base[] seqB)
     {
-		String w = Character.toString(seqone[l-1].base); 
-		String x = Character.toString(seqone[l].base);
-		String y = Character.toString(seqtwo[l-1].base);
-		String z = Character.toString(seqtwo[l].base);
+		String w = Character.toString(seqA[l-1].base); 
+		String x = Character.toString(seqA[l].base);
+		String y = Character.toString(seqB[l-1].base);
+		String z = Character.toString(seqB[l].base);
 
-		if(!seqone[l].canPair(seqtwo[l]) && seqone[l-1].canPair(seqtwo[l-1]))
+		if(!seqA[l].canPair(seqB[l]) && seqA[l-1].canPair(seqB[l-1]))
         {
 			//      X T  / X' T
-			if(seqone[l].base == seqtwo[l].base)
+			if(seqA[l].base == seqB[l].base)
             {	
 				String finaltemp = w + x + "/" + y + z;					
 				if (hmap.get(finaltemp) != null)
@@ -309,10 +304,10 @@ public class ThermodynamicsCalculator
 				}
 			}		
 			//      X C Y  / X' T Y'
-			else if((l + 1 < seqone.length) && seqone[l + 1].canPair(seqtwo[l + 1]))
+			else if((l + 1 < seqA.length) && seqA[l + 1].canPair(seqB[l + 1]))
             {
-				String xnext = Character.toString(seqone[l + 1].base);
-				String znext = Character.toString(seqtwo[l + 1].base);
+				String xnext = Character.toString(seqA[l + 1].base);
+				String znext = Character.toString(seqB[l + 1].base);
 			
 				String finaltemp = w + x + xnext + "/" + y + z + znext;
 				if (hmap.get(finaltemp) == null)

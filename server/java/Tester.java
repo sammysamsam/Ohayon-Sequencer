@@ -7,7 +7,7 @@ public class Tester
     {
 		//testConsecPossible();
 		//testSelfChecker();
-		//testThermoMismatch();
+		testThermoMismatch();
 		//testFullAlgorithm();
 		//testCompAlgorithm();
 		//testCompleteAlgorithm();
@@ -83,7 +83,8 @@ public class Tester
 		Strand h = new Strand("ACAGTATTATCGACTATGTTAGCG", true);
 		Strand g = new Strand("GGGTTTGCTGCTCCGTTCGTGTTGGCATCGT", false); 
 
-		h.thermoMismatch(g,x,4);
+		System.out.println(h.thermoMismatch(g,x,4));
+
 	}
 	public static void testSelfChecker()
 	{
