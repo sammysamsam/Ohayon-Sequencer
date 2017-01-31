@@ -472,7 +472,7 @@ STRAND PROPERTIES/GETTER METHODS
 				else
                 {
 					//Case: If the non-match is surrounded by match and is between consecutive hits ( ::: : = 2 , ::: :: = 3)
-					if( 	singleMismatch = false &&
+					if( 	singleMismatch == false &&
 							k+2 < shiftedB.length && k -2 >= 0 && 
 							shiftedB[k - 2].canPair(shiftedThis[k - 2]) && 
                             shiftedB[k + 2].canPair(shiftedThis[k + 2]) && 
