@@ -5,7 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --watch server --exec babel-node server/index.js"
+    "server": "nodemon --watch server --exec babel-node server/index.js",
+    "start": "npm run server"
   },
   "keywords": [],
   "author": "",
