@@ -11,17 +11,17 @@ import FooterSection from '../pages/FooterSection';
 
 import {Collapsible,CollapsibleItem,Tabs,Tab} from 'react-materialize';
 
-
+import backgroundImage from '../../Images/appbackground.png'
 
 
 export default class ToolsAnalysis extends React.Component {
 
 	render(){
 		const backgroundstyle = {
-			background:"rgba(255,255,255,.5)",
+			background:"rgba(255,255,255,.2)",
 			padding:"50px 0px 50px 0px",
 			verticalAlign:"top",
-			minHeight:"540px"
+			minHeight:"100vh"
 		}
 		let headerStyle = {
 			boxShadow:" 6px 9px 12px -4px rgba(0,0,0,0.56)",
@@ -45,7 +45,7 @@ export default class ToolsAnalysis extends React.Component {
 
 
 		return(
-			<div style = {{overflow:"hidden"}}>
+			<div style = {{overflow:"hidden",backgroundImage: 'url('+backgroundImage+')',backgroundSize:"100% 100%"}}>
 				<div style = {{backgroundColor:"#292B2D",height:"40px",padding:"3px 0px 0px 75px",fontSize:"13px",width:"100%"}}> 
 	
 						<Link to="/" className = "hvr-grow" style = {{color:"#ff6600",display:"inline-block",cursor:"pointer"}}>
@@ -57,40 +57,38 @@ export default class ToolsAnalysis extends React.Component {
 						
 						</Link>
 				</div>
-				<div style = {{backgroundImage: "url('http://www.lirent.net/wp-content/uploads/2014/10/Android-Lollipop-Material-Design-Wallpaper-IdeaLTriangles.png')",backgroundSize:"100% 150%"}}>
-					<div style = {backgroundstyle}>	
-						<h4 style = {headerStyle}>
-							<i style = {{float:"left",margin:"-10px 20px 0px 0px"}}className=" medium material-icons">
-								assignment
-							</i>
-							TOOLS & ANALYSIS 
-						</h4>
-						<div style = {bodyStyle}> 					
-							
-							<p style = {{color:"rgb(238, 110, 115)",textAlign:"center",fontStyle:"italic"}}> Analyze and manipulate your sequences. </p>
-							<Collapsible  popout style = {{width:"1105px"}}>
-						  		<CollapsibleItem header = "Sequence Manipulator">
+				<div style = {backgroundstyle}>	
+					<h4 style = {headerStyle}>
+						<i style = {{float:"left",margin:"-10px 20px 0px 0px"}}className=" medium material-icons">
+							assignment
+						</i>
+						TOOLS & ANALYSIS 
+					</h4>
+					<div style = {bodyStyle}> 					
+						
+						<p style = {{color:"rgb(238, 110, 115)",textAlign:"center",fontStyle:"italic",padding:"15px 0px 30px 0px"}}> 
+							Analyze and manipulate your sequences. 
+						</p>
+						<Collapsible  popout style = {{width:"1105px"}}>
+					  		<CollapsibleItem header = "Sequence Manipulator">
+								<StrandUtilities/>
+							</CollapsibleItem>
+						  	<CollapsibleItem header = "Melting Point Calculator">
 
-									<StrandUtilities/>
+								<StrandMeltingPt/>
 
-								</CollapsibleItem>
-							  	<CollapsibleItem header = "Melting Point Calculator">
+							</CollapsibleItem>						
+							<CollapsibleItem header = "Strand vs Strand Comparison" >
 
-									<StrandMeltingPt/>
+								<StrandComparer/>
 
-								</CollapsibleItem>						
-								<CollapsibleItem header = "Strand vs Strand Comparison" >
-
-									<StrandComparer/>
-
-								</CollapsibleItem>
-							</Collapsible>
-						</div>
-
+							</CollapsibleItem>
+						</Collapsible>
 					</div>
-
-					<FooterSection/>
 				</div>
+
+				<FooterSection/>
+
 			</div>
 		  );
 	}

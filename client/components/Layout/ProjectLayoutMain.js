@@ -27,7 +27,7 @@ export default class ProjectLayoutMain extends React.Component {
 		}
 
 		return(
-		<div style = {{overflow:"hidden",backgroundImage: 'url('+backgroundImage+')',backgroundSize:"1700px 1700px"}}>
+		<div style = {{overflow:"hidden",backgroundImage: 'url('+backgroundImage+')',backgroundSize:"100% 100%"}}>
 			<div style = {headerStyle}> 
 					<Link to="/"className = "hvr-grow" style = {{color:"#ff8a65  ",display:"inline-block",cursor:"pointer"}}>
 						<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">

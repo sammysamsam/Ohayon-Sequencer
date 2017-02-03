@@ -21,5 +21,9 @@ app.use(webpackMiddleware(compiler));
 app.get('/*',(req,res) => {
 	res.sendFile(path.join(__dirname, '../client/index.html'));
 });
+// set the port of our application
 
-app.listen(80,()=>console.log('Running on server'))
+// process.env.PORT lets the port be set by Heroku
+var port = process.env.PORT || 8080;
+
+app.listen(port,()=>console.log('Running on server'+port))
