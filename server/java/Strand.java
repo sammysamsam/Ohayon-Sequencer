@@ -487,7 +487,7 @@ STRAND PROPERTIES/GETTER METHODS
                     {
 						if(singleMismatch)
 						{
-							consecCounter = consecCounter/2 + 1;
+							consecCounter = consecCounter - 1;
 							singleMismatch = false;
 						}
 						if(consecCounter >= maxhitlimit) // :: :: = 3   ::: :: = 4   ::: ::: = 5  :::: :: = 5   :::: ::: = 6
@@ -573,7 +573,7 @@ STRAND PROPERTIES/GETTER METHODS
 	                    {
 							if(singleMismatch)
 							{
-								consecCounter = consecCounter/2 + 1;
+								consecCounter = consecCounter - 1;
 								singleMismatch = false;
 							}
 							if(consecCounter >= maxhitlimit) 
@@ -590,7 +590,7 @@ STRAND PROPERTIES/GETTER METHODS
 				*/
 				if(singleMismatch)
 				{
-					consecCounter = consecCounter/2 + 1;
+					consecCounter = consecCounter - 1;
 					singleMismatch = false;
 				}
 				if(consecCounter >= maxhitlimit)
@@ -677,7 +677,7 @@ STRAND PROPERTIES/GETTER METHODS
                     {
 						if(singleMismatch)
 						{
-							consecCounter = consecCounter/2 + 1;
+							consecCounter = consecCounter - 1;
 							singleMismatch = false;
 						}
 						if(consecCounter >= maxhitlimit)

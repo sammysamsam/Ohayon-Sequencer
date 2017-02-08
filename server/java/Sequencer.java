@@ -396,8 +396,8 @@ COMPONENT ALGORITHM METHODS:
    {
         Strand currStrand = this.componentList.get(strandPosition);
         int[] basePositions = shuffleBaseArray(currStrand);
-        if(phase == 2)
-            basePositions = getBasePositions(strandPosition);
+        //if(phase == 2)
+        //    basePositions = getBasePositions(strandPosition);
 
         char[] baseArray = currStrand.sequence.toCharArray(); // strand x's sequence now split by each letter into array
 

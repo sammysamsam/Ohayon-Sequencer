@@ -41,7 +41,7 @@ export default class ProjectLayoutMain extends React.Component {
 
 			<div>
 				<div style = {{background:"rgba(255,255,255,.5)"}}>
-					<div style = {{padding:"30px 0px 75px 0px", margin:"auto",display:"block",width:"1200px"}}>
+					<div style = {{padding:"5vh 0px 15vh 0px", margin:"auto",display:"block",width:"1200px"}}>
 
 						<ProjectNavigationBar/>	
 						

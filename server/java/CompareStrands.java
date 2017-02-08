@@ -8,9 +8,9 @@ public class CompareStrands {
 	}
 	public void bestArrangement(Strand a, Strand b){
 		System.out.println(a.name + " vs " + b.name);
-		System.out.println(this.mismatchPrint(a, b, 5) + "\n");
+		System.out.println(this.mismatchPrint(a, b, 4) + "\n");
 		System.out.println(a.name + "' vs " + b.name);
-		System.out.println(this.mismatchPrint(a.complement(), b, 5) + "\n");
+		System.out.println(this.mismatchPrint(a.complement(), b, 4) + "\n");
 		//System.out.println(a.name + "' vs " + b.name);
 		//System.out.println(this.mismatchPrint(a.complement(), b, 5) + "\n");
 	}
@@ -205,7 +205,7 @@ public class CompareStrands {
                     {
 						if(singleMismatch)
 						{
-							consecCounter = consecCounter/2 + 1;
+							consecCounter = consecCounter --;
 							singleMismatch = false;
 						}
 						if(consecCounter >= maxhitlimit)
@@ -218,7 +218,7 @@ public class CompareStrands {
 			}
 			if(singleMismatch)
 			{
-				consecCounter = consecCounter/2 + 1;
+				consecCounter = consecCounter --;
 				singleMismatch = false;
 			}
 			//this accounts for if there are consec hits in the very end (dont delete this)
@@ -295,7 +295,7 @@ public class CompareStrands {
 	                    {
 							if(singleMismatch)
 							{
-								consecCounter = consecCounter/2 + 1;
+								consecCounter = consecCounter --;
 								singleMismatch = false;
 							}
 							if(consecCounter >= maxhitlimit)

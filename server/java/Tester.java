@@ -41,8 +41,8 @@ public class Tester
 		//Strand h = new Strand("CGCATAACCACCTTGTTAGAGAGAGAGCCG",true); //30
 		//Strand g = new Strand("GTTAGAGAGAGAGCAGTTAGAGAGAGAGCAATCGA",true); //35
 
-		Strand h = new Strand(100,true); //30
-		Strand g = new Strand(100,true); //35
+		Strand h = new Strand(80,true); //30
+		Strand g = new Strand(80,true); //35
 
 
 		//Strand i = new Strand("CATCTGCACGTATGTGAGCTAGCTT",true); //25
