@@ -1,5 +1,5 @@
 {
-  "name": "app2",
+  "name": "Ohayon_Project",
   "version": "1.0.0",
   "engines":{"node":"6.9.4","npm":"3.10.10"},
   "description": "",
@@ -36,9 +36,7 @@
     "react-select": "1.0.0-rc.2",
     "react-spinkit": "1.1.11",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.1.0"
-  },
-  "devDependencies": {
+    "redux-thunk": "^2.1.0",
     "axios": "^0.15.2",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",

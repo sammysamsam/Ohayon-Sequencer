@@ -49,7 +49,7 @@ export default class HomeLayout extends React.Component {
 
 					<div style = {{margin:"auto",display:"block",width:"270px"}}>
 						<div className= "animated fadeInUp" style = {{marginLeft:"10px"}}> 
-							<Link className = "z-depth-3 hvr-grow" style = {linkstyle} to = "Project/Development">	
+							<Link className = "z-depth-1 hvr-grow" style = {linkstyle} to = "Project/Development">	
 								<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
 									lightbulb_outline
 								</i>
@@ -58,7 +58,7 @@ export default class HomeLayout extends React.Component {
 						</div> 	
 
 						 <div className= "animated fadeInUp"  style = {{position:"relative",top:"-60px",left:"385px"}}> 
-						 	<Link className = " z-depth-3 hvr-grow"  style = {linkstyle} to = "ToolsAnalysis">
+						 	<Link className = " z-depth-1 hvr-grow"  style = {linkstyle} to = "ToolsAnalysis">
 							 	<i style = {{position:"relative",top:"6px",marginRight:"10px"}}className="material-icons">
 							 		polymer
 							 	</i>
